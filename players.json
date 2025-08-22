@@ -8,7 +8,7 @@
   { "id": "mark",  "name": "Mark",  "avatar": "Assets/mark.png",  "team": "San Francisco 49ers", "teamLogo": "Assets/san-francisco-49ers.png" },
   { "id": "ste",   "name": "Ste",   "avatar": "Assets/ste.png",   "team": "Placeholder Team", "teamLogo": "Assets/placeholder.png" },
   { "id": "tony",  "name": "Tony",  "avatar": "Assets/donuts.png","team": "Las Vegas Raiders", "teamLogo": "Assets/raiders.png" },
-  { "id": "jay",   "name": "Jay",   "avatar": "Assets/jay.png",   "team": "Seattle Seahawksm", "teamLogo": "Assets/seattle-seahawks.png" },
+  { "id": "jay",   "name": "Jay",   "avatar": "Assets/jay.png",   "team": "Seattle Seahawks", "teamLogo": "Assets/seattle-seahawks.png" },
   { "id": "lee",   "name": "Lee",   "avatar": "Assets/lee.png",   "team": "Placeholder Team", "teamLogo": "Assets/placeholder.png" },
   { "id": "liam",  "name": "Liam",  "avatar": "Assets/liam.png",  "team": "Placeholder Team", "teamLogo": "Assets/placeholder.png" }
 ]

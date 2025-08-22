@@ -1,15 +1,15 @@
 [
-  { "id": "matt", "name": "Matt", "avatar": "Assets/matt.png" },
-  { "id": "jarv", "name": "Jarv", "avatar": "Assets/jarv.png" },
-  { "id": "gaz", "name": "Gaz", "avatar": "Assets/gaz.png" },
-  { "id": "joe", "name": "Joe", "avatar": "Assets/joe.png" },
-  { "id": "ben", "name": "Ben", "avatar": "Assets/ben.png" },
-  { "id": "coley", "name": "Coley", "avatar": "Assets/coley.png" },
-  { "id": "mark", "name": "Mark", "avatar": "Assets/mark.png" },
-  { "id": "ste", "name": "Ste", "avatar": "Assets/ste.png" },
-
-  { "id": "tony", "name": "Tony", "avatar": "Assets/donuts.png" },
-  { "id": "jay", "name": "Jay", "avatar": "Assets/jay.png" },
-  { "id": "lee", "name": "Lee", "avatar": "Assets/lee.png" },
-  { "id": "liam", "name": "Liam", "avatar": "Assets/liam.png" }
+  { "id": "matt",  "name": "Matt",  "avatar": "Assets/matt.png",  "team": "Placeholder Team", "teamLogo": "Assets/teams/placeholder.png" },
+  { "id": "jarv",  "name": "Jarv",  "avatar": "Assets/jarv.png",  "team": "Placeholder Team", "teamLogo": "Assets/teams/placeholder.png" },
+  { "id": "gaz",   "name": "Gaz",   "avatar": "Assets/gaz.png",   "team": "Placeholder Team", "teamLogo": "Assets/teams/placeholder.png" },
+  { "id": "joe",   "name": "Joe",   "avatar": "Assets/joe.png",   "team": "Placeholder Team", "teamLogo": "Assets/teams/placeholder.png" },
+  { "id": "ben",   "name": "Ben",   "avatar": "Assets/ben.png",   "team": "Placeholder Team", "teamLogo": "Assets/teams/placeholder.png" },
+  { "id": "coley", "name": "Coley", "avatar": "Assets/coley.png", "team": "Placeholder Team", "teamLogo": "Assets/teams/placeholder.png" },
+  { "id": "mark",  "name": "Mark",  "avatar": "Assets/mark.png",  "team": "Placeholder Team", "teamLogo": "Assets/teams/placeholder.png" },
+  { "id": "ste",   "name": "Ste",   "avatar": "Assets/ste.png",   "team": "Placeholder Team", "teamLogo": "Assets/teams/placeholder.png" },
+  { "id": "tony",  "name": "Tony",  "avatar": "Assets/donuts.png","team": "Placeholder Team", "teamLogo": "Assets/teams/placeholder.png" },
+  { "id": "jay",   "name": "Jay",   "avatar": "Assets/jay.png",   "team": "Placeholder Team", "teamLogo": "Assets/teams/placeholder.png" },
+  { "id": "lee",   "name": "Lee",   "avatar": "Assets/lee.png",   "team": "Placeholder Team", "teamLogo": "Assets/teams/placeholder.png" },
+  { "id": "liam",  "name": "Liam",  "avatar": "Assets/liam.png",  "team": "Placeholder Team", "teamLogo": "Assets/teams/placeholder.png" }
 ]
+

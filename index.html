@@ -50,16 +50,29 @@
     .riddle-title{ letter-spacing:.08em; }
     .text-2xl,.text-xl,.font-extrabold{ font-family:'Freshman',sans-serif; letter-spacing:.06em; }
 
-    /* Rule highlights */
+    /* Highlights */
     .rule-key{ color:var(--nfl-red); font-weight:700; }
 
     /* Cards & controls */
-    .card{ background:rgba(0,0,0,.50); border:1px solid var(--line); border-radius:1rem; box-shadow:0 4px 12px rgba(0,0,0,.5); }
+    .card{ background:rgba(0,0,0,.60); border:1px solid var(--line); border-radius:1rem; box-shadow:0 4px 12px rgba(0,0,0,.5); }
     .tab-btn,.pill{ background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; transition:background .2s; text-transform:uppercase; letter-spacing:.05em; }
     .tab-btn[aria-selected="true"]{ background:var(--theme); }
     .pill{ border-radius:.75rem; }
     .avatar{ width:56px; height:56px; border-radius:50%; object-fit:cover; }
     .grid-auto{ display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:1rem; }
+
+    /* Player CARD: solid background + selectable glow */
+    .player-card{
+      background: #0d111a;                 /* SOLID, not transparent */
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,.5);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .player-card:hover{ transform: translateY(-2px); }
+    .player-card.selected{
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, .8), 0 10px 24px rgba(0,0,0,.6); /* amber ring + shadow */
+    }
 
     /* Player profile modal */
     .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; z-index:60; }
@@ -183,6 +196,20 @@
         <div class="text-xs opacity-80">Longest Scoring Streak</div>
         <div id="statStreak" class="text-2xl mt-1">0 weeks</div>
       </div>
+
+      <!-- Metrics explainer -->
+      <div class="mt-5">
+        <button id="metricsInfoBtn" class="tab-btn px-3 py-1.5 rounded-lg text-sm">What do these mean?</button>
+        <div id="metricsInfoPanel" class="hidden mt-3 card p-4">
+          <ul class="list-disc pl-5 space-y-2 text-sm leading-6">
+            <li><span class="rule-key">Total Points</span>: Sum of all points you’ve earned this season.</li>
+            <li><span class="rule-key">Games Played</span>: Weeks where you have a recorded score (missed = not counted).</li>
+            <li><span class="rule-key">Avg / Game</span>: Total Points ÷ Games Played.</li>
+            <li><span class="rule-key">Best Week</span>: Your single highest weekly score and which week it happened.</li>
+            <li><span class="rule-key">Longest Scoring Streak</span>: Most consecutive weeks with more than 0 points.</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -208,7 +235,7 @@
           const t = idx[pid]; if(!t) continue;
           const val = Number(pts)||0;
           t.total += val;
-          t.perWeek[w.week] = val; // undefined = missed week (tracked)
+          t.perWeek[w.week] = val; // undefined => missed week
         }
       });
 
@@ -221,12 +248,7 @@
       if(view==='week'){ value = p.perWeek[selectedWeek]||0; label = `Week ${selectedWeek}`; }
 
       return `
-        <article
-          class="relative rounded-2xl p-4 bg-black/70 border border-[var(--line)]
-                 transition duration-300 hover:-translate-y-[3px]
-                 hover:ring-4 hover:ring-amber-400/80 hover:shadow-xl cursor-pointer"
-          data-player="${p.id}"
-        >
+        <article class="player-card p-4 relative cursor-pointer" data-player="${p.id}">
           ${m ? `<div class="absolute -top-4 -right-3 bg-gradient-to-b ${m.color}
                            text-xl rounded-full w-12 h-12 grid place-items-center"
                      title="${m.name}">${m.emoji}</div>` : ''}
@@ -244,6 +266,11 @@
               <div class="text-2xl font-extrabold">${value}</div>
             </div>
           </div>
+
+          <!-- Profile button: opens modal, does NOT select the card -->
+          <div class="mt-3 flex justify-end">
+            <button class="tab-btn px-3 py-1 rounded-lg text-xs" data-open-profile="${p.id}">Profile</button>
+          </div>
         </article>`;
     }
 
@@ -252,13 +279,40 @@
         if(view==='week') return (b.perWeek[selectedWeek]||0) - (a.perWeek[selectedWeek]||0);
         return b.total - a.total;
       });
-      const html = sorted.map((p,i)=>playerCard(p,i,view,selectedWeek)).join('');
       const el = document.getElementById('leaderboard');
-      el.innerHTML = html;
+      el.innerHTML = sorted.map((p,i)=>playerCard(p,i,view,selectedWeek)).join('');
 
-      // open profile on click
-      el.querySelectorAll('[data-player]').forEach(card=>{
-        card.addEventListener('click', ()=> openProfile(card.getAttribute('data-player')));
+      // Click behaviors:
+      const cards = [...el.querySelectorAll('[data-player]')];
+
+      // Selecting (yellow glow) by clicking the card area
+      cards.forEach(card=>{
+        card.addEventListener('click', (e)=>{
+          // if the click was on the Profile button, ignore (that handler below)
+          if (e.target.closest('[data-open-profile]')) return;
+          setSelected(card.getAttribute('data-player'));
+        });
+      });
+
+      // Open profile buttons
+      el.querySelectorAll('[data-open-profile]').forEach(btn=>{
+        btn.addEventListener('click', (e)=>{
+          e.stopPropagation();
+          openProfile(btn.getAttribute('data-open-profile'));
+        });
+      });
+
+      // Keep previous selection highlighted after re-render, if any
+      if (window.selectedPlayerId){
+        const sel = el.querySelector(`[data-player="${window.selectedPlayerId}"]`);
+        if (sel) sel.classList.add('selected');
+      }
+    }
+
+    function setSelected(playerId){
+      window.selectedPlayerId = playerId;
+      document.querySelectorAll('#leaderboard .player-card').forEach(c=>{
+        c.classList.toggle('selected', c.getAttribute('data-player') === playerId);
       });
     }
 
@@ -316,11 +370,11 @@
 
       const scores = weekNums.map(w => Number(p.perWeek[w] ?? NaN));
       const defined = scores.filter(v => !Number.isNaN(v));
-      const gamesPlayed = defined.length;                 // has an entry (missed week = no entry)
+      const gamesPlayed = defined.length;
       const total = defined.reduce((a,b)=>a+b,0);
       const avg = gamesPlayed ? (total / gamesPlayed) : 0;
 
-      // Best week (points and week number)
+      // Best week
       let bestPts = -Infinity, bestWeek = null;
       weekNums.forEach((w,idx)=>{
         const v = scores[idx];
@@ -330,7 +384,7 @@
       });
       if(bestPts===-Infinity){ bestPts = 0; bestWeek = '–'; }
 
-      // Longest scoring streak (>0 points, consecutive)
+      // Longest scoring streak (>0)
       let cur = 0, best = 0;
       scores.forEach(v=>{
         if(!Number.isNaN(v) && v > 0){ cur += 1; best = Math.max(best, cur); }
@@ -438,12 +492,16 @@
         document.getElementById('closeRules').addEventListener('click', ()=> rulesModal.classList.remove('open'));
         rulesModal.addEventListener('click', e=>{ if(e.target===rulesModal) rulesModal.classList.remove('open'); });
 
-        // Profile modal close controls
+        // Profile modal close + metrics explainer toggle
         const profileModal = document.getElementById('playerProfile');
         const closeProfile = ()=> profileModal.classList.remove('open');
         document.getElementById('closeProfile').addEventListener('click', closeProfile);
         profileModal.addEventListener('click', e=>{ if(e.target===profileModal) closeProfile(); });
         window.addEventListener('keydown', e=>{ if(e.key==='Escape') closeProfile(); });
+
+        const infoBtn = document.getElementById('metricsInfoBtn');
+        const infoPanel = document.getElementById('metricsInfoPanel');
+        infoBtn.addEventListener('click', ()=> infoPanel.classList.toggle('hidden'));
 
         // Footer year
         document.getElementById('copyrightYear').textContent = new Date().getFullYear();

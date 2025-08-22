@@ -10,16 +10,13 @@
     { "year": 2023, "player": "gaz" },
     { "year": 2022, "player": "ste" },
     { "year": 2021, "player": "jarv" }
-  ]
-}
-{
-  "season": "2024",
-  "repoUrl": "https://github.com/your/repo",
-  "perfectWeekPoints": { "1": 14, "2": 13, "3": 12 }
-}
-{
-  "season": 2024,
-  "gamesPerWeek": 14,
-  "playedWeeks": [1]   // put real weeks as they happen
-}
+  ],
 
+  /* Optional: used for “Perfect Weeks”.
+     If a week is listed here, a player is counted perfect when their score equals this number. */
+  "perfectWeekPoints": {
+    "1": 14,
+    "2": 13,
+    "3": 12
+  }
+}

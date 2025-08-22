@@ -15,80 +15,121 @@
   <link rel="preload" as="image" href="Assets/football-field.jpeg">
 
   <style>
-    :root { --line: rgba(255,255,255,0.15); --theme:#2563eb; }
+  :root { --line: rgba(255,255,255,0.15); --theme:#2563eb; }
 
-    /* ------------ Background (robust mobile) ------------ */
-
-/* keep text color etc. on body, but NOT the image */
-html, body { min-height: 100%; }
-body{
-  position: relative;   /* create a stacking context for the ::before */
-  z-index: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color:#fff;
-  margin:0;
-  background:#0b1220;
-}
-
-/* Full-viewport fixed canvas behind everything */
-body::before{
-  content:"";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  /* desktop/tablet default */
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
-    url('Assets/football-field.jpeg');
-  background-repeat: no-repeat;
-  background-position: center top;
-  background-size: cover;
-
-  /* smooth out mobile repaints */
-  will-change: transform;
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  pointer-events: none;
-}
-
-/* Phones: show more of the pitch; optional mobile asset first */
-@media (max-width: 640px){
-  body::before{
-    background-image:
-      linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
-      url('Assets/football-field-mobile.jpeg'),
-      url('Assets/football-field.jpeg');
-    background-position: center 20%;
-    background-size: cover;     /* keep filling screen as you scroll */
+  /* ------------ Font ------------ */
+  @font-face {
+    font-family: 'Freshman';
+    src: url('Assets/Freshman.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
   }
-}
 
-    /* ------------ Small helper CSS (the bit that went missing) ------------ */
-    .riddle-title { font-family: Cinzel, serif; letter-spacing:.02em; }
-    .card { background: rgba(0,0,0,.50); border:1px solid var(--line); border-radius:1rem; box-shadow:0 4px 12px rgba(0,0,0,.5); }
-    .tab-btn, .pill { background: rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; transition:background .2s; }
-    .tab-btn[aria-selected="true"]{ background: var(--theme); }
-    .pill{ border-radius:.75rem; }
-    /* Keep avatars small and tidy on player cards */
-    .avatar{ width:56px; height:56px; border-radius:50%; object-fit:cover; }
-    /* Responsive grid for cards */
-    .grid-auto{ display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:1rem; }
+  /* ------------ Background (robust mobile) ------------ */
+  html, body { min-height: 100%; }
+  body {
+    font-family: 'Freshman', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color:#fff;
+    margin:0;
+    background:#0b1220; /* fallback color */
+    letter-spacing: 0.03em;  /* slight spacing everywhere */
+  }
 
-    /* ------------ Modal ------------ */
-    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; z-index:50; }
-    .modal-backdrop.open { display:flex; align-items:center; justify-content:center; }
-    .modal-backdrop .card {
-      background:#111; border:1px solid var(--line); border-radius:1rem;
-      max-width:600px; padding:1.5rem; margin:1rem; box-shadow:0 8px 20px rgba(0,0,0,.6);
+  /* Full-viewport fixed canvas behind everything */
+  body::before {
+    content:"";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
+      url('Assets/football-field.jpeg');
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* Phones: show more of the pitch; optional mobile asset first */
+  @media (max-width: 640px){
+    body::before{
+      background-image:
+        linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
+        url('Assets/football-field-mobile.jpeg'),
+        url('Assets/football-field.jpeg');
+      background-position: center 20%;
+      background-size: cover;
     }
+  }
 
-    /* Mobile spacing tweaks */
-    @media (max-width: 640px){
-      header .riddle-title{ font-size:1.5rem }
-      .card{ padding:1rem !important }
-      .tab-btn, .pill{ font-size:1rem; padding:.5rem 1rem }
-    }
-  </style>
+  /* ------------ Typography Tweaks ------------ */
+  h1, h2, h3, h4, .riddle-title {
+    font-family: 'Freshman', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 900;
+  }
+
+  .riddle-title { 
+    letter-spacing: 0.08em; 
+  }
+
+  /* Scores & important numbers */
+  .text-2xl, .text-xl, .font-extrabold {
+    font-family: 'Freshman', sans-serif;
+    letter-spacing: 0.06em;
+  }
+
+  /* ------------ Small helper CSS ------------ */
+  .card { 
+    background: rgba(0,0,0,.50); 
+    border:1px solid var(--line); 
+    border-radius:1rem; 
+    box-shadow:0 4px 12px rgba(0,0,0,.5); 
+  }
+
+  .tab-btn, .pill { 
+    background: rgba(255,255,255,.10); 
+    border:1px solid var(--line); 
+    color:#fff; 
+    transition:background .2s; 
+    font-family: 'Freshman', sans-serif; 
+    letter-spacing: 0.05em; 
+    text-transform: uppercase;
+  }
+
+  .tab-btn[aria-selected="true"]{ background: var(--theme); }
+  .pill{ border-radius:.75rem; }
+
+  .avatar{ width:56px; height:56px; border-radius:50%; object-fit:cover; }
+  .grid-auto{ display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:1rem; }
+
+  /* ------------ Modal ------------ */
+  .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; z-index:50; }
+  .modal-backdrop.open { display:flex; align-items:center; justify-content:center; }
+  .modal-backdrop .card {
+    background:#111; 
+    border:1px solid var(--line); 
+    border-radius:1rem;
+    max-width:600px; 
+    padding:1.5rem; 
+    margin:1rem; 
+    box-shadow:0 8px 20px rgba(0,0,0,.6);
+    font-family: 'Freshman', sans-serif;
+    letter-spacing: 0.04em;
+  }
+
+  /* Mobile spacing tweaks */
+  @media (max-width: 640px){
+    header .riddle-title{ font-size:1.5rem }
+    .card{ padding:1rem !important }
+    .tab-btn, .pill{ font-size:1rem; padding:.5rem 1rem }
+  }
+</style>
 </head>
 <body>
   <header class="max-w-xl mx-auto px-4 pt-6 pb-3">

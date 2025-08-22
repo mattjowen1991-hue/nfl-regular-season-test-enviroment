@@ -11,9 +11,6 @@
     { "year": 2022, "player": "ste" },
     { "year": 2021, "player": "jarv" }
   ],
-
-  /* Optional: used for “Perfect Weeks”.
-     If a week is listed here, a player is counted perfect when their score equals this number. */
   "perfectWeekPoints": {
     "1": 14,
     "2": 13,

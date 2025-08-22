@@ -1,0 +1,14 @@
+{
+  "season": "2024",
+  "repoUrl": "https://github.com/your/repo",
+  "highlight": {
+    "winner": "matt",
+    "spoon": "ste"
+  },
+  "honorary": [
+    { "year": 2024, "player": "matt" },
+    { "year": 2023, "player": "gaz" },
+    { "year": 2022, "player": "ste" },
+    { "year": 2021, "player": "jarv" }
+  ]
+}

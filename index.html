@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NFL League Scores</title>
 
-  <!-- Tailwind for utility classes -->
+  <!-- Tailwind utilities -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Heading font to match your style -->
+  <!-- Heading font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
@@ -16,44 +16,57 @@
   <style>
     :root { --line: rgba(255,255,255,0.15); --theme:#2563eb; }
 
-    /* Desktop / tablets (unchanged) */
-body{
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  /* overlay + desktop background */
-  background:
-    linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
-    url('Assets/football-field.jpeg');
-  background-repeat: no-repeat;
-  background-position: center top;      /* a bit higher looks nicer */
-  background-size: cover;               /* fill on wide screens */
-  color:#fff;
-  margin:0;
-  min-height:100vh;
-}
+    /* ------------ Background ------------ */
+    /* Desktop / tablets */
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
+        url('Assets/football-field.jpeg');
+      background-repeat: no-repeat;
+      background-position: center top;
+      background-size: cover;
+      color:#fff; margin:0; min-height:100vh;
+    }
+    /* Phones: show more of the pitch */
+    @media (max-width: 640px){
+      body{
+        background-image:
+          linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
+          url('Assets/football-field-mobile.jpeg'),
+          url('Assets/football-field.jpeg');
+        background-repeat: no-repeat;
+        background-position: center 20%;
+        background-size: 100% auto;
+        background-attachment: scroll;
+        background-color: #0f172a;
+      }
+    }
 
-/* Phones: show more of the pitch & keep the horizon visible */
-@media (max-width: 640px){
-  body{
-    /* If you add Assets/football-field-mobile.jpeg it will be used first,
-       otherwise the desktop image is used (second URL). */
-    background-image:
-      linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
-      url('Assets/football-field-mobile.jpeg'),
-      url('Assets/football-field.jpeg');
-    background-repeat: no-repeat;
-    background-position: center 20%;    /* lift the image a little */
-    background-size: 100% auto;         /* fit width, don’t over-zoom */
-    background-attachment: scroll;      /* avoid mobile “fake fixed” zoom */
-    background-color: #0f172a;          /* subtle fallback edge color */
-  }
-}
+    /* ------------ Small helper CSS (the bit that went missing) ------------ */
+    .riddle-title { font-family: Cinzel, serif; letter-spacing:.02em; }
+    .card { background: rgba(0,0,0,.50); border:1px solid var(--line); border-radius:1rem; box-shadow:0 4px 12px rgba(0,0,0,.5); }
+    .tab-btn, .pill { background: rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; transition:background .2s; }
+    .tab-btn[aria-selected="true"]{ background: var(--theme); }
+    .pill{ border-radius:.75rem; }
+    /* Keep avatars small and tidy on player cards */
+    .avatar{ width:56px; height:56px; border-radius:50%; object-fit:cover; }
+    /* Responsive grid for cards */
+    .grid-auto{ display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:1rem; }
 
-    /* Modal */
+    /* ------------ Modal ------------ */
     .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; z-index:50; }
     .modal-backdrop.open { display:flex; align-items:center; justify-content:center; }
     .modal-backdrop .card {
       background:#111; border:1px solid var(--line); border-radius:1rem;
       max-width:600px; padding:1.5rem; margin:1rem; box-shadow:0 8px 20px rgba(0,0,0,.6);
+    }
+
+    /* Mobile spacing tweaks */
+    @media (max-width: 640px){
+      header .riddle-title{ font-size:1.5rem }
+      .card{ padding:1rem !important }
+      .tab-btn, .pill{ font-size:1rem; padding:.5rem 1rem }
     }
   </style>
 </head>
@@ -124,7 +137,7 @@ body{
   </div>
 
   <script>
-    // ---------- Rendering helpers ----------
+    /* ---------- Rendering helpers ---------- */
     function medal(rank){
       if(rank===0) return {emoji:"🥇", color:"from-yellow-400 to-yellow-600", name:"Gold"};
       if(rank===1) return {emoji:"🥈", color:"from-gray-300 to-gray-500", name:"Silver"};
@@ -153,37 +166,35 @@ body{
     }
 
     function playerCard(p, rank, view, selectedWeek){
-  const m = medal(rank);
-  let value = p.total, label = 'Total';
-  if(view==='week'){ value = p.perWeek[selectedWeek]||0; label = `Week ${selectedWeek}`; }
+      const m = medal(rank);
+      let value = p.total, label = 'Total';
+      if(view==='week'){ value = p.perWeek[selectedWeek]||0; label = `Week ${selectedWeek}`; }
 
-  return `
-    <article
-      class="relative rounded-2xl p-4 bg-black/70 border border-[var(--line)]
-             transition duration-300 hover:-translate-y-[3px]
-             hover:ring-4 hover:ring-amber-400/80 hover:shadow-xl"
-    >
-      ${m ? `<div class="absolute -top-4 -right-3 bg-gradient-to-b ${m.color}
-                       text-xl rounded-full w-12 h-12 grid place-items-center"
-                 title="${m.name}">${m.emoji}</div>` : ''}
+      return `
+        <article
+          class="relative rounded-2xl p-4 bg-black/70 border border-[var(--line)]
+                 transition duration-300 hover:-translate-y-[3px]
+                 hover:ring-4 hover:ring-amber-400/80 hover:shadow-xl"
+        >
+          ${m ? `<div class="absolute -top-4 -right-3 bg-gradient-to-b ${m.color}
+                           text-xl rounded-full w-12 h-12 grid place-items-center"
+                     title="${m.name}">${m.emoji}</div>` : ''}
 
-      <div class="flex items-center gap-3">
-        <!-- avatar now static (no hover zoom) so the card effect is the star -->
-        <img src="${p.avatar}" alt="${p.name}"
-             class="avatar border border-[var(--line)]"/>
-        <div class="min-w-0">
-          <div class="font-extrabold text-lg truncate">${p.name}</div>
-        </div>
-      </div>
+          <div class="flex items-center gap-3">
+            <img src="${p.avatar}" alt="${p.name}" class="avatar border border-[var(--line)]"/>
+            <div class="min-w-0">
+              <div class="font-extrabold text-lg truncate">${p.name}</div>
+            </div>
+          </div>
 
-      <div class="mt-3 grid text-center">
-        <div class="rounded-xl border border-[var(--line)] py-3">
-          <div class="text-xs opacity-80">${label}</div>
-          <div class="text-2xl font-extrabold">${value}</div>
-        </div>
-      </div>
-    </article>`;
-}
+          <div class="mt-3 grid text-center">
+            <div class="rounded-xl border border-[var(--line)] py-3">
+              <div class="text-xs opacity-80">${label}</div>
+              <div class="text-2xl font-extrabold">${value}</div>
+            </div>
+          </div>
+        </article>`;
+    }
 
     function renderLeaderboard(totals, view, selectedWeek){
       const sorted = [...totals].sort((a,b)=>{
@@ -194,7 +205,7 @@ body{
         sorted.map((p,i)=>playerCard(p,i,view,selectedWeek)).join('');
     }
 
-    // Season highlight (winner + spoon) with the same hover zoom/glow
+    /* Season highlight */
     function renderHighlight(cfg, playersById){
       const el = document.getElementById('highlight');
       if(!el) return;
@@ -230,7 +241,7 @@ body{
       `;
     }
 
-    // Honorary winners list with the same hover zoom/glow
+    /* Honorary winners */
     function renderHonorary(cfg, playersById){
       const el = document.getElementById('honorary');
       if(!el) return;
@@ -253,7 +264,7 @@ body{
       el.innerHTML = items || '<div class="opacity-60 text-center">No honorary winners yet.</div>';
     }
 
-    // ---------- Data I/O ----------
+    /* ---------- Data I/O ---------- */
     async function loadJSON(path){
       const res = await fetch(path, { cache: 'no-store' });
       if(!res.ok) throw new Error("Failed to load "+path);
@@ -262,7 +273,7 @@ body{
 
     const paths = { players:"players.json", weeks:"weeks.json", config:"config.json" };
 
-    // ---------- Boot ----------
+    /* ---------- Boot ---------- */
     (async function boot(){
       try{
         const [players, weeks, config] = await Promise.all([
@@ -273,17 +284,14 @@ body{
 
         const state = compute({ players, weeks });
 
-        // Week picker
         const weekSel = document.getElementById('weekSelect');
         weekSel.innerHTML = state.weekNums.map(w=>`<option value="${w}">Week ${w}</option>`).join('');
         if(state.weekNums.length) weekSel.value = String(state.weekNums[state.weekNums.length-1]);
 
-        // Initial renders
-        renderLeaderboard(state.totals, 'total'); // Total first
+        renderLeaderboard(state.totals, 'total');
         renderHighlight(config, state.playersById);
         renderHonorary(config, state.playersById);
 
-        // Interactions
         document.getElementById('totalBtn').addEventListener('click', ()=>{
           document.getElementById('totalBtn').setAttribute('aria-selected','true');
           renderLeaderboard(state.totals, 'total');
@@ -293,17 +301,14 @@ body{
           renderLeaderboard(state.totals, 'week', Number(weekSel.value));
         });
 
-        // Repo link
         const repoLink = document.getElementById('repoLink');
         if(repoLink) repoLink.href = config.repoUrl || '#';
 
-        // Rules modal
         const modal = document.getElementById('rulesModal');
         document.getElementById('rulesBtn').addEventListener('click', ()=> modal.classList.add('open'));
         document.getElementById('closeRules').addEventListener('click', ()=> modal.classList.remove('open'));
         modal.addEventListener('click', e=>{ if(e.target===modal) modal.classList.remove('open'); });
 
-        // Footer year
         document.getElementById('copyrightYear').textContent = new Date().getFullYear();
       }catch(err){
         console.error(err);

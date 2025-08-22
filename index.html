@@ -8,9 +8,7 @@
   <!-- Tailwind utilities -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Optional Google font preload (not used for UI text, Freshman is primary) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Preload bg for faster paint -->
   <link rel="preload" as="image" href="Assets/football-field.jpeg">
 
   <style>
@@ -63,6 +61,7 @@
 
     /* Player CARD: solid background + selectable glow */
     .player-card{
+      position:relative;
       background:#0d111a;                 /* SOLID */
       border:1px solid var(--line);
       border-radius:1rem;
@@ -74,7 +73,14 @@
       box-shadow:0 0 0 4px rgba(245,158,11,.8), 0 10px 24px rgba(0,0,0,.6);
     }
 
-    /* Modals */
+    .medal-badge{
+      position:absolute; top:.5rem; right:.5rem;
+      width:2.25rem; height:2.25rem; border-radius:9999px;
+      display:grid; place-items:center; font-size:1.125rem;
+      z-index:2; pointer-events:none;
+    }
+
+    /* Modals - solid cards */
     .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; z-index:60; }
     .modal-backdrop.open{ display:flex; align-items:center; justify-content:center; }
     .modal-card { background:#111 !important; border:1px solid var(--line); border-radius:1rem; box-shadow:0 8px 20px rgba(0,0,0,.75); }
@@ -190,10 +196,10 @@
       <div id="metricHelp" class="hidden mt-3 text-sm leading-6 bg-black/40 border border-[var(--line)] rounded-xl p-4">
         <ul class="list-disc ml-5 space-y-1">
           <li><b>Total Points</b>: Sum of all your weekly points.</li>
-          <li><b>Games Played</b>: Number of weeks where you submitted a score (weeks you didn’t play are not counted).</li>
+          <li><b>Games Played</b>: Weeks that actually happened (at least one player scored &gt; 0) where you have a recorded score (0 or more).</li>
           <li><b>Avg / Game</b>: Total Points divided by Games Played.</li>
           <li><b>Best Week</b>: Your highest scoring week.</li>
-          <li><b>Longest Streak</b>: Most consecutive played weeks with a score &gt; 0.</li>
+          <li><b>Longest Streak</b>: Most consecutive weeks with a score &gt; 0.</li>
           <li><b>Perfect Weeks</b>: Weeks where you guessed every game correctly (uses <code>config.perfectWeekPoints</code> or <code>weeks[i].games</code>; if neither exist, we treat a week as “perfect” when you hit that week’s top score).</li>
         </ul>
       </div>
@@ -225,7 +231,7 @@
           const val = Number(pts);
           if(Number.isFinite(val)){
             t.total += val;
-            t.perWeek[w.week] = val;  // NOTE: undefined means “didn’t play”; 0 means played but scored 0
+            t.perWeek[w.week] = val;  // undefined = DNP; number 0+ = played
           }
         }
       });
@@ -248,7 +254,7 @@
 
       return `
         <article class="player-card" data-player="${p.id}">
-          ${m ? `<div class="absolute -mt-3 -mr-3 right-0 bg-gradient-to-b ${m.color} text-xl rounded-full w-12 h-12 grid place-items-center" title="${m.name}">${m.emoji}</div>` : ''}
+          ${m ? `<div class="medal-badge bg-gradient-to-b ${m.color}" title="${m.name}">${m.emoji}</div>` : ''}
           <div class="p-4">
             <div class="flex items-center gap-3">
               <img src="${p.avatar}" alt="${p.name}" class="avatar border border-[var(--line)]"/>
@@ -273,17 +279,18 @@
         return b.total - a.total;
       });
       const html = sorted.map((p,i)=>playerCardHTML(p,i,view,selectedWeek)).join('');
-      document.getElementById('leaderboard').innerHTML = html;
+      const root = document.getElementById('leaderboard');
+      root.innerHTML = html;
 
       // selection highlight on card tap/click (doesn't open profile)
-      document.querySelectorAll('#leaderboard .player-card').forEach(card=>{
+      root.querySelectorAll('.player-card').forEach(card=>{
         card.addEventListener('click', (e)=>{
           if(e.target.closest('.open-profile')) return; // ignore when pressing the button
           card.classList.toggle('selected');
         });
       });
       // handle Profile buttons
-      document.querySelectorAll('#leaderboard .open-profile').forEach(btn=>{
+      root.querySelectorAll('.open-profile').forEach(btn=>{
         btn.addEventListener('click', (e)=>{
           e.stopPropagation();
           openProfile(btn.dataset.player);
@@ -348,10 +355,15 @@
         : '<div class="opacity-60 text-center">No honorary winners yet.</div>';
     }
 
-    /* ---------- Profile Stats ---------- */
-    // Counts weeks as "played" only when a score exists (undefined = DNP)
+    /* ---------- Profile Stats (with "played weeks" fix) ---------- */
+    // Only count weeks that actually happened (at least one player scored > 0)
     function computeProfileStats(weeks, playerId, config){
-      const perfectMap = config?.perfectWeekPoints || {}; // optional { "1": 14, "2": 13, ... }
+      const playedWeeks = weeks.filter(w=>{
+        const vals = Object.values(w.scores || {}).map(Number).filter(Number.isFinite);
+        return vals.some(v => v > 0);
+      });
+
+      const perfectMap = config?.perfectWeekPoints || {}; // { "1": 14, ... }
 
       let total = 0;
       let games = 0;
@@ -360,36 +372,29 @@
       let longest = 0, current = 0;
       let perfectCount = 0;
 
-      for(const w of weeks){
-        const score = w?.scores?.[playerId];
-        if(score === undefined) continue;     // DNP: not counted
-        const v = Number(score);
+      for(const w of playedWeeks){
+        const raw = w?.scores?.[playerId];
+        if(raw === undefined) continue; // DNP in a week that happened
+        const v = Number(raw);
         if(!Number.isFinite(v)) continue;
 
         total += v;
         games += 1;
 
-        // best week
         if(v > bestPoints){ bestPoints = v; bestWeek = w.week; }
 
-        // streak (strictly > 0)
         if(v > 0){ current += 1; longest = Math.max(longest, current); }
         else { current = 0; }
 
-        // perfect weeks:
-        // 1) explicit config.perfectWeekPoints[week]
-        // 2) or weeks[i].games (if present)
-        // 3) else fallback: v equals max score in that week (and > 0)
-        let target = undefined;
+        // perfect week target
+        let target;
         if(perfectMap[w.week] != null){
           target = Number(perfectMap[w.week]);
         } else if(w.games != null){
           target = Number(w.games);
         } else {
-          // fallback: compute max for this week
-          const vals = Object.values(w.scores||{}).map(n=>Number(n)).filter(n=>Number.isFinite(n));
-          const max = vals.length ? Math.max(...vals) : undefined;
-          target = max;
+          const vals = Object.values(w.scores||{}).map(n=>Number(n)).filter(Number.isFinite);
+          target = vals.length ? Math.max(...vals) : undefined;
         }
         if(Number.isFinite(target) && v === target && v > 0){
           perfectCount += 1;
@@ -403,8 +408,8 @@
         gamesPlayed: games,
         avgPerGame: games ? total/games : 0,
         bestPoints,
-        bestWeek,        // number or null
-        longest,         // streak length
+        bestWeek,
+        longest,
         perfectWeeks: perfectCount
       };
     }

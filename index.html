@@ -92,6 +92,9 @@
     .close-btn:hover{ background:rgba(255,255,255,.2); }
     .team-pill{ display:inline-flex; align-items:center; gap:.5rem; border:1px solid var(--line); border-radius:9999px; padding:.4rem .75rem; background:rgba(255,255,255,.06); }
 
+    /* Scroll lock (when a modal is open) */
+    html.modal-locked, body.modal-locked { overflow: hidden; }
+
     /* Mobile tweaks */
     @media (max-width:640px){
       header .riddle-title{ font-size:1.5rem }
@@ -207,6 +210,41 @@
   </div>
 
   <script>
+    /* ---------- Scroll lock helpers (mobile-safe) ---------- */
+    const ScrollLock = (() => {
+      let y = 0, locks = 0;
+      return {
+        lock(){
+          if (locks++ === 0) {
+            y = window.scrollY || document.documentElement.scrollTop || 0;
+            document.documentElement.classList.add('modal-locked');
+            document.body.classList.add('modal-locked');
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${y}px`;
+            document.body.style.left = '0';
+            document.body.style.right = '0';
+            document.body.style.width = '100%';
+          }
+        },
+        unlock(){
+          if (--locks <= 0) {
+            locks = 0;
+            document.documentElement.classList.remove('modal-locked');
+            document.body.classList.remove('modal-locked');
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+            document.body.style.width = '';
+            window.scrollTo(0, y);
+          }
+        }
+      };
+    })();
+
+    function openModal(el){ el.classList.add('open'); ScrollLock.lock(); }
+    function closeModal(el){ el.classList.remove('open'); ScrollLock.unlock(); }
+
     /* ---------- Utilities ---------- */
     const paths = { players:"players.json", weeks:"weeks.json", config:"config.json" };
 
@@ -447,8 +485,8 @@
       document.getElementById('statStreak').textContent  = stats.longest;
       document.getElementById('statPerfect').textContent = stats.perfectWeeks;
 
-      // Show modal
-      document.getElementById('profileModal').classList.add('open');
+      // Show modal (with scroll lock)
+      openModal(document.getElementById('profileModal'));
     }
 
     /* ---------- Boot ---------- */
@@ -496,16 +534,16 @@
           renderLeaderboard(state.totals, 'week', Number(weekSel.value));
         });
 
-        // Rules modal
+        /* ----- Rules modal (with scroll lock) ----- */
         const rulesModal = document.getElementById('rulesModal');
-        document.getElementById('rulesBtn').addEventListener('click', ()=> rulesModal.classList.add('open'));
-        document.getElementById('closeRules').addEventListener('click', ()=> rulesModal.classList.remove('open'));
-        rulesModal.addEventListener('click', e=>{ if(e.target===rulesModal) rulesModal.classList.remove('open'); });
+        document.getElementById('rulesBtn').addEventListener('click', ()=> openModal(rulesModal));
+        document.getElementById('closeRules').addEventListener('click', ()=> closeModal(rulesModal));
+        rulesModal.addEventListener('click', e=>{ if(e.target===rulesModal) closeModal(rulesModal); });
 
-        // Profile modal
+        /* ----- Profile modal (with scroll lock) ----- */
         const profileModal = document.getElementById('profileModal');
-        document.getElementById('profileClose').addEventListener('click', ()=> profileModal.classList.remove('open'));
-        profileModal.addEventListener('click', e=>{ if(e.target===profileModal) profileModal.classList.remove('open'); });
+        document.getElementById('profileClose').addEventListener('click', ()=> closeModal(profileModal));
+        profileModal.addEventListener('click', e=>{ if(e.target===profileModal) closeModal(profileModal); });
 
         // Metric help toggle
         const metricHelpBtn = document.getElementById('metricHelpBtn');

@@ -1,5 +1,5 @@
 [
-  { "week": 1, "scores": { "matt": 2, "jarv": 3, "gaz": 4, "joe": 4, "ben": 3, "coley": 2, "mark": 1, "ste": 2, "donuts": 0, "jay": 0, "lee": 0, "liam": 0 } },
+  { "week": 1, "scores": { "matt": 0, "jarv": 0, "gaz": 0, "joe": 0, "ben": 0, "coley": 0, "mark": 0, "ste": 2, "donuts": 0, "jay": 0, "lee": 0, "liam": 0 } },
   { "week": 2, "scores": { "matt": 0, "jarv": 0, "gaz": 0, "joe": 0, "ben": 0, "coley": 0, "mark": 0, "ste": 0, "donuts": 0, "jay": 0, "lee": 0, "liam": 0 } },
   { "week": 3, "scores": { "matt": 0, "jarv": 0, "gaz": 0, "joe": 0, "ben": 0, "coley": 0, "mark": 0, "ste": 0, "donuts": 0, "jay": 0, "lee": 0, "liam": 0 } },
   { "week": 4, "scores": { "matt": 0, "jarv": 0, "gaz": 0, "joe": 0, "ben": 0, "coley": 0, "mark": 0, "ste": 0, "donuts": 0, "jay": 0, "lee": 0, "liam": 0 } },

@@ -5,24 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NFL League Scores</title>
 
-  <!-- Tailwind -->
+  <!-- Tailwind utilities -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Preload bg -->
+  <!-- Optional heading font preload (we use Freshman everywhere) -->
   <link rel="preload" as="image" href="Assets/football-field.jpeg">
 
   <style>
     :root { --line: rgba(255,255,255,0.15); --theme:#2563eb; --nfl-red:#c8102e; }
 
-    /* Font – Freshman */
+    /* ------------ Font ------------ */
     @font-face {
       font-family: 'Freshman';
       src: url('Assets/Freshman.ttf') format('truetype');
-      font-weight: normal; font-style: normal; font-display: swap;
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
     }
 
-    /* Background (robust mobile) */
-    html, body { min-height:100%; }
+    /* ------------ Background (robust mobile) ------------ */
+    html, body { min-height: 100%; }
     body{
       font-family: 'Freshman', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:#fff; margin:0; background:#0b1220; letter-spacing:.03em;
@@ -45,15 +47,13 @@
       }
     }
 
-    /* Titles / numbers */
-    h1,h2,h3,h4,.riddle-title{ font-family:'Freshman',sans-serif; text-transform:uppercase; letter-spacing:.05em; font-weight:900; }
+    /* ------------ Typography ------------ */
+    h1,h2,h3,h4,.riddle-title{ text-transform:uppercase; letter-spacing:.05em; font-weight:900; }
     .riddle-title{ letter-spacing:.08em; }
-    .text-2xl,.text-xl,.font-extrabold{ font-family:'Freshman',sans-serif; letter-spacing:.06em; }
-
-    /* Highlights */
+    .text-2xl,.text-xl,.font-extrabold{ letter-spacing:.06em; }
     .rule-key{ color:var(--nfl-red); font-weight:700; }
 
-    /* Cards & controls */
+    /* ------------ Cards & controls ------------ */
     .card{ background:rgba(0,0,0,.60); border:1px solid var(--line); border-radius:1rem; box-shadow:0 4px 12px rgba(0,0,0,.5); }
     .tab-btn,.pill{ background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; transition:background .2s; text-transform:uppercase; letter-spacing:.05em; }
     .tab-btn[aria-selected="true"]{ background:var(--theme); }
@@ -63,20 +63,22 @@
 
     /* Player CARD: solid background + selectable glow */
     .player-card{
-      background: #0d111a;                 /* SOLID, not transparent */
-      border: 1px solid var(--line);
-      border-radius: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,.5);
+      background:#0d111a; border:1px solid var(--line); border-radius:1rem;
+      box-shadow:0 4px 12px rgba(0,0,0,.5);
       transition: transform .2s ease, box-shadow .2s ease;
     }
     .player-card:hover{ transform: translateY(-2px); }
     .player-card.selected{
-      box-shadow: 0 0 0 4px rgba(245, 158, 11, .8), 0 10px 24px rgba(0,0,0,.6); /* amber ring + shadow */
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, .8), 0 10px 24px rgba(0,0,0,.6);
     }
 
-    /* Player profile modal */
+    /* Modals (Rules + Profile) */
     .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; z-index:60; }
     .modal-backdrop.open{ display:flex; align-items:center; justify-content:center; }
+    .modal-backdrop .card,
+    .player-profile-card{
+      background:#111 !important; border:1px solid var(--line); border-radius:1rem; box-shadow:0 8px 20px rgba(0,0,0,.75);
+    }
     .profile-panel{ width:min(900px,92vw); max-height:90vh; overflow:auto; }
     .stat-card{ background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:1rem; padding:1rem; text-align:center; }
     .close-btn{ position:absolute; top:.5rem; right:.5rem; width:40px; height:40px; border-radius:9999px; background:rgba(255,255,255,.1); border:1px solid var(--line); display:grid; place-items:center; }
@@ -89,14 +91,6 @@
       .card{ padding:1rem !important }
       .tab-btn,.pill{ font-size:1rem; padding:.5rem 1rem }
     }
-    /* Solid modal + profile card background */
-.modal-backdrop .card,
-.player-profile-card {
-  background: #111 !important; /* Solid black */
-  border: 1px solid var(--line);
-  border-radius: 1rem;
-  box-shadow: 0 8px 20px rgba(0,0,0,.75);
-}
   </style>
 </head>
 <body>
@@ -104,10 +98,14 @@
     <div class="flex items-center justify-center">
       <img src="Assets/nfl-logo.png" alt="NFL" class="w-12 h-12 rounded-md shadow-lg">
     </div>
-    <h1 class="riddle-title text-center font-extrabold mt-3" style="font-size:clamp(1.4rem, 4.8vw, 2rem); line-height:1.15;">
-      NFL League <span class="block">Regular Season</span>
+    <h1 class="riddle-title text-center font-extrabold mt-3"
+        style="font-size:clamp(1.4rem, 4.8vw, 2rem); line-height:1.15;">
+      NFL League
+      <span class="block">Regular Season</span>
     </h1>
-    <p class="text-center opacity-80 text-base mt-2">Updated weekly from JSON — simple to edit, zero build step.</p>
+    <p class="text-center opacity-80 text-base mt-2">
+      Updated weekly from JSON — simple to edit, zero build step.
+    </p>
     <div class="mt-4 flex items-center justify-center gap-3">
       <button id="rulesBtn" class="tab-btn px-3 py-1.5 rounded-lg text-sm">Rules</button>
       <a id="repoLink" class="text-sm underline opacity-90 hover:opacity-100" target="_blank" rel="noreferrer">View on GitHub</a>
@@ -146,7 +144,7 @@
 
   <!-- Rules Modal -->
   <div id="rulesModal" class="modal-backdrop">
-    <div class="card p-6 max-w-[600px] mx-4">
+    <div class="card p-6">
       <h3 class="riddle-title text-xl font-extrabold mb-3 text-center">League Rules</h3>
       <ol class="list-decimal pl-5 space-y-2 text-sm leading-6">
         <li><span class="rule-key">Submit</span> Sunday game picks before <span class="rule-key">6 PM UK</span>.</li>
@@ -161,68 +159,13 @@
     </div>
   </div>
 
-  <!-- Player Profile Modal -->
-  <div id="playerProfile" class="modal-backdrop">
-    <div class="profile-panel card p-5 sm:p-7 relative mx-4">
-      <button id="closeProfile" class="close-btn" aria-label="Close profile">✕</button>
-
-      <!-- Header: avatar + name + team -->
-      <div class="flex items-center gap-4">
-        <img id="profAvatar" class="w-20 h-20 rounded-full ring-4 ring-amber-400 object-cover" alt="">
-        <div class="min-w-0">
-          <h3 id="profName" class="riddle-title text-2xl">Player</h3>
-          <div id="teamRow" class="mt-2 hidden">
-            <span class="team-pill">
-              <img id="profTeamLogo" alt="" class="w-6 h-6 rounded-sm object-contain">
-              <span id="profTeamName" class="text-sm">Team</span>
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Stats grid -->
-      <div class="grid sm:grid-cols-4 gap-4 mt-5">
-        <div class="stat-card">
-          <div class="text-xs opacity-80">Total Points</div>
-          <div id="statTotal" class="text-2xl mt-1">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="text-xs opacity-80">Games Played</div>
-          <div id="statPlayed" class="text-2xl mt-1">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="text-xs opacity-80">Avg / Game</div>
-          <div id="statAvg" class="text-2xl mt-1">0.00</div>
-        </div>
-        <div class="stat-card">
-          <div class="text-xs opacity-80">Best Week</div>
-          <div id="statBest" class="text-2xl mt-1">W– 0</div>
-        </div>
-      </div>
-
-      <div class="stat-card mt-4">
-        <div class="text-xs opacity-80">Longest Scoring Streak</div>
-        <div id="statStreak" class="text-2xl mt-1">0 weeks</div>
-      </div>
-
-      <!-- Metrics explainer -->
-      <div class="mt-5">
-        <button id="metricsInfoBtn" class="tab-btn px-3 py-1.5 rounded-lg text-sm">What do these mean?</button>
-        <div id="metricsInfoPanel" class="hidden mt-3 card p-4">
-          <ul class="list-disc pl-5 space-y-2 text-sm leading-6">
-            <li><span class="rule-key">Total Points</span>: Sum of all points you’ve earned this season.</li>
-            <li><span class="rule-key">Games Played</span>: Weeks where you have a recorded score (missed = not counted).</li>
-            <li><span class="rule-key">Avg / Game</span>: Total Points ÷ Games Played.</li>
-            <li><span class="rule-key">Best Week</span>: Your single highest weekly score and which week it happened.</li>
-            <li><span class="rule-key">Longest Scoring Streak</span>: Most consecutive weeks with more than 0 points.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+  <!-- Profile Modal -->
+  <div id="profileModal" class="modal-backdrop">
+    <div class="player-profile-card profile-panel p-6 relative"></div>
   </div>
 
   <script>
-    /* ---------- Helpers ---------- */
+    /* ---------- Rendering helpers ---------- */
     function medal(rank){
       if(rank===0) return {emoji:"🥇", color:"from-yellow-400 to-yellow-600", name:"Gold"};
       if(rank===1) return {emoji:"🥈", color:"from-gray-300 to-gray-500", name:"Silver"};
@@ -234,149 +177,31 @@
       const playersById = Object.fromEntries(players.map(p=>[p.id,p]));
       const weekNums = [...new Set(weeks.map(w=>w.week))].sort((a,b)=>a-b);
 
-      const totals = players.map(p=>({ id:p.id, name:p.name, avatar:p.avatar, total:0, perWeek:{} }));
+      const totals = players.map(p=>({ id:p.id, name:p.name, avatar:p.avatar, team:p.team, teamLogo:p.teamLogo, total:0, perWeek:{} }));
       const idx = Object.fromEntries(totals.map(t=>[t.id,t]));
 
       weeks.forEach(w=>{
         const scores = w.scores || {};
         for(const [pid,pts] of Object.entries(scores)){
           const t = idx[pid]; if(!t) continue;
-          const val = Number(pts)||0;
-          t.total += val;
-          t.perWeek[w.week] = val; // undefined => missed week
+          const val = Number(pts);
+          if(!Number.isNaN(val)){
+            t.total += val;
+            t.perWeek[w.week] = val;
+          }
         }
       });
 
       return { playersById, totals, weekNums };
     }
 
-    function playerCard(p, rank, view, selectedWeek){
-      const m = medal(rank);
-      let value = p.total, label = 'Total';
-      if(view==='week'){ value = p.perWeek[selectedWeek]||0; label = `Week ${selectedWeek}`; }
-
-      return `
-        <article class="player-card p-4 relative cursor-pointer" data-player="${p.id}">
-          ${m ? `<div class="absolute -top-4 -right-3 bg-gradient-to-b ${m.color}
-                           text-xl rounded-full w-12 h-12 grid place-items-center"
-                     title="${m.name}">${m.emoji}</div>` : ''}
-
-          <div class="flex items-center gap-3">
-            <img src="${p.avatar}" alt="${p.name}" class="avatar border border-[var(--line)]"/>
-            <div class="min-w-0">
-              <div class="font-extrabold text-lg truncate">${p.name}</div>
-            </div>
-          </div>
-
-          <div class="mt-3 grid text-center">
-            <div class="rounded-xl border border-[var(--line)] py-3">
-              <div class="text-xs opacity-80">${label}</div>
-              <div class="text-2xl font-extrabold">${value}</div>
-            </div>
-          </div>
-
-          <!-- Profile button: opens modal, does NOT select the card -->
-          <div class="mt-3 flex justify-end">
-            <button class="tab-btn px-3 py-1 rounded-lg text-xs" data-open-profile="${p.id}">Profile</button>
-          </div>
-        </article>`;
-    }
-
-    function renderLeaderboard(totals, view, selectedWeek){
-      const sorted = [...totals].sort((a,b)=>{
-        if(view==='week') return (b.perWeek[selectedWeek]||0) - (a.perWeek[selectedWeek]||0);
-        return b.total - a.total;
-      });
-      const el = document.getElementById('leaderboard');
-      el.innerHTML = sorted.map((p,i)=>playerCard(p,i,view,selectedWeek)).join('');
-
-      // Click behaviors:
-      const cards = [...el.querySelectorAll('[data-player]')];
-
-      // Selecting (yellow glow) by clicking the card area
-      cards.forEach(card=>{
-        card.addEventListener('click', (e)=>{
-          // if the click was on the Profile button, ignore (that handler below)
-          if (e.target.closest('[data-open-profile]')) return;
-          setSelected(card.getAttribute('data-player'));
-        });
-      });
-
-      // Open profile buttons
-      el.querySelectorAll('[data-open-profile]').forEach(btn=>{
-        btn.addEventListener('click', (e)=>{
-          e.stopPropagation();
-          openProfile(btn.getAttribute('data-open-profile'));
-        });
-      });
-
-      // Keep previous selection highlighted after re-render, if any
-      if (window.selectedPlayerId){
-        const sel = el.querySelector(`[data-player="${window.selectedPlayerId}"]`);
-        if (sel) sel.classList.add('selected');
-      }
-    }
-
-    function setSelected(playerId){
-      window.selectedPlayerId = playerId;
-      document.querySelectorAll('#leaderboard .player-card').forEach(c=>{
-        c.classList.toggle('selected', c.getAttribute('data-player') === playerId);
-      });
-    }
-
-    function renderHighlight(cfg, playersById){
-      const el = document.getElementById('highlight'); if(!el) return;
-      const wId = cfg?.highlight?.winner, sId = cfg?.highlight?.spoon;
-      const w = wId && playersById[wId]; const s = sId && playersById[sId];
-
-      el.innerHTML = `
-        <div class="text-center space-y-2">
-          <h4 class="font-extrabold text-amber-400 text-xl sm:text-2xl">
-            ${cfg?.season ? `${cfg.season} Season Winner!` : 'Season Winner!'}
-          </h4>
-          ${ w ? `
-            <div class="mx-auto w-28 h-28 rounded-full overflow-hidden ring-4 ring-amber-400 shadow-lg
-                        transition-transform duration-300 hover:scale-110 hover:ring-amber-300 hover:shadow-xl">
-              <img src="${w.avatar}" alt="${w.name}" class="w-full h-full object-cover">
-            </div>
-            <div class="font-extrabold text-lg">${w.name}</div>` : `<div class="opacity-60">TBD</div>` }
-        </div>
-        <div class="text-center space-y-2">
-          <h4 class="font-extrabold text-xl sm:text-2xl">🥄 Current Wooden Spoon Holder!</h4>
-          ${ s ? `
-            <div class="mx-auto w-28 h-28 rounded-full overflow-hidden ring-4 ring-red-400 shadow-lg
-                        transition-transform duration-300 hover:scale-110 hover:ring-red-300 hover:shadow-xl">
-              <img src="${s.avatar}" alt="${s.name}" class="w-full h-full object-cover">
-            </div>
-            <div class="font-extrabold text-lg">${s.name}</div>` : `<div class="opacity-60">TBD</div>` }
-        </div>`;
-    }
-
-    function renderHonorary(cfg, playersById){
-      const el = document.getElementById('honorary'); if(!el) return;
-      const items = (cfg?.honorary || [])
-        .slice().sort((a,b)=>b.year - a.year)
-        .map(h=>{
-          const p = playersById[h.player] || { name:h.player, avatar:'Assets/football2.jpg' };
-          return `
-            <li class="flex flex-col items-center text-center">
-              <div class="w-24 h-24 rounded-full overflow-hidden ring-4 ring-amber-400 shadow-lg
-                          transition-transform duration-300 hover:scale-110 hover:ring-amber-300 hover:shadow-xl">
-                <img src="${p.avatar}" alt="${p.name}" class="w-full h-full object-cover">
-              </div>
-              <div class="mt-2 font-semibold">${h.year} - ${p.name}</div>
-            </li>`;
-        }).join('');
-      el.innerHTML = items || '<div class="opacity-60 text-center">No honorary winners yet.</div>';
-    }
-
-    /* ---------- Stats for Profile ---------- */
+    /* ---------- Stats for Profile (counts only weeks with a defined score) ---------- */
     function calcStats(playerId){
       const { totals, weekNums, playersById } = window.state;
       const p = totals.find(t=>t.id===playerId);
       if(!p) return null;
 
-      const scores = weekNums.map(w => Number(p.perWeek[w] ?? NaN));
+      const scores = weekNums.map(w => Number.isFinite(Number(p.perWeek[w])) ? Number(p.perWeek[w]) : NaN);
       const defined = scores.filter(v => !Number.isNaN(v));
       const gamesPlayed = defined.length;
       const total = defined.reduce((a,b)=>a+b,0);
@@ -386,11 +211,11 @@
       let bestPts = -Infinity, bestWeek = null;
       weekNums.forEach((w,idx)=>{
         const v = scores[idx];
-        if(!Number.isNaN(v) && v >= 0){
+        if(!Number.isNaN(v)){
           if (v > bestPts){ bestPts = v; bestWeek = w; }
         }
       });
-      if(bestPts===-Infinity){ bestPts = 0; bestWeek = '–'; }
+      if(bestPts===-Infinity){ bestPts = 0; bestWeek = null; }
 
       // Longest scoring streak (>0)
       let cur = 0, best = 0;
@@ -404,40 +229,113 @@
         totalPoints: total,
         gamesPlayed,
         avgPerGame: avg,
-        bestWeekLabel: bestWeek,
-        bestWeekPoints: bestPts,
-        longestStreak: best
+        bestWeek: bestWeek,
+        bestPoints: bestPts,
+        longest: best
       };
     }
 
-    function openProfile(playerId){
-      const st = calcStats(playerId); if(!st) return;
-      const modal = document.getElementById('playerProfile');
+    function playerCard(p, rank, view, selectedWeek){
+      const m = medal(rank);
+      let value = p.total, label = 'Total';
+      if(view==='week'){ value = p.perWeek[selectedWeek]||0; label = `Week ${selectedWeek}`; }
 
-      // header
-      document.getElementById('profAvatar').src = st.player.avatar;
-      document.getElementById('profAvatar').alt = st.player.name;
-      document.getElementById('profName').textContent = st.player.name;
+      return `
+        <article class="player-card p-4" data-player="${p.id}">
+          ${m ? `<div class="absolute -mt-6 -mr-3 right-0 bg-gradient-to-b ${m.color}
+                           text-xl rounded-full w-12 h-12 grid place-items-center"
+                     title="${m.name}">${m.emoji}</div>` : ''}
 
-      // team info (optional)
-      const teamRow = document.getElementById('teamRow');
-      if(st.player.team && st.player.teamLogo){
-        document.getElementById('profTeamLogo').src = st.player.teamLogo;
-        document.getElementById('profTeamLogo').alt = st.player.team;
-        document.getElementById('profTeamName').textContent = st.player.team;
-        teamRow.classList.remove('hidden');
-      }else{
-        teamRow.classList.add('hidden');
-      }
+          <div class="flex items-center gap-3">
+            <img src="${p.avatar}" alt="${p.name}" class="avatar border border-[var(--line)]"/>
+            <div class="min-w-0">
+              <div class="font-extrabold text-lg truncate">${p.name}</div>
+              ${p.team ? `<div class="text-xs opacity-80 flex items-center gap-1 mt-0.5">
+                ${p.teamLogo ? `<img src="${p.teamLogo}" alt="${p.team}" class="w-4 h-4 rounded-sm border border-[var(--line)]">` : ''}
+                <span>${p.team||''}</span>
+              </div>`:''}
+            </div>
+          </div>
 
-      // stats
-      document.getElementById('statTotal').textContent  = st.totalPoints.toString();
-      document.getElementById('statPlayed').textContent = st.gamesPlayed.toString();
-      document.getElementById('statAvg').textContent    = st.avgPerGame.toFixed(2);
-      document.getElementById('statBest').textContent   = (st.bestWeekLabel==='–' ? '—' : `W${st.bestWeekLabel}: ${st.bestWeekPoints}`);
-      document.getElementById('statStreak').textContent = `${st.longestStreak} week${st.longestStreak===1?'':'s'}`;
+          <div class="mt-3 grid text-center">
+            <div class="rounded-xl border border-[var(--line)] py-3">
+              <div class="text-xs opacity-80">${label}</div>
+              <div class="text-2xl font-extrabold">${value}</div>
+            </div>
+          </div>
 
-      modal.classList.add('open');
+          <div class="mt-4 flex justify-end">
+            <button class="tab-btn px-2 py-1 rounded-md text-xs profile-btn" data-player="${p.id}">Profile</button>
+          </div>
+        </article>`;
+    }
+
+    function renderLeaderboard(totals, view, selectedWeek){
+      const sorted = [...totals].sort((a,b)=>{
+        if(view==='week') return ( (b.perWeek[selectedWeek]||0) - (a.perWeek[selectedWeek]||0) );
+        return b.total - a.total;
+      });
+      document.getElementById('leaderboard').innerHTML =
+        sorted.map((p,i)=>playerCard(p,i,view,selectedWeek)).join('');
+    }
+
+    /* Season highlight */
+    function renderHighlight(cfg, playersById){
+      const el = document.getElementById('highlight');
+      if(!el) return;
+
+      const wId = cfg?.highlight?.winner;
+      const sId = cfg?.highlight?.spoon;
+      const w = wId && playersById[wId];
+      const s = sId && playersById[sId];
+
+      el.innerHTML = `
+        <div class="text-center space-y-2">
+          <h4 class="font-extrabold text-amber-400 text-xl sm:text-2xl">
+            ${cfg?.season ? `${cfg.season} Season Winner!` : 'Season Winner!'}
+          </h4>
+          ${ w
+            ? `<div class="mx-auto w-28 h-28 rounded-full overflow-hidden ring-4 ring-amber-400 shadow-lg
+                           transition-transform duration-300 hover:scale-110 hover:ring-amber-300 hover:shadow-xl">
+                 <img src="${w.avatar}" alt="${w.name}" class="w-full h-full object-cover">
+               </div>
+               <div class="font-extrabold text-lg">${w.name}</div>`
+            : `<div class="opacity-60">TBD</div>` }
+        </div>
+        <div class="text-center space-y-2">
+          <h4 class="font-extrabold text-xl sm:text-2xl">🥄 Current Wooden Spoon Holder!</h4>
+          ${ s
+            ? `<div class="mx-auto w-28 h-28 rounded-full overflow-hidden ring-4 ring-red-400 shadow-lg
+                           transition-transform duration-300 hover:scale-110 hover:ring-red-300 hover:shadow-xl">
+                 <img src="${s.avatar}" alt="${s.name}" class="w-full h-full object-cover">
+               </div>
+               <div class="font-extrabold text-lg">${s.name}</div>`
+            : `<div class="opacity-60">TBD</div>` }
+        </div>
+      `;
+    }
+
+    /* Honorary winners */
+    function renderHonorary(cfg, playersById){
+      const el = document.getElementById('honorary');
+      if(!el) return;
+
+      const items = (cfg?.honorary || [])
+        .slice()
+        .sort((a,b)=> b.year - a.year)
+        .map(h=>{
+          const p = playersById[h.player] || { name:h.player, avatar:'Assets/football2.jpg' };
+          return `
+            <li class="flex flex-col items-center text-center">
+              <div class="w-24 h-24 rounded-full overflow-hidden ring-4 ring-amber-400 shadow-lg
+                          transition-transform duration-300 hover:scale-110 hover:ring-amber-300 hover:shadow-xl">
+                <img src="${p.avatar}" alt="${p.name}" class="w-full h-full object-cover">
+              </div>
+              <div class="mt-2 font-semibold">${h.year} - ${p.name}</div>
+            </li>`;
+        }).join('');
+
+      el.innerHTML = items || '<div class="opacity-60 text-center">No honorary winners yet.</div>';
     }
 
     /* ---------- Data I/O ---------- */
@@ -446,7 +344,87 @@
       if(!res.ok) throw new Error("Failed to load "+path);
       return await res.json();
     }
+
     const paths = { players:"players.json", weeks:"weeks.json", config:"config.json" };
+
+    /* ---------- Profile Modal helpers ---------- */
+    function openProfile(playerId){
+      const { playersById } = window.state;
+      const player = playersById[playerId];
+      if(!player) return;
+
+      const stats = calcStats(playerId);
+
+      const panel = document.querySelector('#profileModal .player-profile-card');
+      panel.innerHTML = `
+        <button class="close-btn" aria-label="Close profile" onclick="closeProfile()">✕</button>
+
+        <div class="flex flex-col items-center space-y-4">
+          <img src="${player.avatar}" alt="${player.name}" class="w-24 h-24 rounded-full border border-[var(--line)]"/>
+          <h3 class="text-2xl font-extrabold">${player.name}</h3>
+          ${player.team ? `
+          <div class="team-pill">
+            ${player.teamLogo ? `<img src="${player.teamLogo}" alt="${player.team}" class="w-6 h-6 rounded-sm border border-[var(--line)]">` : ''}
+            <span>${player.team}</span>
+          </div>`:''}
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6">
+          <div class="stat-card">
+            <div class="text-sm opacity-75">Total Points</div>
+            <div class="text-xl font-extrabold">${stats.totalPoints}</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-sm opacity-75">Games Played</div>
+            <div class="text-xl font-extrabold">${stats.gamesPlayed}</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-sm opacity-75">Avg / Game</div>
+            <div class="text-xl font-extrabold">${stats.avgPerGame.toFixed(2)}</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-sm opacity-75">Best Week</div>
+            <div class="text-xl font-extrabold">
+              ${stats.bestWeek ? `W${stats.bestWeek}` : '—'}${stats.bestWeek ? ` (${stats.bestPoints})` : ''}
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="text-sm opacity-75">Longest Streak</div>
+            <div class="text-xl font-extrabold">${stats.longest}</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-sm opacity-75">Missed Weeks</div>
+            <div class="text-xl font-extrabold">${Math.max(0, (window.state.weekNums?.length||0) - stats.gamesPlayed)}</div>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <button id="metricsHelpBtn" class="tab-btn px-3 py-1.5 rounded-lg text-sm">What do these mean?</button>
+          <div id="metricsHelp" class="mt-3 hidden text-sm leading-6 bg-black/40 border border-[var(--line)] rounded-lg p-3">
+            <p><span class="rule-key">Total Points</span>: Sum of all your weekly points recorded.</p>
+            <p><span class="rule-key">Games Played</span>: Weeks where you have a recorded score (not just 0s added later).</p>
+            <p><span class="rule-key">Avg / Game</span>: Total ÷ Games Played.</p>
+            <p><span class="rule-key">Best Week</span>: Your highest single-week score (shows week number).</p>
+            <p><span class="rule-key">Longest Streak</span>: Consecutive weeks with &gt; 0 points.</p>
+            <p><span class="rule-key">Missed Weeks</span>: Scheduled weeks with no score for you.</p>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('profileModal').classList.add('open');
+      // toggle help
+      const helpBtn = document.getElementById('metricsHelpBtn');
+      const help = document.getElementById('metricsHelp');
+      helpBtn.onclick = ()=> help.classList.toggle('hidden');
+    }
+
+    function closeProfile(){
+      document.getElementById('profileModal').classList.remove('open');
+    }
+    // Close when clicking the dim backdrop
+    document.getElementById('profileModal').addEventListener('click', (e)=>{
+      if(e.target.id === 'profileModal') closeProfile();
+    });
 
     /* ---------- Boot ---------- */
     (async function boot(){
@@ -457,25 +435,30 @@
           loadJSON(paths.config).catch(()=>({}))
         ]);
 
-        const state = compute({ players, weeks });
-        window.state = state;
+        // expose config players additions: expect team/teamLogo fields exist in players.json
+        window.state = compute({ players, weeks });
 
-        // Week dropdown (ascending), default to Week 1; "Total" is separate
+        // Week dropdown (ascending), default Week 1
         const weekSel = document.getElementById('weekSelect');
         const totalBtn = document.getElementById('totalBtn');
 
-        weekSel.innerHTML = state.weekNums.map(w=>`<option value="${w}">Week ${w}</option>`).join('');
-        if(state.weekNums.length) weekSel.value = String(state.weekNums[0]); // Week 1
+        weekSel.innerHTML = window.state.weekNums
+          .map(w => `<option value="${w}">Week ${w}</option>`)
+          .join('');
+        if (window.state.weekNums.length) {
+          weekSel.value = String(window.state.weekNums[0]); // Week 1
+        }
 
         // Initial renders
-        renderHighlight(config, state.playersById);
-        renderHonorary(config, state.playersById);
+        renderLeaderboard(window.state.totals, 'total'); // All first
+        renderHighlight(config, window.state.playersById);
+        renderHonorary(config, window.state.playersById);
 
-        // Always start on Total (also when coming back via history)
+        // Always start on All (also on back/forward)
         function resetToAll(){
           totalBtn.setAttribute('aria-selected','true');
-          if(state.weekNums.length) weekSel.selectedIndex = 0;
-          renderLeaderboard(state.totals, 'total');
+          if (window.state.weekNums.length) weekSel.selectedIndex = 0;
+          renderLeaderboard(window.state.totals, 'total');
         }
         resetToAll();
         window.addEventListener('pageshow', resetToAll);
@@ -483,36 +466,42 @@
         // Interactions
         totalBtn.addEventListener('click', ()=>{
           totalBtn.setAttribute('aria-selected','true');
-          renderLeaderboard(state.totals, 'total');
+          renderLeaderboard(window.state.totals, 'total');
         });
         weekSel.addEventListener('change', ()=>{
           totalBtn.setAttribute('aria-selected','false');
-          renderLeaderboard(state.totals, 'week', Number(weekSel.value));
+          renderLeaderboard(window.state.totals, 'week', Number(weekSel.value));
         });
 
-        // Repo link
+        // Leaderboard interactions: select card VS open profile
+        const board = document.getElementById('leaderboard');
+        board.addEventListener('click', (e)=>{
+          const btn = e.target.closest('.profile-btn');
+          if(btn){
+            const pid = btn.getAttribute('data-player');
+            openProfile(pid);
+            return;
+          }
+          const card = e.target.closest('.player-card');
+          if(card){
+            // toggle selection UI (only one selected at a time)
+            [...board.querySelectorAll('.player-card')].forEach(c=>c.classList.remove('selected'));
+            card.classList.add('selected');
+          }
+        });
+
+        // Repo link + rules modal
         const repoLink = document.getElementById('repoLink');
         if(repoLink) repoLink.href = config.repoUrl || '#';
 
-        // Rules modal
         const rulesModal = document.getElementById('rulesModal');
         document.getElementById('rulesBtn').addEventListener('click', ()=> rulesModal.classList.add('open'));
         document.getElementById('closeRules').addEventListener('click', ()=> rulesModal.classList.remove('open'));
         rulesModal.addEventListener('click', e=>{ if(e.target===rulesModal) rulesModal.classList.remove('open'); });
 
-        // Profile modal close + metrics explainer toggle
-        const profileModal = document.getElementById('playerProfile');
-        const closeProfile = ()=> profileModal.classList.remove('open');
-        document.getElementById('closeProfile').addEventListener('click', closeProfile);
-        profileModal.addEventListener('click', e=>{ if(e.target===profileModal) closeProfile(); });
-        window.addEventListener('keydown', e=>{ if(e.key==='Escape') closeProfile(); });
-
-        const infoBtn = document.getElementById('metricsInfoBtn');
-        const infoPanel = document.getElementById('metricsInfoPanel');
-        infoBtn.addEventListener('click', ()=> infoPanel.classList.toggle('hidden'));
-
         // Footer year
         document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+
       }catch(err){
         console.error(err);
         const msg = document.createElement('div');

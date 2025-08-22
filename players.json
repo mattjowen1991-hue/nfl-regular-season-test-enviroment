@@ -1,10 +1,15 @@
 [
-{ "id": "matt", "name": "Matt", "avatar": "Assets/matt.png" },
-{ "id": "jarv", "name": "Jarv", "avatar": "Assets/jarv.png" },
-{ "id": "gaz", "name": "Gaz", "avatar": "Assets/gaz.png" },
-{ "id": "joe", "name": "Joe", "avatar": "Assets/joe.png" },
-{ "id": "ben", "name": "Ben", "avatar": "Assets/ben.png" },
-{ "id": "coley", "name": "Coley", "avatar": "Assets/coley.png" },
-{ "id": "mark", "name": "Mark", "avatar": "Assets/mark.png" },
-{ "id": "ste", "name": "Ste", "avatar": "Assets/ste.png" }
+  { "id": "matt", "name": "Matt", "avatar": "Assets/matt.png" },
+  { "id": "jarv", "name": "Jarv", "avatar": "Assets/jarv.png" },
+  { "id": "gaz", "name": "Gaz", "avatar": "Assets/gaz.png" },
+  { "id": "joe", "name": "Joe", "avatar": "Assets/joe.png" },
+  { "id": "ben", "name": "Ben", "avatar": "Assets/ben.png" },
+  { "id": "coley", "name": "Coley", "avatar": "Assets/coley.png" },
+  { "id": "mark", "name": "Mark", "avatar": "Assets/mark.png" },
+  { "id": "ste", "name": "Ste", "avatar": "Assets/ste.png" },
+
+  { "id": "donuts", "name": "Donuts", "avatar": "Assets/donuts.png" },
+  { "id": "jay", "name": "Jay", "avatar": "Assets/jay.png" },
+  { "id": "lee", "name": "Lee", "avatar": "Assets/lee.png" },
+  { "id": "liam", "name": "Liam", "avatar": "Assets/liam.png" }
 ]

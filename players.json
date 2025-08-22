@@ -1,0 +1,10 @@
+[
+{ "id": "matt", "name": "Matt", "avatar": "Assets/matt.png" },
+{ "id": "jarv", "name": "Jarv", "avatar": "Assets/jarv.png" },
+{ "id": "gaz", "name": "Gaz", "avatar": "Assets/gaz.png" },
+{ "id": "joe", "name": "Joe", "avatar": "Assets/joe.png" },
+{ "id": "ben", "name": "Ben", "avatar": "Assets/ben.png" },
+{ "id": "coley", "name": "Coley", "avatar": "Assets/coley.png" },
+{ "id": "mark", "name": "Mark", "avatar": "Assets/mark.png" },
+{ "id": "ste", "name": "Ste", "avatar": "Assets/ste.png" }
+]

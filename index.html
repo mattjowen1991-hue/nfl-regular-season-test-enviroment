@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NFL League Scores</title>
+
+  <!-- Tailwind utilities -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root { --line: rgba(255,255,255,0.15); --theme:#2563eb; }
+
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
+        url('Assets/football-field.jpeg') center / cover no-repeat scroll;
+      color:#fff; margin:0; min-height:100vh;
+    }
+
+    .riddle-title { font-family: Cinzel, serif; letter-spacing:.02em; }
+    .card { background: rgba(0,0,0,.50); border:1px solid var(--line); border-radius:1rem; box-shadow:0 4px 12px rgba(0,0,0,.5); }
+    .tab-btn, .pill { background: rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; transition:background .2s; }
+    .tab-btn[aria-selected="true"]{ background: var(--theme); }
+    .pill{ border-radius:.75rem; }
+    .avatar{ width:48px; height:48px; border-radius:50%; object-fit:cover; }
+    .grid-auto{ display:grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap:1rem; }
+
+    @media (max-width: 640px){
+      header .riddle-title{ font-size:1.5rem }
+      .card{ padding:1rem !important }
+      .tab-btn, .pill{ font-size:1rem; padding:.5rem 1rem }
+    }
+
+    /* Modal styles */
+    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; z-index:50; }
+    .modal-backdrop.open { display:flex; align-items:center; justify-content:center; }
+    .modal-backdrop .card {
+      background:#111; border:1px solid var(--line); border-radius:1rem;
+      max-width:600px; padding:1.5rem; margin:1rem; box-shadow:0 8px 20px rgba(0,0,0,.6);
+    }
+  </style>
+</head>
+<body>
+  <header class="max-w-xl mx-auto px-4 pt-6 pb-3">
+    <div class="flex items-center justify-center">
+      <img src="Assets/nfl-logo.png" alt="NFL" class="w-12 h-12 rounded-md shadow-lg">
+    </div>
+    <h1 class="riddle-title text-center font-extrabold mt-3"
+        style="font-size:clamp(1.4rem, 4.8vw, 2rem); line-height:1.15;">
+      NFL League
+      <span class="block">Regular Season</span>
+    </h1>
+    <p class="text-center opacity-80 text-base mt-2">
+      Updated weekly from JSON — simple to edit, zero build step.
+    </p>
+    <div class="mt-4 flex items-center justify-center gap-3">
+      <button id="rulesBtn" class="tab-btn px-3 py-1.5 rounded-lg text-sm">Rules</button>
+      <a id="repoLink" class="text-sm underline opacity-90 hover:opacity-100" target="_blank" rel="noreferrer">View on GitHub</a>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 pb-24 space-y-6">
+    <!-- Weekly Scores -->
+    <section class="card p-5 sm:p-7">
+      <div class="flex items-center justify-between">
+        <h2 class="riddle-title text-2xl sm:text-3xl font-extrabold">Weekly Scores</h2>
+        <div class="flex gap-2 items-center">
+          <button id="totalBtn" class="tab-btn px-3 py-1.5 rounded-lg text-sm" aria-selected="true">Total</button>
+          <select id="weekSelect" class="pill px-2 py-1 rounded-lg text-sm"></select>
+        </div>
+      </div>
+      <div id="leaderboard" class="mt-5 grid-auto"></div>
+    </section>
+
+    <!-- Season Highlight -->
+    <section class="card p-5 sm:p-7">
+      <h3 class="riddle-title text-xl sm:text-2xl font-extrabold">Season Highlight</h3>
+      <div id="highlight" class="mt-4 grid sm:grid-cols-2 gap-6"></div>
+    </section>
+
+    <!-- Honorary Winners -->
+    <section class="card p-5 sm:p-7">
+      <h3 class="riddle-title text-xl sm:text-2xl font-extrabold">Honorary Winners</h3>
+      <ul id="honorary" class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></ul>
+    </section>
+  </main>
+
+  <footer class="text-center text-sm opacity-75 py-6">
+    <p>&copy; <span id="copyrightYear"></span> NFL League</p>
+  </footer>
+
+  <!-- Rules Modal -->
+  <div id="rulesModal" class="modal-backdrop">
+    <div class="card">
+      <h3 class="riddle-title text-xl font-extrabold mb-3 text-center">League Rules</h3>
+      <ol class="list-decimal pl-5 space-y-2 text-sm leading-6">
+        <li>Submit Sunday game picks before <b>6 PM UK</b>.</li>
+        <li>Each correct prediction earns <b>1 point</b>.</li>
+        <li><b>Perfect Week:</b> all Sunday games correct = <b>+2 bonus</b>.</li>
+        <li><b>Specials:</b> Thanksgiving & International games score <b>double</b>.</li>
+        <li>Ties are shared positions (no tiebreaker).</li>
+      </ol>
+      <div class="mt-4 text-right">
+        <button id="closeRules" class="tab-btn px-3 py-1.5 rounded-lg text-sm">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function renderHighlight(cfg, playersById){
+      const el = document.getElementById('highlight');
+      if(!el) return;
+
+      const wId = cfg?.highlight?.winner;
+      const sId = cfg?.highlight?.spoon;
+      const w = wId && playersById[wId];
+      const s = sId && playersById[sId];
+
+      el.innerHTML = `
+        <div class="text-center space-y-2">
+          <h4 class="font-extrabold text-amber-400 text-xl sm:text-2xl">
+            ${cfg?.season ? `${cfg.season} Season Winner!` : 'Season Winner!'}
+          </h4>
+          ${ w
+            ? `<div class="mx-auto w-28 h-28 rounded-full overflow-hidden ring-4 ring-amber-400 shadow-lg">
+                 <img src="${w.avatar}" alt="${w.name}" class="w-full h-full object-cover">
+               </div>
+               <div class="font-extrabold text-lg">${w.name}</div>`
+            : `<div class="opacity-60">TBD</div>` }
+        </div>
+        <div class="text-center space-y-2">
+          <h4 class="font-extrabold text-xl sm:text-2xl">🥄 Current Wooden Spoon Holder!</h4>
+          ${ s
+            ? `<div class="mx-auto w-28 h-28 rounded-full overflow-hidden ring-4 ring-red-400 shadow-lg">
+                 <img src="${s.avatar}" alt="${s.name}" class="w-full h-full object-cover">
+               </div>
+               <div class="font-extrabold text-lg">${s.name}</div>`
+            : `<div class="opacity-60">TBD</div>` }
+        </div>
+      `;
+    }
+
+    function renderHonorary(cfg, playersById){
+      const el = document.getElementById('honorary');
+      if(!el) return;
+
+      const items = (cfg?.honorary || [])
+        .slice()
+        .sort((a,b)=> b.year - a.year)
+        .map(h=>{
+          const p = playersById[h.player] || { name:h.player, avatar:'Assets/football2.jpg' };
+          return `
+            <li class="flex flex-col items-center text-center">
+              <div class="w-24 h-24 rounded-full overflow-hidden ring-4 ring-amber-400 shadow-lg">
+                <img src="${p.avatar}" alt="${p.name}" class="w-full h-full object-cover">
+              </div>
+              <div class="mt-2 font-semibold">${h.year} - ${p.name}</div>
+            </li>`;
+        }).join('');
+
+      el.innerHTML = items || '<div class="opacity-60 text-center">No honorary winners yet.</div>';
+    }
+
+    function medal(rank){
+      if(rank===0) return {emoji:"🥇", color:"from-yellow-400 to-yellow-600", name:"Gold"};
+      if(rank===1) return {emoji:"🥈", color:"from-gray-300 to-gray-500", name:"Silver"};
+      if(rank===2) return {emoji:"🥉", color:"from-amber-600 to-amber-800", name:"Bronze"};
+      return null;
+    }
+
+    function compute(tables){
+      const { players, weeks } = tables;
+      const byId = Object.fromEntries(players.map(p=>[p.id,p]));
+      const weekNums = [...new Set(weeks.map(w=>w.week))].sort((a,b)=>a-b);
+
+      const totals = players.map(p=>({ id:p.id, name:p.name, avatar:p.avatar, total:0, perWeek:{} }));
+      const idx = Object.fromEntries(totals.map(t=>[t.id,t]));
+
+      weeks.forEach(w=>{
+        const scores = w.scores || {};
+        for(const [pid,pts] of Object.entries(scores)){
+          const t = idx[pid]; if(!t) continue;
+          const val = Number(pts)||0;
+          t.total += val;
+          t.perWeek[w.week] = val;
+        }
+      });
+
+      return { playersById:byId, totals, weekNums };
+    }
+
+    function playerCard(p, rank, view, selectedWeek){
+      const m = medal(rank);
+      let value = p.total, label = 'Total';
+      if(view==='week'){ value = p.perWeek[selectedWeek]||0; label = `Week ${selectedWeek}`; }
+
+      return `
+        <article class="relative bg-black/70 rounded-2xl p-4 border border-[var(--line)] hover:-translate-y-[2px] transition">
+          ${m ? `<div class="absolute -top-4 -right-3 bg-gradient-to-b ${m.color} text-xl rounded-full w-12 h-12 grid place-items-center" title="${m.name}">${m.emoji}</div>` : ''}
+          <div class="flex items-center gap-3">
+            <img src="${p.avatar}" alt="${p.name}" class="avatar border border-[var(--line)]">
+            <div class="min-w-0">
+              <div class="font-extrabold text-lg truncate">${p.name}</div>
+            </div>
+          </div>
+          <div class="mt-3 grid text-center">
+            <div class="rounded-xl border border-[var(--line)] py-3">
+              <div class="text-xs opacity-80">${label}</div>
+              <div class="text-2xl font-extrabold">${value}</div>
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function renderLeaderboard(totals, view, selectedWeek){
+      const sorted = [...totals].sort((a,b)=>{
+        if(view==='week') return (b.perWeek[selectedWeek]||0) - (a.perWeek[selectedWeek]||0);
+        return b.total - a.total;
+      });
+      document.getElementById('leaderboard').innerHTML =
+        sorted.map((p,i)=>playerCard(p,i,view,selectedWeek)).join('');
+    }
+
+    async function loadJSON(path){
+      const res = await fetch(path);
+      if(!res.ok) throw new Error("Failed to load "+path);
+      return await res.json();
+    }
+
+    const paths = { players:"players.json", weeks:"weeks.json", config:"config.json" };
+
+    (async function boot(){
+      try{
+        const [players, weeks, config] = await Promise.all([
+          loadJSON(paths.players),
+          loadJSON(paths.weeks),
+          loadJSON(paths.config).catch(()=>({}))
+        ]);
+
+        const state = compute({ players, weeks });
+        const weekSel = document.getElementById('weekSelect');
+        weekSel.innerHTML = state.weekNums.map(w=>`<option value="${w}">Week ${w}</option>`).join('');
+        if(state.weekNums.length) weekSel.value = String(state.weekNums[state.weekNums.length-1]);
+
+        renderLeaderboard(state.totals, 'total');
+        renderHighlight(config, state.playersById);
+        renderHonorary(config, state.playersById);
+
+        document.getElementById('totalBtn').addEventListener('click', ()=>{
+          document.getElementById('totalBtn').setAttribute('aria-selected','true');
+          renderLeaderboard(state.totals, 'total');
+        });
+        weekSel.addEventListener('change', ()=>{
+          document.getElementById('totalBtn').setAttribute('aria-selected','false');
+          renderLeaderboard(state.totals, 'week', Number(weekSel.value));
+        });
+
+        const repoLink = document.getElementById('repoLink');
+        if(repoLink) repoLink.href = config.repoUrl || '#';
+
+        const modal = document.getElementById('rulesModal');
+        document.getElementById('rulesBtn').addEventListener('click', ()=> modal.classList.add('open'));
+        document.getElementById('closeRules').addEventListener('click', ()=> modal.classList.remove('open'));
+        modal.addEventListener('click', e=>{ if(e.target===modal) modal.classList.remove('open'); });
+
+        document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+      }catch(err){
+        console.error(err);
+        const msg = document.createElement('div');
+        msg.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-xl text-sm shadow-lg';
+        msg.textContent = err.message;
+        document.body.appendChild(msg);
+      }
+    })();
+  </script>
+</body>
+</html>

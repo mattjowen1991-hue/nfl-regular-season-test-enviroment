@@ -5,110 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NFL League Scores</title>
 
-  <!-- Tailwind utilities -->
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Heading font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+  <!-- Preload bg -->
   <link rel="preload" as="image" href="Assets/football-field.jpeg">
 
   <style>
-  :root { --line: rgba(255,255,255,0.15); --theme:#2563eb; }
+    :root { --line: rgba(255,255,255,0.15); --theme:#2563eb; --nfl-red:#c8102e; }
 
-  /* ------------ Font ------------ */
-  @font-face {
-    font-family: 'Freshman';
-    src: url('Assets/Freshman.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  /* ------------ Background ------------ */
-  html, body { min-height: 100%; }
-  body {
-    font-family: 'Freshman', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    color:#fff;
-    margin:0;
-    background:#0b1220;
-    letter-spacing: 0.03em;
-  }
-
-  body::before {
-    content:"";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background:
-      linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
-      url('Assets/football-field.jpeg');
-    background-repeat: no-repeat;
-    background-position: center top;
-    background-size: cover;
-  }
-
-  @media (max-width: 640px){
-    body::before{
-      background-image:
-        linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
-        url('Assets/football-field-mobile.jpeg'),
-        url('Assets/football-field.jpeg');
-      background-position: center 20%;
-      background-size: cover;
+    /* Font – Freshman */
+    @font-face {
+      font-family: 'Freshman';
+      src: url('Assets/Freshman.ttf') format('truetype');
+      font-weight: normal; font-style: normal; font-display: swap;
     }
-  }
 
-  /* ------------ Rule highlights ------------ */
-  .rule-key {
-    color: #c8102e;   /* NFL red */
-    font-weight: 700;
-  }
+    /* Background (robust mobile) */
+    html, body { min-height:100%; }
+    body{
+      font-family: 'Freshman', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:#fff; margin:0; background:#0b1220; letter-spacing:.03em;
+    }
+    body::before{
+      content:""; position:fixed; inset:0; z-index:-1;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
+        url('Assets/football-field.jpeg');
+      background-repeat:no-repeat; background-position:center top; background-size:cover;
+      will-change:transform; transform:translateZ(0); -webkit-backface-visibility:hidden; pointer-events:none;
+    }
+    @media (max-width:640px){
+      body::before{
+        background-image:
+          linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
+          url('Assets/football-field-mobile.jpeg'),
+          url('Assets/football-field.jpeg');
+        background-position:center 20%; background-size:cover;
+      }
+    }
 
-  /* ------------ Typography ------------ */
-  h1, h2, h3, h4, .riddle-title {
-    font-family: 'Freshman', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 900;
-  }
-  .riddle-title { letter-spacing: 0.08em; }
-  .text-2xl, .text-xl, .font-extrabold {
-    font-family: 'Freshman', sans-serif;
-    letter-spacing: 0.06em;
-  }
+    /* Titles / numbers */
+    h1,h2,h3,h4,.riddle-title{ font-family:'Freshman',sans-serif; text-transform:uppercase; letter-spacing:.05em; font-weight:900; }
+    .riddle-title{ letter-spacing:.08em; }
+    .text-2xl,.text-xl,.font-extrabold{ font-family:'Freshman',sans-serif; letter-spacing:.06em; }
 
-  /* ------------ Helpers ------------ */
-  .card { background: rgba(0,0,0,.50); border:1px solid var(--line); border-radius:1rem; box-shadow:0 4px 12px rgba(0,0,0,.5); }
-  .tab-btn, .pill { background: rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; transition:background .2s; font-family: 'Freshman', sans-serif; letter-spacing: 0.05em; text-transform: uppercase; }
-  .tab-btn[aria-selected="true"]{ background: var(--theme); }
-  .pill{ border-radius:.75rem; }
-  .avatar{ width:56px; height:56px; border-radius:50%; object-fit:cover; }
-  .grid-auto{ display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:1rem; }
+    /* Rule highlights */
+    .rule-key{ color:var(--nfl-red); font-weight:700; }
 
-  /* ------------ Modals ------------ */
-  .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; z-index:50; }
-  .modal-backdrop.open { display:flex; align-items:center; justify-content:center; }
-  .modal-backdrop .card {
-    background:#111; border:1px solid var(--line); border-radius:1rem;
-    max-width:600px; padding:1.5rem; margin:1rem; box-shadow:0 8px 20px rgba(0,0,0,.6);
-    font-family: 'Freshman', sans-serif; letter-spacing: 0.04em;
-  }
-  .close-x{
-    position:absolute; top:.5rem; right:.75rem;
-    width:2.25rem; height:2.25rem; line-height:2.25rem;
-    text-align:center; border-radius:9999px;
-    background:rgba(255,255,255,.08); border:1px solid var(--line);
-    font-size:1.25rem; cursor:pointer;
-  }
-  .close-x:hover{ background:rgba(255,255,255,.15); }
+    /* Cards & controls */
+    .card{ background:rgba(0,0,0,.50); border:1px solid var(--line); border-radius:1rem; box-shadow:0 4px 12px rgba(0,0,0,.5); }
+    .tab-btn,.pill{ background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; transition:background .2s; text-transform:uppercase; letter-spacing:.05em; }
+    .tab-btn[aria-selected="true"]{ background:var(--theme); }
+    .pill{ border-radius:.75rem; }
+    .avatar{ width:56px; height:56px; border-radius:50%; object-fit:cover; }
+    .grid-auto{ display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:1rem; }
 
-  @media (max-width: 640px){
-    header .riddle-title{ font-size:1.5rem }
-    .card{ padding:1rem !important }
-    .tab-btn, .pill{ font-size:1rem; padding:.5rem 1rem }
-  }
+    /* Player profile modal */
+    .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; z-index:60; }
+    .modal-backdrop.open{ display:flex; align-items:center; justify-content:center; }
+    .profile-panel{ width:min(900px,92vw); max-height:90vh; overflow:auto; }
+    .stat-card{ background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:1rem; padding:1rem; text-align:center; }
+    .close-btn{ position:absolute; top:.5rem; right:.5rem; width:40px; height:40px; border-radius:9999px; background:rgba(255,255,255,.1); border:1px solid var(--line); display:grid; place-items:center; }
+    .close-btn:hover{ background:rgba(255,255,255,.2); }
+    .team-pill{ display:inline-flex; align-items:center; gap:.5rem; border:1px solid var(--line); border-radius:9999px; padding:.4rem .75rem; background:rgba(255,255,255,.06); }
+
+    /* Mobile tweaks */
+    @media (max-width:640px){
+      header .riddle-title{ font-size:1.5rem }
+      .card{ padding:1rem !important }
+      .tab-btn,.pill{ font-size:1rem; padding:.5rem 1rem }
+    }
   </style>
 </head>
 <body>
@@ -116,10 +83,8 @@
     <div class="flex items-center justify-center">
       <img src="Assets/nfl-logo.png" alt="NFL" class="w-12 h-12 rounded-md shadow-lg">
     </div>
-    <h1 class="riddle-title text-center font-extrabold mt-3"
-        style="font-size:clamp(1.4rem, 4.8vw, 2rem); line-height:1.15;">
-      NFL League
-      <span class="block">Regular Season</span>
+    <h1 class="riddle-title text-center font-extrabold mt-3" style="font-size:clamp(1.4rem, 4.8vw, 2rem); line-height:1.15;">
+      NFL League <span class="block">Regular Season</span>
     </h1>
     <p class="text-center opacity-80 text-base mt-2">Updated weekly from JSON — simple to edit, zero build step.</p>
     <div class="mt-4 flex items-center justify-center gap-3">
@@ -160,7 +125,7 @@
 
   <!-- Rules Modal -->
   <div id="rulesModal" class="modal-backdrop">
-    <div class="card">
+    <div class="card p-6 max-w-[600px] mx-4">
       <h3 class="riddle-title text-xl font-extrabold mb-3 text-center">League Rules</h3>
       <ol class="list-decimal pl-5 space-y-2 text-sm leading-6">
         <li><span class="rule-key">Submit</span> Sunday game picks before <span class="rule-key">6 PM UK</span>.</li>
@@ -177,152 +142,319 @@
 
   <!-- Player Profile Modal -->
   <div id="playerProfile" class="modal-backdrop">
-    <div class="card relative max-w-xl w-[92vw]">
-      <button id="closeProfile" class="close-x" aria-label="Close">×</button>
-      <div id="profileContent"></div>
+    <div class="profile-panel card p-5 sm:p-7 relative mx-4">
+      <button id="closeProfile" class="close-btn" aria-label="Close profile">✕</button>
+
+      <!-- Header: avatar + name + team -->
+      <div class="flex items-center gap-4">
+        <img id="profAvatar" class="w-20 h-20 rounded-full ring-4 ring-amber-400 object-cover" alt="">
+        <div class="min-w-0">
+          <h3 id="profName" class="riddle-title text-2xl">Player</h3>
+          <div id="teamRow" class="mt-2 hidden">
+            <span class="team-pill">
+              <img id="profTeamLogo" alt="" class="w-6 h-6 rounded-sm object-contain">
+              <span id="profTeamName" class="text-sm">Team</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="grid sm:grid-cols-4 gap-4 mt-5">
+        <div class="stat-card">
+          <div class="text-xs opacity-80">Total Points</div>
+          <div id="statTotal" class="text-2xl mt-1">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="text-xs opacity-80">Games Played</div>
+          <div id="statPlayed" class="text-2xl mt-1">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="text-xs opacity-80">Avg / Game</div>
+          <div id="statAvg" class="text-2xl mt-1">0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="text-xs opacity-80">Best Week</div>
+          <div id="statBest" class="text-2xl mt-1">W– 0</div>
+        </div>
+      </div>
+
+      <div class="stat-card mt-4">
+        <div class="text-xs opacity-80">Longest Scoring Streak</div>
+        <div id="statStreak" class="text-2xl mt-1">0 weeks</div>
+      </div>
     </div>
   </div>
 
-<script>
-function medal(rank){
-  if(rank===0) return {emoji:"🥇", color:"from-yellow-400 to-yellow-600", name:"Gold"};
-  if(rank===1) return {emoji:"🥈", color:"from-gray-300 to-gray-500", name:"Silver"};
-  if(rank===2) return {emoji:"🥉", color:"from-amber-600 to-amber-800", name:"Bronze"};
-  return null;
-}
-
-function compute({ players, weeks }){
-  const playersById = Object.fromEntries(players.map(p=>[p.id,p]));
-  const weekNums = [...new Set(weeks.map(w=>w.week))].sort((a,b)=>a-b);
-  const totals = players.map(p=>({ id:p.id, name:p.name, avatar:p.avatar, total:0, perWeek:{} }));
-  const idx = Object.fromEntries(totals.map(t=>[t.id,t]));
-  weeks.forEach(w=>{
-    const scores = w.scores || {};
-    for(const [pid,pts] of Object.entries(scores)){
-      const t = idx[pid]; if(!t) continue;
-      const val = Number(pts)||0;
-      t.total += val;
-      t.perWeek[w.week] = val;
+  <script>
+    /* ---------- Helpers ---------- */
+    function medal(rank){
+      if(rank===0) return {emoji:"🥇", color:"from-yellow-400 to-yellow-600", name:"Gold"};
+      if(rank===1) return {emoji:"🥈", color:"from-gray-300 to-gray-500", name:"Silver"};
+      if(rank===2) return {emoji:"🥉", color:"from-amber-600 to-amber-800", name:"Bronze"};
+      return null;
     }
-  });
-  return { playersById, totals, weekNums };
-}
 
-function playerCard(p, rank, view, selectedWeek){
-  const m = medal(rank);
-  let value = p.total, label = 'Total';
-  if(view==='week'){ value = p.perWeek[selectedWeek]||0; label = `Week ${selectedWeek}`; }
-  return `
-    <article data-player-id="${p.id}" role="button" tabindex="0"
-      class="relative rounded-2xl p-4 bg-black/70 border border-[var(--line)]
-             transition duration-300 hover:-translate-y-[3px]
-             hover:ring-4 hover:ring-amber-400/80 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-amber-400/80">
-      ${m ? `<div class="absolute -top-4 -right-3 bg-gradient-to-b ${m.color}
-                       text-xl rounded-full w-12 h-12 grid place-items-center"
-                 title="${m.name}">${m.emoji}</div>` : ''}
-      <div class="flex items-center gap-3">
-        <img src="${p.avatar}" alt="${p.name}" class="avatar border border-[var(--line)]"/>
-        <div class="min-w-0">
-          <div class="font-extrabold text-lg truncate">${p.name}</div>
+    function compute({ players, weeks }){
+      const playersById = Object.fromEntries(players.map(p=>[p.id,p]));
+      const weekNums = [...new Set(weeks.map(w=>w.week))].sort((a,b)=>a-b);
+
+      const totals = players.map(p=>({ id:p.id, name:p.name, avatar:p.avatar, total:0, perWeek:{} }));
+      const idx = Object.fromEntries(totals.map(t=>[t.id,t]));
+
+      weeks.forEach(w=>{
+        const scores = w.scores || {};
+        for(const [pid,pts] of Object.entries(scores)){
+          const t = idx[pid]; if(!t) continue;
+          const val = Number(pts)||0;
+          t.total += val;
+          t.perWeek[w.week] = val; // undefined = missed week (tracked)
+        }
+      });
+
+      return { playersById, totals, weekNums };
+    }
+
+    function playerCard(p, rank, view, selectedWeek){
+      const m = medal(rank);
+      let value = p.total, label = 'Total';
+      if(view==='week'){ value = p.perWeek[selectedWeek]||0; label = `Week ${selectedWeek}`; }
+
+      return `
+        <article
+          class="relative rounded-2xl p-4 bg-black/70 border border-[var(--line)]
+                 transition duration-300 hover:-translate-y-[3px]
+                 hover:ring-4 hover:ring-amber-400/80 hover:shadow-xl cursor-pointer"
+          data-player="${p.id}"
+        >
+          ${m ? `<div class="absolute -top-4 -right-3 bg-gradient-to-b ${m.color}
+                           text-xl rounded-full w-12 h-12 grid place-items-center"
+                     title="${m.name}">${m.emoji}</div>` : ''}
+
+          <div class="flex items-center gap-3">
+            <img src="${p.avatar}" alt="${p.name}" class="avatar border border-[var(--line)]"/>
+            <div class="min-w-0">
+              <div class="font-extrabold text-lg truncate">${p.name}</div>
+            </div>
+          </div>
+
+          <div class="mt-3 grid text-center">
+            <div class="rounded-xl border border-[var(--line)] py-3">
+              <div class="text-xs opacity-80">${label}</div>
+              <div class="text-2xl font-extrabold">${value}</div>
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function renderLeaderboard(totals, view, selectedWeek){
+      const sorted = [...totals].sort((a,b)=>{
+        if(view==='week') return (b.perWeek[selectedWeek]||0) - (a.perWeek[selectedWeek]||0);
+        return b.total - a.total;
+      });
+      const html = sorted.map((p,i)=>playerCard(p,i,view,selectedWeek)).join('');
+      const el = document.getElementById('leaderboard');
+      el.innerHTML = html;
+
+      // open profile on click
+      el.querySelectorAll('[data-player]').forEach(card=>{
+        card.addEventListener('click', ()=> openProfile(card.getAttribute('data-player')));
+      });
+    }
+
+    function renderHighlight(cfg, playersById){
+      const el = document.getElementById('highlight'); if(!el) return;
+      const wId = cfg?.highlight?.winner, sId = cfg?.highlight?.spoon;
+      const w = wId && playersById[wId]; const s = sId && playersById[sId];
+
+      el.innerHTML = `
+        <div class="text-center space-y-2">
+          <h4 class="font-extrabold text-amber-400 text-xl sm:text-2xl">
+            ${cfg?.season ? `${cfg.season} Season Winner!` : 'Season Winner!'}
+          </h4>
+          ${ w ? `
+            <div class="mx-auto w-28 h-28 rounded-full overflow-hidden ring-4 ring-amber-400 shadow-lg
+                        transition-transform duration-300 hover:scale-110 hover:ring-amber-300 hover:shadow-xl">
+              <img src="${w.avatar}" alt="${w.name}" class="w-full h-full object-cover">
+            </div>
+            <div class="font-extrabold text-lg">${w.name}</div>` : `<div class="opacity-60">TBD</div>` }
         </div>
-      </div>
-      <div class="mt-3 grid text-center">
-        <div class="rounded-xl border border-[var(--line)] py-3">
-          <div class="text-xs opacity-80">${label}</div>
-          <div class="text-2xl font-extrabold">${value}</div>
-        </div>
-      </div>
-    </article>`;
-}
+        <div class="text-center space-y-2">
+          <h4 class="font-extrabold text-xl sm:text-2xl">🥄 Current Wooden Spoon Holder!</h4>
+          ${ s ? `
+            <div class="mx-auto w-28 h-28 rounded-full overflow-hidden ring-4 ring-red-400 shadow-lg
+                        transition-transform duration-300 hover:scale-110 hover:ring-red-300 hover:shadow-xl">
+              <img src="${s.avatar}" alt="${s.name}" class="w-full h-full object-cover">
+            </div>
+            <div class="font-extrabold text-lg">${s.name}</div>` : `<div class="opacity-60">TBD</div>` }
+        </div>`;
+    }
 
-function renderLeaderboard(totals, view, selectedWeek){
-  const sorted = [...totals].sort((a,b)=>{
-    if(view==='week') return (b.perWeek[selectedWeek]||0) - (a.perWeek[selectedWeek]||0);
-    return b.total - a.total;
-  });
-  document.getElementById('leaderboard').innerHTML =
-    sorted.map((p,i)=>playerCard(p,i,view,selectedWeek)).join('');
-  wireCardClicks();
-}
+    function renderHonorary(cfg, playersById){
+      const el = document.getElementById('honorary'); if(!el) return;
+      const items = (cfg?.honorary || [])
+        .slice().sort((a,b)=>b.year - a.year)
+        .map(h=>{
+          const p = playersById[h.player] || { name:h.player, avatar:'Assets/football2.jpg' };
+          return `
+            <li class="flex flex-col items-center text-center">
+              <div class="w-24 h-24 rounded-full overflow-hidden ring-4 ring-amber-400 shadow-lg
+                          transition-transform duration-300 hover:scale-110 hover:ring-amber-300 hover:shadow-xl">
+                <img src="${p.avatar}" alt="${p.name}" class="w-full h-full object-cover">
+              </div>
+              <div class="mt-2 font-semibold">${h.year} - ${p.name}</div>
+            </li>`;
+        }).join('');
+      el.innerHTML = items || '<div class="opacity-60 text-center">No honorary winners yet.</div>';
+    }
 
-function renderHighlight(cfg, playersById){ /* unchanged */ }
-function renderHonorary(cfg, playersById){ /* unchanged */ }
+    /* ---------- Stats for Profile ---------- */
+    function calcStats(playerId){
+      const { totals, weekNums, playersById } = window.state;
+      const p = totals.find(t=>t.id===playerId);
+      if(!p) return null;
 
-// ---- Profile helpers ----
-function longestScoringStreak(perWeek, weekNums){
-  let best=0,cur=0,prev=null;
-  for(const w of weekNums){
-    const v=perWeek[w]||0;
-    if(v>0){ if(prev!==null&&w===prev+1){cur++}else{cur=1}; best=Math.max(best,cur); }
-    else cur=0; prev=w;
-  }
-  return best;
-}
-function showPlayerProfile(pid){
-  const modal=document.getElementById('playerProfile');
-  const content=document.getElementById('profileContent');
-  if(!window.state) return;
-  const p=state.totals.find(t=>t.id===pid); if(!p) return;
-  const weeks=state.weekNums;
-  const entries=weeks.map(w=>({week:w,pts:(p.perWeek[w]||0)}));
-  const gamesPlayed=entries.filter(e=>p.perWeek[e.week]!==undefined).length;
-  const total=p.total; const avg=gamesPlayed?(total/gamesPlayed).toFixed(2):'0.00';
-  const best=entries.reduce((acc,e)=> e.pts>acc.pts?e:acc,{week:null,pts:-Infinity});
-  const streak=longestScoringStreak(p.perWeek,weeks);
-  const weeksRows=entries.map(e=>`<tr><td class="px-3 py-1.5 border-b border-[var(--line)]">Week ${e.week}</td><td class="px-3 py-1.5 border-b border-[var(--line)] text-right">${e.pts}</td></tr>`).join('');
-  content.innerHTML=`
-    <div class="flex items-center gap-3 mb-3">
-      <img src="${p.avatar}" class="w-14 h-14 rounded-full border border-[var(--line)]">
-      <div><div class="text-xl font-extrabold">${p.name}</div><div class="opacity-80 text-sm">Player profile</div></div>
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-      <div class="card p-3 text-center"><div class="text-xs opacity-80">Total Points</div><div class="text-2xl font-extrabold">${total}</div></div>
-      <div class="card p-3 text-center"><div class="text-xs opacity-80">Games Played</div><div class="text-2xl font-extrabold">${gamesPlayed}</div></div>
-      <div class="card p-3 text-center"><div class="text-xs opacity-80">Avg / Game</div><div class="text-2xl font-extrabold">${avg}</div></div>
-      <div class="card p-3 text-center"><div class="text-xs opacity-80">Best Week</div><div class="text-lg font-extrabold">${best.week===null?'—':`W${best.week}: ${best.pts}`}</div></div>
-      <div class="card p-3 text-center col-span-2 sm:col-span-4"><div class="text-xs opacity-80">Longest Scoring Streak</div><div class="text-xl font-extrabold">${streak} ${streak===1?'week':'weeks'}</div></div>
-    </div>
-    <div class="card overflow-hidden"><table class="w-full text-sm"><thead class="bg-white/5"><tr><th class="text-left px-3 py-2">Week</th><th class="text-right px-3 py-2">Points</th></tr></thead><tbody>${weeksRows}</tbody></table></div>`;
-  modal.classList.add('open');
-}
-function wireCardClicks(){
-  const profileModal=document.getElementById('playerProfile');
-  document.querySelectorAll('[data-player-id]').forEach(el=>{
-    const id=el.getAttribute('data-player-id');
-    el.addEventListener('click',()=>showPlayerProfile(id));
-    el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showPlayerProfile(id)}});
-  });
-  document.addEventListener('keydown',e=>{if(e.key==='Escape') profileModal.classList.remove('open');});
-}
+      const scores = weekNums.map(w => Number(p.perWeek[w] ?? NaN));
+      const defined = scores.filter(v => !Number.isNaN(v));
+      const gamesPlayed = defined.length;                 // has an entry (missed week = no entry)
+      const total = defined.reduce((a,b)=>a+b,0);
+      const avg = gamesPlayed ? (total / gamesPlayed) : 0;
 
-// ---- Data I/O ----
-async function loadJSON(path){ const res=await fetch(path,{cache:'no-store'}); if(!res.ok) throw new Error("Failed to load "+path); return await res.json(); }
-const paths={players:"players.json",weeks:"weeks.json",config:"config.json"};
+      // Best week (points and week number)
+      let bestPts = -Infinity, bestWeek = null;
+      weekNums.forEach((w,idx)=>{
+        const v = scores[idx];
+        if(!Number.isNaN(v) && v >= 0){
+          if (v > bestPts){ bestPts = v; bestWeek = w; }
+        }
+      });
+      if(bestPts===-Infinity){ bestPts = 0; bestWeek = '–'; }
 
-// ---- Boot ----
-(async function boot(){
-  try{
-    const [players,weeks,config]=await Promise.all([loadJSON(paths.players),loadJSON(paths.weeks),loadJSON(paths.config)]);
-    const {playersById,totals,weekNums}=compute({players,weeks}); window.state={playersById,totals,weekNums};
-    // Dropdown
-    const sel=document.getElementById('weekSelect');
-    sel.innerHTML=weekNums.map(w=>`<option value="${w}">Week ${w}</option>`).join('');
-    sel.insertAdjacentHTML('afterbegin','<option value="all" selected>All</option>');
-    sel.addEventListener('change',()=>{const val=sel.value; if(val==='all'){renderLeaderboard(totals,'total')}else{renderLeaderboard(totals,'week',Number(val))}});
-    document.getElementById('totalBtn').addEventListener('click',()=>{sel.value='all';renderLeaderboard(totals,'total')});
-    // Default view
-    sel.value='all'; renderLeaderboard(totals,'total');
-    renderHighlight(config,playersById); renderHonorary(config,playersById);
-    // Rules
-    const rulesModal=document.getElementById('rulesModal'); const rulesBtn=document.getElementById('rulesBtn'); const closeRules=document.getElementById('closeRules');
-    rulesBtn.addEventListener('click',()=>rulesModal.classList.add('open')); closeRules.addEventListener('click',()=>rulesModal.classList.remove('open')); rulesModal.addEventListener('click',e=>{if(e.target===rulesModal) rulesModal.classList.remove('open')});
-    // Player Profile
-    const profileModal=document.getElementById('playerProfile'); document.getElementById('closeProfile').addEventListener('click',()=>profileModal.classList.remove('open')); profileModal.addEventListener('click',e=>{if(e.target===profileModal) profileModal.classList.remove('open')});
-    // Footer
-    document.getElementById('copyrightYear').textContent=new Date().getFullYear();
-    if(config.repo) document.getElementById('repoLink').href=config.repo;
-  }catch(err){ console.error("Init failed",err); document.getElementById('leaderboard').innerHTML="<p class='text-red-400'>Failed to load data.</p>"; }
-})();
-</script>
+      // Longest scoring streak (>0 points, consecutive)
+      let cur = 0, best = 0;
+      scores.forEach(v=>{
+        if(!Number.isNaN(v) && v > 0){ cur += 1; best = Math.max(best, cur); }
+        else { cur = 0; }
+      });
+
+      return {
+        player: playersById[playerId],
+        totalPoints: total,
+        gamesPlayed,
+        avgPerGame: avg,
+        bestWeekLabel: bestWeek,
+        bestWeekPoints: bestPts,
+        longestStreak: best
+      };
+    }
+
+    function openProfile(playerId){
+      const st = calcStats(playerId); if(!st) return;
+      const modal = document.getElementById('playerProfile');
+
+      // header
+      document.getElementById('profAvatar').src = st.player.avatar;
+      document.getElementById('profAvatar').alt = st.player.name;
+      document.getElementById('profName').textContent = st.player.name;
+
+      // team info (optional)
+      const teamRow = document.getElementById('teamRow');
+      if(st.player.team && st.player.teamLogo){
+        document.getElementById('profTeamLogo').src = st.player.teamLogo;
+        document.getElementById('profTeamLogo').alt = st.player.team;
+        document.getElementById('profTeamName').textContent = st.player.team;
+        teamRow.classList.remove('hidden');
+      }else{
+        teamRow.classList.add('hidden');
+      }
+
+      // stats
+      document.getElementById('statTotal').textContent  = st.totalPoints.toString();
+      document.getElementById('statPlayed').textContent = st.gamesPlayed.toString();
+      document.getElementById('statAvg').textContent    = st.avgPerGame.toFixed(2);
+      document.getElementById('statBest').textContent   = (st.bestWeekLabel==='–' ? '—' : `W${st.bestWeekLabel}: ${st.bestWeekPoints}`);
+      document.getElementById('statStreak').textContent = `${st.longestStreak} week${st.longestStreak===1?'':'s'}`;
+
+      modal.classList.add('open');
+    }
+
+    /* ---------- Data I/O ---------- */
+    async function loadJSON(path){
+      const res = await fetch(path, { cache: 'no-store' });
+      if(!res.ok) throw new Error("Failed to load "+path);
+      return await res.json();
+    }
+    const paths = { players:"players.json", weeks:"weeks.json", config:"config.json" };
+
+    /* ---------- Boot ---------- */
+    (async function boot(){
+      try{
+        const [players, weeks, config] = await Promise.all([
+          loadJSON(paths.players),
+          loadJSON(paths.weeks),
+          loadJSON(paths.config).catch(()=>({}))
+        ]);
+
+        const state = compute({ players, weeks });
+        window.state = state;
+
+        // Week dropdown (ascending), default to Week 1; "Total" is separate
+        const weekSel = document.getElementById('weekSelect');
+        const totalBtn = document.getElementById('totalBtn');
+
+        weekSel.innerHTML = state.weekNums.map(w=>`<option value="${w}">Week ${w}</option>`).join('');
+        if(state.weekNums.length) weekSel.value = String(state.weekNums[0]); // Week 1
+
+        // Initial renders
+        renderHighlight(config, state.playersById);
+        renderHonorary(config, state.playersById);
+
+        // Always start on Total (also when coming back via history)
+        function resetToAll(){
+          totalBtn.setAttribute('aria-selected','true');
+          if(state.weekNums.length) weekSel.selectedIndex = 0;
+          renderLeaderboard(state.totals, 'total');
+        }
+        resetToAll();
+        window.addEventListener('pageshow', resetToAll);
+
+        // Interactions
+        totalBtn.addEventListener('click', ()=>{
+          totalBtn.setAttribute('aria-selected','true');
+          renderLeaderboard(state.totals, 'total');
+        });
+        weekSel.addEventListener('change', ()=>{
+          totalBtn.setAttribute('aria-selected','false');
+          renderLeaderboard(state.totals, 'week', Number(weekSel.value));
+        });
+
+        // Repo link
+        const repoLink = document.getElementById('repoLink');
+        if(repoLink) repoLink.href = config.repoUrl || '#';
+
+        // Rules modal
+        const rulesModal = document.getElementById('rulesModal');
+        document.getElementById('rulesBtn').addEventListener('click', ()=> rulesModal.classList.add('open'));
+        document.getElementById('closeRules').addEventListener('click', ()=> rulesModal.classList.remove('open'));
+        rulesModal.addEventListener('click', e=>{ if(e.target===rulesModal) rulesModal.classList.remove('open'); });
+
+        // Profile modal close controls
+        const profileModal = document.getElementById('playerProfile');
+        const closeProfile = ()=> profileModal.classList.remove('open');
+        document.getElementById('closeProfile').addEventListener('click', closeProfile);
+        profileModal.addEventListener('click', e=>{ if(e.target===profileModal) closeProfile(); });
+        window.addEventListener('keydown', e=>{ if(e.key==='Escape') closeProfile(); });
+
+        // Footer year
+        document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+      }catch(err){
+        console.error(err);
+        const msg = document.createElement('div');
+        msg.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-xl text-sm shadow-lg';
+        msg.textContent = err.message;
+        document.body.appendChild(msg);
+      }
+    })();
+  </script>
 </body>
 </html>

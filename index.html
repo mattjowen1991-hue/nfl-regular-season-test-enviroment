@@ -36,6 +36,12 @@
     letter-spacing: 0.03em;  /* slight spacing everywhere */
   }
 
+  /* rule-key styling */
+  .rule-key {
+    color: #c8102e;   /* NFL red */
+    font-weight: 700;
+  }
+
   /* Full-viewport fixed canvas behind everything */
   body::before {
     content:"";
@@ -181,21 +187,21 @@
   </footer>
 
   <!-- Rules Modal -->
-  <div id="rulesModal" class="modal-backdrop">
-    <div class="card">
-      <h3 class="riddle-title text-xl font-extrabold mb-3 text-center">League Rules</h3>
-      <ol class="list-decimal pl-5 space-y-2 text-sm leading-6">
-        <li>Submit Sunday game picks before <b>6 PM UK</b>.</li>
-        <li>Each correct prediction earns <b>1 point</b>.</li>
-        <li><b>Perfect Week:</b> all Sunday games correct = <b>+2 bonus</b>.</li>
-        <li><b>Specials:</b> Thanksgiving & International games score <b>double</b>.</li>
-        <li>Ties are shared positions (no tiebreaker).</li>
-      </ol>
-      <div class="mt-4 text-right">
-        <button id="closeRules" class="tab-btn px-3 py-1.5 rounded-lg text-sm">Close</button>
-      </div>
+<div id="rulesModal" class="modal-backdrop">
+  <div class="card">
+    <h3 class="riddle-title text-xl font-extrabold mb-3 text-center">League Rules</h3>
+    <ol class="list-decimal pl-5 space-y-2 text-sm leading-6">
+      <li><span class="rule-key">Submit</span> Sunday game picks before <span class="rule-key">6 PM UK</span>.</li>
+      <li>Each correct prediction earns <span class="rule-key">1 point</span>.</li>
+      <li><span class="rule-key">Perfect Week:</span> all Sunday games correct = <span class="rule-key">+2 bonus</span>.</li>
+      <li><span class="rule-key">Specials:</span> Thanksgiving & International games score <span class="rule-key">double</span>.</li>
+      <li>Ties are shared positions (<span class="rule-key">no tiebreaker</span>).</li>
+    </ol>
+    <div class="mt-4 text-right">
+      <button id="closeRules" class="tab-btn px-3 py-1.5 rounded-lg text-sm">Close</button>
     </div>
   </div>
+</div>
 
   <script>
   /* ---------- Rendering helpers ---------- */

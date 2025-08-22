@@ -12,3 +12,8 @@
     { "year": 2021, "player": "jarv" }
   ]
 }
+{
+  "season": "2024",
+  "repoUrl": "https://github.com/your/repo",
+  "perfectWeekPoints": { "1": 14, "2": 13, "3": 12 }
+}

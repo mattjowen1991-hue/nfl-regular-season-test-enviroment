@@ -16,32 +16,49 @@
   <style>
     :root { --line: rgba(255,255,255,0.15); --theme:#2563eb; }
 
-    /* ------------ Background ------------ */
-    /* Desktop / tablets */
-    body{
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:
-        linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
-        url('Assets/football-field.jpeg');
-      background-repeat: no-repeat;
-      background-position: center top;
-      background-size: cover;
-      color:#fff; margin:0; min-height:100vh;
-    }
-    /* Phones: show more of the pitch */
-    @media (max-width: 640px){
-      body{
-        background-image:
-          linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
-          url('Assets/football-field-mobile.jpeg'),
-          url('Assets/football-field.jpeg');
-        background-repeat: no-repeat;
-        background-position: center 20%;
-        background-size: 100% auto;
-        background-attachment: scroll;
-        background-color: #0f172a;
-      }
-    }
+    /* ------------ Background (robust mobile) ------------ */
+
+/* keep text color etc. on body, but NOT the image */
+html, body { min-height: 100%; }
+body{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:#fff;
+  margin:0;
+  background:#0b1220; /* fallback color */
+}
+
+/* Full-viewport fixed canvas behind everything */
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  /* desktop/tablet default */
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
+    url('Assets/football-field.jpeg');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+
+  /* smooth out mobile repaints */
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  pointer-events: none;
+}
+
+/* Phones: show more of the pitch; optional mobile asset first */
+@media (max-width: 640px){
+  body::before{
+    background-image:
+      linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.85)),
+      url('Assets/football-field-mobile.jpeg'),
+      url('Assets/football-field.jpeg');
+    background-position: center 20%;
+    background-size: cover;     /* keep filling screen as you scroll */
+  }
+}
 
     /* ------------ Small helper CSS (the bit that went missing) ------------ */
     .riddle-title { font-family: Cinzel, serif; letter-spacing:.02em; }

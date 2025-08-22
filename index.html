@@ -163,9 +163,7 @@
         </li>`;
     }).join('');
 
-  el.innerHTML = items
-    ? `<ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">${items}</ul>`
-    : '<div class="opacity-60 text-center">No honorary winners yet.</div>';
+  el.innerHTML = items || '<div class="opacity-60 text-center">No honorary winners yet.</div>';
 }
 
     function medal(rank){

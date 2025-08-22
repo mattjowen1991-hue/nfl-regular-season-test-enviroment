@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="Assets/football-field.jpeg">
 
   <style>
     :root { --line: rgba(255,255,255,0.15); --theme:#2563eb; }
@@ -21,10 +22,12 @@
 /* keep text color etc. on body, but NOT the image */
 html, body { min-height: 100%; }
 body{
+  position: relative;   /* create a stacking context for the ::before */
+  z-index: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color:#fff;
   margin:0;
-  background:#0b1220; /* fallback color */
+  background:#0b1220;
 }
 
 /* Full-viewport fixed canvas behind everything */

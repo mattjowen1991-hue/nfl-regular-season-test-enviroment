@@ -17,3 +17,9 @@
   "repoUrl": "https://github.com/your/repo",
   "perfectWeekPoints": { "1": 14, "2": 13, "3": 12 }
 }
+{
+  "season": 2024,
+  "gamesPerWeek": 14,
+  "playedWeeks": [1]   // put real weeks as they happen
+}
+

@@ -1,32 +1,104 @@
 [
   {
-    "date": "2025-09-07T17:00:00Z",
-    "home": "San Francisco 49ers",
-    "away": "Dallas Cowboys",
-    "venue": "Levi's Stadium"
-  },
-  {
-    "date": "2025-09-07T20:25:00Z",
-    "home": "Philadelphia Eagles",
-    "away": "Washington Redskins",
-    "venue": "Lincoln Financial Field"
-  },
-  {
-    "date": "2025-09-08T00:20:00Z",
+    "date": "2025-09-07T20:05:00Z",
     "home": "Seattle Seahawks",
-    "away": "New York Giants",
+    "away": "San Francisco 49ers",
     "venue": "Lumen Field"
   },
   {
     "date": "2025-09-14T17:00:00Z",
-    "home": "Kansas City Chiefs",
-    "away": "New England Patriots",
-    "venue": "GEHA Field at Arrowhead Stadium"
+    "home": "New Orleans Saints",
+    "away": "San Francisco 49ers",
+    "venue": "Caesars Superdome"
   },
   {
-    "date": "2025-09-14T20:25:00Z",
-    "home": "Las Vegas Raiders",
+    "date": "2025-09-21T21:25:00Z",
+    "home": "San Francisco 49ers",
+    "away": "Arizona Cardinals",
+    "venue": "Levi's Stadium"
+  },
+  {
+    "date": "2025-09-28T20:05:00Z",
+    "home": "San Francisco 49ers",
+    "away": "Jacksonville Jaguars",
+    "venue": "Levi's Stadium"
+  },
+  {
+    "date": "2025-10-01T23:15:00Z",
+    "home": "Los Angeles Rams",
     "away": "San Francisco 49ers",
-    "venue": "Allegiant Stadium"
+    "venue": "SoFi Stadium"
+  },
+  {
+    "date": "2025-10-12T17:00:00Z",
+    "home": "Tampa Bay Buccaneers",
+    "away": "San Francisco 49ers",
+    "venue": "Raymond James Stadium"
+  },
+  {
+    "date": "2025-10-19T00:20:00Z",
+    "home": "San Francisco 49ers",
+    "away": "Atlanta Falcons",
+    "venue": "Levi's Stadium"
+  },
+  {
+    "date": "2025-10-26T17:00:00Z",
+    "home": "Houston Texans",
+    "away": "San Francisco 49ers",
+    "venue": "NRG Stadium"
+  },
+  {
+    "date": "2025-11-02T17:00:00Z",
+    "home": "New York Giants",
+    "away": "San Francisco 49ers",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": "2025-11-09T21:25:00Z",
+    "home": "San Francisco 49ers",
+    "away": "Los Angeles Rams",
+    "venue": "Levi's Stadium"
+  },
+  {
+    "date": "2025-11-16T20:05:00Z",
+    "home": "Arizona Cardinals",
+    "away": "San Francisco 49ers",
+    "venue": "State Farm Stadium"
+  },
+  {
+    "date": "2025-11-23T23:15:00Z",
+    "home": "San Francisco 49ers",
+    "away": "Carolina Panthers",
+    "venue": "Levi's Stadium"
+  },
+  {
+    "date": "2025-11-30T17:00:00Z",
+    "home": "Cleveland Browns",
+    "away": "San Francisco 49ers",
+    "venue": "Huntington Bank Field"
+  },
+  {
+    "date": "2025-12-14T21:25:00Z",
+    "home": "San Francisco 49ers",
+    "away": "Tennessee Titans",
+    "venue": "Levi's Stadium"
+  },
+  {
+    "date": "2025-12-23T00:15:00Z",
+    "home": "Indianapolis Colts",
+    "away": "San Francisco 49ers",
+    "venue": "Lucas Oil Stadium"
+  },
+  {
+    "date": "2025-12-29T00:20:00Z",
+    "home": "San Francisco 49ers",
+    "away": "Chicago Bears",
+    "venue": "Levi's Stadium"
+  },
+  {
+    "date": null,
+    "home": "San Francisco 49ers",
+    "away": "Seattle Seahawks",
+    "venue": "Levi's Stadium"
   }
 ]

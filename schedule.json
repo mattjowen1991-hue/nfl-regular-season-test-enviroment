@@ -100,5 +100,111 @@
     "home": "San Francisco 49ers",
     "away": "Seattle Seahawks",
     "venue": "Levi's Stadium"
+  },
+  {
+    "date": "2025-09-04T00:20:00Z",
+    "home": "Philadelphia Eagles",
+    "away": "Dallas Cowboys",
+    "venue": "Lincoln Financial Field"
+  },
+  {
+    "date": "2025-09-14T20:25:00Z",
+    "home": "Kansas City Chiefs",
+    "away": "Philadelphia Eagles",
+    "venue": "Arrowhead Stadium"
+  },
+  {
+    "date": "2025-09-21T17:00:00Z",
+    "home": "Philadelphia Eagles",
+    "away": "Los Angeles Rams",
+    "venue": "Lincoln Financial Field"
+  },
+  {
+    "date": "2025-09-28T17:00:00Z",
+    "home": "Tampa Bay Buccaneers",
+    "away": "Philadelphia Eagles",
+    "venue": "Raymond James Stadium"
+  },
+  {
+    "date": "2025-10-05T17:00:00Z",
+    "home": "Philadelphia Eagles",
+    "away": "Denver Broncos",
+    "venue": "Lincoln Financial Field"
+  },
+  {
+    "date": "2025-10-10T00:15:00Z",
+    "home": "New York Giants",
+    "away": "Philadelphia Eagles",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": "2025-10-19T17:00:00Z",
+    "home": "Minnesota Vikings",
+    "away": "Philadelphia Eagles",
+    "venue": "U.S. Bank Stadium"
+  },
+  {
+    "date": "2025-10-26T17:00:00Z",
+    "home": "Philadelphia Eagles",
+    "away": "New York Giants",
+    "venue": "Lincoln Financial Field"
+  },
+  {
+    "date": null,
+    "note": "Bye Week"
+  },
+  {
+    "date": "2025-11-10T00:15:00Z",
+    "home": "Green Bay Packers",
+    "away": "Philadelphia Eagles",
+    "venue": "Lambeau Field"
+  },
+  {
+    "date": "2025-11-16T01:20:00Z",
+    "home": "Philadelphia Eagles",
+    "away": "Detroit Lions",
+    "venue": "Lincoln Financial Field"
+  },
+  {
+    "date": "2025-11-23T21:25:00Z",
+    "home": "Dallas Cowboys",
+    "away": "Philadelphia Eagles",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": "2025-11-28T15:00:00Z",
+    "home": "Philadelphia Eagles",
+    "away": "Chicago Bears",
+    "venue": "Lincoln Financial Field"
+  },
+  {
+    "date": "2025-12-08T01:15:00Z",
+    "home": "Los Angeles Chargers",
+    "away": "Philadelphia Eagles",
+    "venue": "SoFi Stadium"
+  },
+  {
+    "date": "2025-12-14T13:00:00Z",
+    "home": "Philadelphia Eagles",
+    "away": "Las Vegas Raiders",
+    "venue": "Lincoln Financial Field"
+  },
+  {
+    "date": null,
+    "home": "Washington Commanders",
+    "away": "Philadelphia Eagles",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": "2025-12-28T21:25:00Z",
+    "home": "Buffalo Bills",
+    "away": "Philadelphia Eagles",
+    "venue": "Highmark Stadium"
+  },
+  {
+    "date": null,
+    "home": "Philadelphia Eagles",
+    "away": "Washington Commanders",
+    "venue": "Lincoln Financial Field"
   }
 ]

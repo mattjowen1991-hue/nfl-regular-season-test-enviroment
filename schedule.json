@@ -630,5 +630,111 @@
     "home": "New England Patriots",
     "away": "Miami Dolphins",
     "venue": "Gillette Stadium"
+  },
+  {
+    "date": "2025-09-07T17:00:00Z",
+    "home": "Washington Redskins",
+    "away": "New York Giants",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": "2025-09-11T00:15:00Z",
+    "home": "Washington Redskins",
+    "away": "Green Bay Packers",
+    "venue": "Lambeau Field"
+  },
+  {
+    "date": "2025-09-21T17:00:00Z",
+    "home": "Washington Redskins",
+    "away": "Las Vegas Raiders",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": "2025-09-28T17:00:00Z",
+    "home": "Washington Redskins",
+    "away": "Atlanta Falcons",
+    "venue": "Mercedes-Benz Stadium"
+  },
+  {
+    "date": "2025-10-05T20:25:00Z",
+    "home": "Washington Redskins",
+    "away": "Los Angeles Chargers",
+    "venue": "SoFi Stadium"
+  },
+  {
+    "date": "2025-10-13T00:15:00Z",
+    "home": "Chicago Bears",
+    "away": "Washington Redskins",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": "2025-10-19T20:25:00Z",
+    "home": "Washington Redskins",
+    "away": "Dallas Cowboys",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": "2025-10-27T00:15:00Z",
+    "home": "Kansas City Chiefs",
+    "away": "Washington Redskins",
+    "venue": "Arrowhead Stadium"
+  },
+  {
+    "date": "2025-11-02T00:20:00Z",
+    "home": "Washington Redskins",
+    "away": "Seattle Seahawks",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": "2025-11-09T20:25:00Z",
+    "home": "Washington Redskins",
+    "away": "Detroit Lions",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": "2025-11-16T13:30:00Z",
+    "home": "Miami Dolphins",
+    "away": "Washington Redskins",
+    "venue": "Santiago Bernabéu Stadium, Madrid"
+  },
+  {
+    "date": null,
+    "note": "Bye Week"
+  },
+  {
+    "date": "2025-11-30T00:20:00Z",
+    "home": "Washington Redskins",
+    "away": "Denver Broncos",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": "2025-12-07T17:00:00Z",
+    "home": "Minnesota Vikings",
+    "away": "Washington Redskins",
+    "venue": "U.S. Bank Stadium"
+  },
+  {
+    "date": "2025-12-14T17:00:00Z",
+    "home": "New York Giants",
+    "away": "Washington Redskins",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": null,
+    "home": "Washington Redskins",
+    "away": "Philadelphia Eagles",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": "2025-12-25T18:00:00Z",
+    "home": "Washington Redskins",
+    "away": "Dallas Cowboys",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": null,
+    "home": "Washington Redskins",
+    "away": "Philadelphia Eagles",
+    "venue": "Lincoln Financial Field"
   }
 ]

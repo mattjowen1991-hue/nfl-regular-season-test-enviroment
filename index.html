@@ -224,44 +224,49 @@
   </div>
 
   <script>
-    /* ---------- Utilities ---------- */
-    // Optional files: picks.json & schedule.json
-    const paths = {
-      players: "players.json",
-      weeks:   "weeks.json",
-      config:  "config.json",
-      picks:   "picks.json",   // OPTIONAL – for team accuracy
-      schedule:"schedule.json" // OPTIONAL – for next game
-    };
+  /* ---------- Utilities ---------- */
+  // Optional files: picks.json & schedule.json
+  const paths = {
+    players: "players.json",
+    weeks:   "weeks.json",
+    config:  "config.json",
+    picks:   "picks.json",   // OPTIONAL – for team accuracy
+    schedule:"schedule.json" // OPTIONAL – for next game
+  };
 
-    // Example picks.json (optional)
-    // [
-    //   {
-    //     "week": 1,
-    //     "games": [
-    //       { "home":"Eagles", "away":"Cowboys", "winner":"Eagles",
-    //         "picks": { "matt":"Eagles", "gaz":"Cowboys", ... } },
-    //       ...
-    //     ]
-    //   },
-    //   ...
-    // ]
+  // Map NFL team names to logo image paths (add any others you need)
+  const teamLogos = {
+    "San Francisco 49ers": "Assets/san-francisco-49ers.png",
+    "Seattle Seahawks": "Assets/seattle-seahawks.png",
+    "Dallas Cowboys": "Assets/dallas-cowboys.png",
+    "Philadelphia Eagles": "Assets/philadelphia-eagles.png",
+    "Washington Redskins": "Assets/washington-redskins.png",
+    "New York Giants": "Assets/new-york-giants.png",
+    "Kansas City Chiefs": "Assets/kansas-city-chiefs.png",
+    "New England Patriots": "Assets/new-england-patriots.png",
+    "Las Vegas Raiders": "Assets/raiders.png",
+    "Los Angeles Rams": "Assets/los-angeles-rams.png",
+    "Tampa Bay Buccaneers": "Assets/tampa-bay-buccaneers.png",
+    "Arizona Cardinals": "Assets/arizona-cardinals.png",
+    "Jacksonville Jaguars": "Assets/jacksonville-jaguars.png",
+    "Carolina Panthers": "Assets/carolina-panthers.png",
+    "Cleveland Browns": "Assets/cleveland-browns.png",
+    "Tennessee Titans": "Assets/tennessee-titans.png",
+    "Indianapolis Colts": "Assets/indianapolis-colts.png",
+    "Chicago Bears": "Assets/chicago-bears.png",
+    "Houston Texans": "Assets/houston-texans.png",
+    "Atlanta Falcons": "Assets/atlanta-falcons.png"
+  };
 
-    // Example schedule.json (optional)
-    // [
-    //   { "date": "2025-09-07T17:00:00Z", "home":"San Francisco 49ers", "away":"Dallas Cowboys", "venue":"Levi's Stadium" },
-    //   ...
-    // ]
-
-    async function loadJSON(path){
-      try{
-        const res = await fetch(path, { cache: "no-store" });
-        if(!res.ok) throw 0;
-        return await res.json();
-      }catch{
-        return null; // optional files may be missing
-      }
+  async function loadJSON(path){
+    try{
+      const res = await fetch(path, { cache: "no-store" });
+      if(!res.ok) throw 0;
+      return await res.json();
+    }catch{
+      return null; // optional files may be missing
     }
+  }
 
     /* ---------- Compute base tables ---------- */
     function compute({ players, weeks }){
@@ -526,31 +531,33 @@
       }
 
       // Next game
-      const nextEl = document.getElementById('nextGame');
-      if(next){
-        const opp = (next.home === player.team) ? next.away : next.home;
-        const dateStr = next.dt.toLocaleString(undefined, { weekday:'short', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
-        nextEl.innerHTML = `
-          <div class="flex items-center justify-between gap-3">
-            <div class="text-sm opacity-80">Next game</div>
-            <div class="text-right text-sm opacity-80">${dateStr}${next.venue ? ` · ${next.venue}` : ''}</div>
-          </div>
-          <div class="mt-2 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              ${player.teamLogo ? `<img src="${player.teamLogo}" class="w-8 h-8 object-contain">` : ''}
-              <span class="font-extrabold">${player.team}</span>
-            </div>
-            <span class="opacity-70">vs</span>
-            <div class="flex items-center gap-2">
-              <!-- Opponent logo optional: map if you have a logos map -->
-              <span class="font-extrabold">${opp}</span>
-            </div>
-          </div>`;
-        nextEl.classList.remove('hidden');
-      } else {
-        nextEl.classList.add('hidden');
-        nextEl.innerHTML = '';
-      }
+const nextEl = document.getElementById('nextGame');
+if(next){
+  const opp = (next.home === player.team) ? next.away : next.home;
+  const dateStr = next.dt.toLocaleString(undefined, {
+    weekday:'short', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'
+  });
+  nextEl.innerHTML = `
+    <div class="flex items-center justify-between gap-3">
+      <div class="text-sm opacity-80">Next game</div>
+      <div class="text-right text-sm opacity-80">${dateStr}${next.venue ? ` · ${next.venue}` : ''}</div>
+    </div>
+    <div class="mt-2 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        ${player.teamLogo ? `<img src="${player.teamLogo}" class="w-8 h-8 object-contain">` : ''}
+        <span class="font-extrabold">${player.team}</span>
+      </div>
+      <span class="opacity-70">vs</span>
+      <div class="flex items-center gap-2">
+        ${teamLogos[opp] ? `<img src="${teamLogos[opp]}" class="w-8 h-8 object-contain">` : ''}
+        <span class="font-extrabold">${opp}</span>
+      </div>
+    </div>`;
+  nextEl.classList.remove('hidden');
+} else {
+  nextEl.classList.add('hidden');
+  nextEl.innerHTML = '';
+}
 
       // Stats
       document.getElementById('statTotal').textContent   = stats.totalPoints;

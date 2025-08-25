@@ -27,9 +27,6 @@
       font-family: 'Freshman', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:#fff; margin:0; background:#0b1220; letter-spacing:.03em;
     }
-    /* Lock scroll when a modal is open */
-    body.no-scroll { overflow: hidden; }
-
     body::before{
       content:""; position:fixed; inset:0; z-index:-1;
       background:
@@ -48,6 +45,9 @@
       }
     }
 
+    /* Lock scroll when a modal is open */
+    body.no-scroll { overflow: hidden; }
+
     /* ------------ Typography ------------ */
     h1,h2,h3,h4,.riddle-title{ text-transform:uppercase; letter-spacing:.05em; font-weight:900; }
     .riddle-title{ letter-spacing:.08em; }
@@ -65,14 +65,16 @@
     /* Player CARD: solid background + selectable glow */
     .player-card{
       position:relative;
-      background:#0d111a;
+      background:#0d111a;                 /* SOLID */
       border:1px solid var(--line);
       border-radius:1rem;
       box-shadow:0 4px 12px rgba(0,0,0,.5);
       transition: transform .2s ease, box-shadow .2s ease;
     }
     .player-card:hover{ transform: translateY(-2px); }
-    .player-card.selected{ box-shadow:0 0 0 4px rgba(245,158,11,.8), 0 10px 24px rgba(0,0,0,.6); }
+    .player-card.selected{
+      box-shadow:0 0 0 4px rgba(245,158,11,.8), 0 10px 24px rgba(0,0,0,.6);
+    }
 
     .medal-badge{
       position:absolute; top:.5rem; right:.5rem;
@@ -91,11 +93,7 @@
     .stat-card{ background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:1rem; padding:1rem; text-align:center; }
     .close-btn{ position:absolute; top:.5rem; right:.5rem; width:40px; height:40px; border-radius:9999px; background:rgba(255,255,255,.1); border:1px solid var(--line); display:grid; place-items:center; }
     .close-btn:hover{ background:rgba(255,255,255,.2); }
-    .team-pill{ display:inline-flex; align-items:center; gap:.6rem; border:1px solid var(--line); border-radius:9999px; padding:.35rem .75rem; background:rgba(255,255,255,.06); }
-    .team-pill img{ width:28px; height:28px; }
-
-    /* Next game */
-    .next-game{ background:rgba(255,255,255,.05); border:1px dashed var(--line); border-radius:1rem; padding:1rem; }
+    .team-pill{ display:inline-flex; align-items:center; gap:.5rem; border:1px solid var(--line); border-radius:9999px; padding:.4rem .75rem; background:rgba(255,255,255,.06); }
 
     /* Mobile tweaks */
     @media (max-width:640px){
@@ -115,7 +113,9 @@
       2025 NFL League
       <span class="block">Regular Season</span>
     </h1>
-    <p class="text-center opacity-80 text-base mt-2">Updated weekly</p>
+    <p class="text-center opacity-80 text-base mt-2">
+      Updated weekly
+    </p>
     <div class="mt-4 flex items-center justify-center gap-3">
       <button id="rulesBtn" class="tab-btn px-3 py-1.5 rounded-lg text-sm">Rules</button>
       <a id="repoLink" class="text-sm underline opacity-90 hover:opacity-100" target="_blank" rel="noreferrer">View on GitHub</a>
@@ -154,8 +154,8 @@
 
   <!-- Rules Modal -->
   <div id="rulesModal" class="modal-backdrop" aria-hidden="true">
-    <div class="modal-card card max-w-[600px] w-[92vw] p-6">
-      <h3 class="riddle-title text-xl font-extrabold mb-3 text-center">League Rules</h3>
+    <div class="modal-card card max-w-[600px] w-[92vw] p-6" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+      <h3 id="rulesTitle" class="riddle-title text-xl font-extrabold mb-3 text-center">League Rules</h3>
       <ol class="list-decimal pl-5 space-y-2 text-sm leading-6">
         <li><span class="rule-key">Submit</span> Sunday game picks before <span class="rule-key">6 PM UK</span>.</li>
         <li>Each correct prediction earns <span class="rule-key">1 point</span>.</li>
@@ -171,10 +171,9 @@
 
   <!-- Player Profile Modal -->
   <div id="profileModal" class="modal-backdrop" aria-hidden="true">
-    <div class="modal-card profile-panel relative p-5 sm:p-7">
-      <button class="close-btn" id="profileClose" title="Close"><span aria-hidden="true">✕</span></button>
+    <div class="modal-card profile-panel relative p-5 sm:p-7" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+      <button class="close-btn" id="profileClose" title="Close" aria-label="Close profile"><span aria-hidden="true">✕</span></button>
 
-      <!-- Header -->
       <div class="flex items-center gap-4">
         <img id="profAvatar" src="" alt="" class="w-20 h-20 rounded-full object-cover border border-[var(--line)]">
         <div class="min-w-0">
@@ -183,23 +182,17 @@
         </div>
       </div>
 
-      <!-- Next game -->
-      <div id="nextGame" class="next-game mt-4 hidden"></div>
-
-      <!-- Stats -->
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
         <div class="stat-card"><div class="text-xs opacity-80">Total Points</div><div id="statTotal" class="text-2xl font-extrabold">0</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Games Played</div><div id="statGames" class="text-2xl font-extrabold">0</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Avg / Game</div><div id="statAvg" class="text-2xl font-extrabold">0.00</div></div>
-
-        <div class="stat-card"><div class="text-xs opacity-80">Win Rate</div><div id="statWinRate" class="text-2xl font-extrabold">0%</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Best Week</div><div id="statBest" class="text-2xl font-extrabold">—</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Longest Streak</div><div id="statStreak" class="text-2xl font-extrabold">0</div></div>
-
         <div class="stat-card"><div class="text-xs opacity-80">Perfect Weeks</div><div id="statPerfect" class="text-2xl font-extrabold">0</div></div>
-        <div class="stat-card"><div class="text-xs opacity-80">Super Bowl Wins</div><div id="statSBWins" class="text-2xl font-extrabold">0</div></div>
-        <div class="stat-card"><div class="text-xs opacity-80">Best Team Accuracy</div><div id="statBestTeam" class="text-2xl font-extrabold">—</div></div>
       </div>
+
+      <!-- Next game card goes here -->
+      <div id="profNextGame" class="mt-6"></div>
 
       <div class="mt-5 flex items-center justify-end">
         <button id="metricHelpBtn" class="tab-btn px-3 py-1.5 rounded-lg text-sm">Metrics Explained</button>
@@ -210,75 +203,55 @@
         <ul class="list-disc ml-5 space-y-1">
           <li><span class="rule-key">Total Points</span> Sum of all your weekly points.</li>
           <li><span class="rule-key">Games Played</span> The number of weeks you predicted the NFL scores.</li>
-          <li><span class="rule-key">Avg / Game</span> Total Points divided by Games Played.</li>
-          <li><span class="rule-key">Win Rate</span> % of your played weeks with a score &gt; 0.</li>
+          <li><span class="rule-key">Average Points per Game</span> Total Points divided by Games Played.</li>
           <li><span class="rule-key">Best Week</span> Your highest scoring week.</li>
           <li><span class="rule-key">Longest Streak</span> Most consecutive weeks with a score &gt; 0.</li>
-          <li><span class="rule-key">Perfect Weeks</span> Weeks where you guessed every game correctly (uses <code>config.perfectWeekPoints</code> or <code>weeks[i].games</code>; if neither exist we treat a week as perfect when you hit that week’s top score).</li>
-          <li><span class="rule-key">Best Team Accuracy</span> The team you pick most accurately (minimum picks set by <code>config.bestTeamMinPicks</code>, default 3).</li>
-          <li><span class="rule-key">Super Bowl Wins</span> Number of Super Bowls your favourite team has won (from <code>players.json</code>).</li>
-          <li><span class="rule-key">Next Game</span> Your favourite team’s next scheduled game.</li>
+          <li><span class="rule-key">Perfect Weeks</span> Weeks where you guessed every game correctly.</li>
         </ul>
       </div>
     </div>
   </div>
 
   <script>
-    /* ---------- Utilities ---------- */
-    // Optional files: picks.json & schedule.json
-    const paths = {
-      players: "players.json",
-      weeks:   "weeks.json",
-      config:  "config.json",
-      picks:   "picks.json",   // OPTIONAL – for team accuracy
-      schedule:"schedule.json" // OPTIONAL – for next game
+    /* ---------- Config: team logos map (expand as needed) ---------- */
+    const teamLogos = {
+      "San Francisco 49ers": "Assets/san-francisco-49ers.png",
+      "Dallas Cowboys": "Assets/dallas-cowboys.png",
+      "Philadelphia Eagles": "Assets/philadelphia-eagles.png",
+      "New York Giants": "Assets/new-york-giants.png",
+      "Kansas City Chiefs": "Assets/kansas-city-chiefs.png",
+      "New England Patriots": "Assets/new-england-patriots.png",
+      "Washington Commanders": "Assets/washington-commanders.png",
+      "Las Vegas Raiders": "Assets/raiders.png",
+      "Seattle Seahawks": "Assets/seattle-seahawks.png",
+      // add more as you need...
     };
 
-    // Example picks.json (optional)
-    // [
-    //   {
-    //     "week": 1,
-    //     "games": [
-    //       { "home":"Eagles", "away":"Cowboys", "winner":"Eagles",
-    //         "picks": { "matt":"Eagles", "gaz":"Cowboys", ... } },
-    //       ...
-    //     ]
-    //   },
-    //   ...
-    // ]
-
-    // Example schedule.json (optional)
-    // [
-    //   { "date": "2025-09-07T17:00:00Z", "home":"San Francisco 49ers", "away":"Dallas Cowboys", "venue":"Levi's Stadium" },
-    //   ...
-    // ]
+    /* ---------- Utilities ---------- */
+    const paths = { players:"players.json", weeks:"weeks.json", config:"config.json", schedule:"schedule.json" };
 
     async function loadJSON(path){
-      try{
-        const res = await fetch(path, { cache: "no-store" });
-        if(!res.ok) throw 0;
-        return await res.json();
-      }catch{
-        return null; // optional files may be missing
-      }
+      const res = await fetch(path, { cache: 'no-store' });
+      if(!res.ok) throw new Error("Failed to load "+path);
+      return await res.json();
     }
 
     /* ---------- Compute base tables ---------- */
     function compute({ players, weeks }){
       const playersById = Object.fromEntries(players.map(p=>[p.id,p]));
-      const weekNums = [...new Set((weeks||[]).map(w=>w.week))].sort((a,b)=>a-b);
+      const weekNums = [...new Set(weeks.map(w=>w.week))].sort((a,b)=>a-b);
 
       const totals = players.map(p=>({ id:p.id, name:p.name, avatar:p.avatar, total:0, perWeek:{} }));
       const idx = Object.fromEntries(totals.map(t=>[t.id,t]));
 
-      (weeks||[]).forEach(w=>{
+      weeks.forEach(w=>{
         const scores = w.scores || {};
         for(const [pid,pts] of Object.entries(scores)){
           const t = idx[pid]; if(!t) continue;
           const val = Number(pts);
           if(Number.isFinite(val)){
             t.total += val;
-            t.perWeek[w.week] = val; // undefined = DNP; number 0+ = played
+            t.perWeek[w.week] = val;  // undefined = DNP; number 0+ = played
           }
         }
       });
@@ -402,18 +375,20 @@
         : '<div class="opacity-60 text-center">No honorary winners yet.</div>';
     }
 
-    /* ---------- Profile Stats & helpers ---------- */
+    /* ---------- Profile Stats (with "played weeks" fix) ---------- */
     // Only count weeks that actually happened (at least one player scored > 0)
     function computeProfileStats(weeks, playerId, config){
-      const playedWeeks = (weeks||[]).filter(w=>{
+      const playedWeeks = weeks.filter(w=>{
         const vals = Object.values(w.scores || {}).map(Number).filter(Number.isFinite);
         return vals.some(v => v > 0);
       });
 
       const perfectMap = config?.perfectWeekPoints || {}; // { "1": 14, ... }
-      let total = 0, games = 0;
-      let positiveWeeks = 0;
-      let bestPoints = -Infinity, bestWeek = null;
+
+      let total = 0;
+      let games = 0;
+      let bestPoints = -Infinity;
+      let bestWeek = null;
       let longest = 0, current = 0;
       let perfectCount = 0;
 
@@ -428,7 +403,7 @@
 
         if(v > bestPoints){ bestPoints = v; bestWeek = w.week; }
 
-        if(v > 0){ current += 1; longest = Math.max(longest, current); positiveWeeks += 1; }
+        if(v > 0){ current += 1; longest = Math.max(longest, current); }
         else { current = 0; }
 
         // perfect week target
@@ -452,7 +427,6 @@
         totalPoints: total,
         gamesPlayed: games,
         avgPerGame: games ? total/games : 0,
-        winRate: games ? Math.round((positiveWeeks / games) * 100) : 0,
         bestPoints,
         bestWeek,
         longest,
@@ -460,42 +434,26 @@
       };
     }
 
-    // Best team accuracy from picks.json
-    function computeBestTeamAccuracy(picks, playerId, config){
-      if(!Array.isArray(picks)) return null;
-
-      const counts = {}; // team -> { correct: n, total: n }
-      for(const wk of picks){
-        for(const g of (wk.games || [])){
-          const playerPick = g?.picks?.[playerId];
-          if(!playerPick) continue;
-          const t = (counts[playerPick] ||= { correct:0, total:0 });
-          t.total += 1;
-          if(g.winner && g.winner === playerPick) t.correct += 1;
-        }
-      }
-      const minPicks = Number(config?.bestTeamMinPicks ?? 3);
-
-      let best = null;
-      for(const [team, stat] of Object.entries(counts)){
-        if(stat.total < minPicks) continue;
-        const pct = Math.round((stat.correct / stat.total) * 100);
-        if(!best || pct > best.pct || (pct === best.pct && stat.total > best.total)){
-          best = { team, pct, total: stat.total };
-        }
-      }
-      return best; // { team, pct, total } or null
-    }
-
-    // Next upcoming game for a team (from schedule.json)
-    function nextGameForTeam(schedule, teamName){
-      if(!Array.isArray(schedule) || !teamName) return null;
+    /* ---------- Next Game Helper ---------- */
+    function getNextGame(team, schedule){
+      if(!team || !Array.isArray(schedule)) return null;
       const now = new Date();
+
       const upcoming = schedule
-        .map(g => ({...g, dt: new Date(g.date)}))
-        .filter(g => g.dt >= now && (g.home === teamName || g.away === teamName))
-        .sort((a,b) => a.dt - b.dt);
-      return upcoming[0] || null;
+        .map(g => ({ ...g, _d: new Date(g.date) }))
+        .filter(g => g._d > now && (g.home === team || g.away === team))
+        .sort((a,b)=> a._d - b._d);
+
+      const next = upcoming[0];
+      if(!next) return null;
+
+      const opponent = next.home === team ? next.away : next.home;
+      return {
+        date: next.date,
+        venue: next.venue || '',
+        opponent,
+        opponentLogo: teamLogos[opponent] || null
+      };
     }
 
     /* ---------- Profile Modal ---------- */
@@ -505,90 +463,69 @@
       if(!player) return;
 
       const stats = computeProfileStats(window.weeks, playerId, window.config || {});
-      const bestTeam = computeBestTeamAccuracy(window.picks, playerId, window.config || {});
-      const next = nextGameForTeam(window.schedule, player.team);
 
       // Header bits
       document.getElementById('profAvatar').src = player.avatar;
       document.getElementById('profAvatar').alt = player.name;
       document.getElementById('profName').textContent = player.name;
 
-      // Team pill
+      // Team pill (optional in players.json) — logo at w-12 h-12 as requested
       const teamWrap = document.getElementById('profTeam');
       if(player.team || player.teamLogo){
+        const logo = player.teamLogo || teamLogos[player.team];
         teamWrap.innerHTML = `
           <span class="team-pill">
-            ${player.teamLogo ? `<img src="${player.teamLogo}" alt="" class="object-contain rounded-sm">` : ''}
+            ${logo ? `<img src="${logo}" alt="" class="w-12 h-12 object-contain rounded-sm">` : ''}
             <span>${player.team || 'Team'}</span>
           </span>`;
       } else {
         teamWrap.innerHTML = '';
       }
 
-      // Next game
-      const nextEl = document.getElementById('nextGame');
-      if(next){
-        const opp = (next.home === player.team) ? next.away : next.home;
-        const dateStr = next.dt.toLocaleString(undefined, { weekday:'short', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
-        nextEl.innerHTML = `
-          <div class="flex items-center justify-between gap-3">
-            <div class="text-sm opacity-80">Next game</div>
-            <div class="text-right text-sm opacity-80">${dateStr}${next.venue ? ` · ${next.venue}` : ''}</div>
-          </div>
-          <div class="mt-2 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              ${player.teamLogo ? `<img src="${player.teamLogo}" class="w-8 h-8 object-contain">` : ''}
-              <span class="font-extrabold">${player.team}</span>
-            </div>
-            <span class="opacity-70">vs</span>
-            <div class="flex items-center gap-2">
-              <!-- Opponent logo optional: map if you have a logos map -->
-              <span class="font-extrabold">${opp}</span>
-            </div>
-          </div>`;
-        nextEl.classList.remove('hidden');
-      } else {
-        nextEl.classList.add('hidden');
-        nextEl.innerHTML = '';
-      }
-
       // Stats
       document.getElementById('statTotal').textContent   = stats.totalPoints;
       document.getElementById('statGames').textContent   = stats.gamesPlayed;
       document.getElementById('statAvg').textContent     = stats.avgPerGame.toFixed(2);
-      document.getElementById('statWinRate').textContent = stats.winRate + '%';
       document.getElementById('statBest').textContent    = stats.bestWeek ? `W${stats.bestWeek} (${stats.bestPoints})` : '—';
       document.getElementById('statStreak').textContent  = stats.longest;
       document.getElementById('statPerfect').textContent = stats.perfectWeeks;
 
-      // Super Bowl wins (from players.json, optional)
-      document.getElementById('statSBWins').textContent = Number.isFinite(Number(player.superbowlWins)) ? Number(player.superbowlWins) : 0;
+      // Next Game (with opponent logo at w-12 h-12)
+      const nextGameEl = document.getElementById('profNextGame');
+      const ng = getNextGame(player.team, window.schedule || []);
+      if(ng){
+        nextGameEl.innerHTML = `
+          <div class="stat-card flex items-center justify-between gap-3">
+            <div>
+              <div class="text-xs opacity-80">Next Game</div>
+              <div class="text-sm font-extrabold">${new Date(ng.date).toLocaleString()}</div>
+              <div class="text-base">${player.team} vs ${ng.opponent}</div>
+              ${ng.venue ? `<div class="text-xs opacity-80 mt-1">${ng.venue}</div>` : ''}
+            </div>
+            ${ng.opponentLogo ? `<img src="${ng.opponentLogo}" class="w-12 h-12 object-contain rounded-sm" alt="${ng.opponent}">` : ''}
+          </div>
+        `;
+      } else {
+        nextGameEl.innerHTML = `<div class="stat-card opacity-60">No upcoming games</div>`;
+      }
 
-      // Best Team Accuracy (from picks.json, optional)
-      document.getElementById('statBestTeam').textContent = bestTeam
-        ? `${bestTeam.team} · ${bestTeam.pct}%`
-        : '—';
-
-      // Show modal & lock scroll
+      // Show modal + lock scroll
       document.getElementById('profileModal').classList.add('open');
       document.body.classList.add('no-scroll');
-      document.getElementById('profileModal').setAttribute('aria-hidden','false');
     }
 
     /* ---------- Boot ---------- */
     (async function boot(){
       try{
-        const [players, weeks, config, picks, schedule] = await Promise.all([
+        const [players, weeks, config, schedule] = await Promise.all([
           loadJSON(paths.players),
           loadJSON(paths.weeks),
-          loadJSON(paths.config),
-          loadJSON(paths.picks),
-          loadJSON(paths.schedule)
+          loadJSON(paths.config).catch(()=>({})),
+          loadJSON(paths.schedule).catch(()=>[]) // schedule.json optional
         ]);
-        window.weeks = weeks || [];
-        window.config = config || {};
-        window.picks = picks || null;
-        window.schedule = schedule || null;
+        window.weeks = weeks;
+        window.config = config;
+        window.schedule = schedule;
 
         const state = compute({ players, weeks });
         window.state = state;
@@ -624,29 +561,18 @@
           renderLeaderboard(state.totals, 'week', Number(weekSel.value));
         });
 
-        // Rules modal
+        // Rules modal + lock scroll
         const rulesModal = document.getElementById('rulesModal');
-        function openRules(){
-          rulesModal.classList.add('open');
-          document.body.classList.add('no-scroll');
-          rulesModal.setAttribute('aria-hidden','false');
-        }
-        function closeRules(){
-          rulesModal.classList.remove('open');
-          document.body.classList.remove('no-scroll');
-          rulesModal.setAttribute('aria-hidden','true');
-        }
+        const openRules = ()=>{ rulesModal.classList.add('open'); document.body.classList.add('no-scroll'); };
+        const closeRules = ()=>{ rulesModal.classList.remove('open'); document.body.classList.remove('no-scroll'); };
+
         document.getElementById('rulesBtn').addEventListener('click', openRules);
         document.getElementById('closeRules').addEventListener('click', closeRules);
         rulesModal.addEventListener('click', e=>{ if(e.target===rulesModal) closeRules(); });
 
-        // Profile modal
+        // Profile modal + lock scroll
         const profileModal = document.getElementById('profileModal');
-        function closeProfile(){
-          profileModal.classList.remove('open');
-          document.body.classList.remove('no-scroll');
-          profileModal.setAttribute('aria-hidden','true');
-        }
+        const closeProfile = ()=>{ profileModal.classList.remove('open'); document.body.classList.remove('no-scroll'); };
         document.getElementById('profileClose').addEventListener('click', closeProfile);
         profileModal.addEventListener('click', e=>{ if(e.target===profileModal) closeProfile(); });
 
@@ -659,14 +585,14 @@
 
         // Repo link + footer year
         const repoLink = document.getElementById('repoLink');
-        if(repoLink) repoLink.href = config?.repoUrl || '#';
+        if(repoLink) repoLink.href = config.repoUrl || '#';
         document.getElementById('copyrightYear').textContent = new Date().getFullYear();
 
       }catch(err){
         console.error(err);
         const msg = document.createElement('div');
         msg.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-xl text-sm shadow-lg';
-        msg.textContent = err?.message || 'Something went wrong';
+        msg.textContent = err.message;
         document.body.appendChild(msg);
       }
     })();

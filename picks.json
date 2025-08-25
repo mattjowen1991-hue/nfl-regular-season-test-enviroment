@@ -1,0 +1,126 @@
+[
+  {
+    "week": 1,
+    "games": [
+      {
+        "home": "San Francisco 49ers",
+        "away": "Philadelphia Eagles",
+        "winner": "San Francisco 49ers",
+        "picks": {
+          "matt": "San Francisco 49ers",
+          "jarv": "Philadelphia Eagles",
+          "gaz": "San Francisco 49ers",
+          "joe": "San Francisco 49ers",
+          "ben": "Philadelphia Eagles",
+          "coley": "Washington Redskins",
+          "mark": "San Francisco 49ers",
+          "ste": "San Francisco 49ers",
+          "tony": "Las Vegas Raiders",
+          "jay": "Seattle Seahawks",
+          "lee": "San Francisco 49ers",
+          "liam": "San Francisco 49ers"
+        }
+      },
+      {
+        "home": "New York Giants",
+        "away": "Seattle Seahawks",
+        "winner": "Seattle Seahawks",
+        "picks": {
+          "matt": "Seattle Seahawks",
+          "jarv": "Seattle Seahawks",
+          "gaz": "New York Giants",
+          "joe": "Seattle Seahawks",
+          "ben": "Seattle Seahawks",
+          "coley": "New York Giants",
+          "mark": "Seattle Seahawks",
+          "ste": "Seattle Seahawks",
+          "tony": "Seattle Seahawks",
+          "jay": "Seattle Seahawks",
+          "lee": "New York Giants",
+          "liam": "Seattle Seahawks"
+        }
+      },
+      {
+        "home": "New England Patriots",
+        "away": "Kansas City Chiefs",
+        "winner": "Kansas City Chiefs",
+        "picks": {
+          "matt": "Kansas City Chiefs",
+          "jarv": "Kansas City Chiefs",
+          "gaz": "New England Patriots",
+          "joe": "Kansas City Chiefs",
+          "ben": "New England Patriots",
+          "coley": "Kansas City Chiefs",
+          "mark": "Kansas City Chiefs",
+          "ste": "Kansas City Chiefs",
+          "tony": "Kansas City Chiefs",
+          "jay": "Seattle Seahawks",
+          "lee": "Kansas City Chiefs",
+          "liam": "Kansas City Chiefs"
+        }
+      }
+    ]
+  },
+  {
+    "week": 2,
+    "games": [
+      {
+        "home": "Las Vegas Raiders",
+        "away": "Seattle Seahawks",
+        "winner": "Las Vegas Raiders",
+        "picks": {
+          "matt": "Las Vegas Raiders",
+          "jarv": "Seattle Seahawks",
+          "gaz": "Las Vegas Raiders",
+          "joe": "Seattle Seahawks",
+          "ben": "Las Vegas Raiders",
+          "coley": "Las Vegas Raiders",
+          "mark": "Las Vegas Raiders",
+          "ste": "Seattle Seahawks",
+          "tony": "Las Vegas Raiders",
+          "jay": "Seattle Seahawks",
+          "lee": "Las Vegas Raiders",
+          "liam": "Las Vegas Raiders"
+        }
+      },
+      {
+        "home": "Philadelphia Eagles",
+        "away": "Washington Redskins",
+        "winner": "Philadelphia Eagles",
+        "picks": {
+          "matt": "Philadelphia Eagles",
+          "jarv": "Philadelphia Eagles",
+          "gaz": "Washington Redskins",
+          "joe": "Philadelphia Eagles",
+          "ben": "Philadelphia Eagles",
+          "coley": "Washington Redskins",
+          "mark": "Philadelphia Eagles",
+          "ste": "Philadelphia Eagles",
+          "tony": "Philadelphia Eagles",
+          "jay": "Philadelphia Eagles",
+          "lee": "Washington Redskins",
+          "liam": "Philadelphia Eagles"
+        }
+      },
+      {
+        "home": "Kansas City Chiefs",
+        "away": "San Francisco 49ers",
+        "winner": "San Francisco 49ers",
+        "picks": {
+          "matt": "San Francisco 49ers",
+          "jarv": "Kansas City Chiefs",
+          "gaz": "San Francisco 49ers",
+          "joe": "Kansas City Chiefs",
+          "ben": "Kansas City Chiefs",
+          "coley": "San Francisco 49ers",
+          "mark": "San Francisco 49ers",
+          "ste": "Kansas City Chiefs",
+          "tony": "Kansas City Chiefs",
+          "jay": "Seattle Seahawks",
+          "lee": "San Francisco 49ers",
+          "liam": "San Francisco 49ers"
+        }
+      }
+    ]
+  }
+]

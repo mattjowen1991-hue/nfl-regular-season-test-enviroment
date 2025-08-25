@@ -842,5 +842,111 @@
     "home": "Seattle Seahawks",
     "away": "San Francisco 49ers",
     "venue": "Levi's Stadium"
+  },
+{
+    "date": "2025-09-07T17:00:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "New England Patriots",
+    "venue": "Gillette Stadium"
+  },
+  {
+    "date": "2025-09-15T02:00:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Los Angeles Chargers",
+    "venue": "Allegiant Stadium"
+  },
+  {
+    "date": "2025-09-21T17:00:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Washington Redskins",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": "2025-09-28T20:25:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Chicago Bears",
+    "venue": "Allegiant Stadium"
+  },
+  {
+    "date": "2025-10-05T17:05:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Indianapolis Colts",
+    "venue": "Lucas Oil Stadium"
+  },
+  {
+    "date": "2025-10-12T20:05:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Tennessee Titans",
+    "venue": "Allegiant Stadium"
+  },
+  {
+    "date": "2025-10-19T17:00:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Kansas City Chiefs",
+    "venue": "Arrowhead Stadium"
+  },
+  {
+    "date": null,
+    "note": "Bye Week"
+  },
+  {
+    "date": "2025-11-02T20:05:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Jacksonville Jaguars",
+    "venue": "Allegiant Stadium"
+  },
+  {
+    "date": "2025-11-06T00:15:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Denver Broncos",
+    "venue": "Empower Field at Mile High"
+  },
+  {
+    "date": "2025-11-17T00:20:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Dallas Cowboys",
+    "venue": "Allegiant Stadium"
+  },
+  {
+    "date": "2025-11-23T20:05:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Cleveland Browns",
+    "venue": "Allegiant Stadium"
+  },
+  {
+    "date": "2025-11-30T20:05:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Los Angeles Chargers",
+    "venue": "SoFi Stadium"
+  },
+  {
+    "date": "2025-12-07T20:05:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Denver Broncos",
+    "venue": "Allegiant Stadium"
+  },
+  {
+    "date": "2025-12-14T17:00:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Philadelphia Eagles",
+    "venue": "Lincoln Financial Field"
+  },
+  {
+    "date": "2025-12-21T20:25:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Houston Texans",
+    "venue": "NRG Stadium"
+  },
+  {
+    "date": null,
+    "home": "Las Vegas Raiders",
+    "away": "New York Giants",
+    "venue": "Allegiant Stadium"
+  },
+  {
+    "date": null,
+    "home": "Las Vegas Raiders",
+    "away": "Kansas City Chiefs",
+    "venue": "Allegiant Stadium"
   }
 ]

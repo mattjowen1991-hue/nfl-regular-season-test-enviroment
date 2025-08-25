@@ -206,5 +206,111 @@
     "home": "Philadelphia Eagles",
     "away": "Washington Commanders",
     "venue": "Lincoln Financial Field"
+  },
+  {
+    "date": "2025-09-05T00:15:00Z",
+    "home": "Los Angeles Chargers",
+    "away": "Kansas City Chiefs",
+    "venue": "Arena Corinthians"
+  },
+  {
+    "date": "2025-09-14T20:25:00Z",
+    "home": "Kansas City Chiefs",
+    "away": "Philadelphia Eagles",
+    "venue": "Arrowhead Stadium"
+  },
+  {
+    "date": "2025-09-21T00:20:00Z",
+    "home": "Kansas City Chiefs",
+    "away": "New York Giants",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": "2025-09-28T20:25:00Z",
+    "home": "Baltimore Ravens",
+    "away": "Kansas City Chiefs",
+    "venue": "Arrowhead Stadium"
+  },
+  {
+    "date": "2025-10-06T00:15:00Z",
+    "home": "Kansas City Chiefs",
+    "away": "Jacksonville Jaguars",
+    "venue": "EverBank Stadium"
+  },
+  {
+    "date": "2025-10-12T00:20:00Z",
+    "home": "Detroit Lions",
+    "away": "Kansas City Chiefs",
+    "venue": "Arrowhead Stadium"
+  },
+  {
+    "date": "2025-10-19T17:00:00Z",
+    "home": "Kansas City Chiefs",
+    "away": "Las Vegas Raiders",
+    "venue": "Arrowhead Stadium"
+  },
+  {
+    "date": "2025-10-27T00:15:00Z",
+    "home": "Washington Commanders",
+    "away": "Kansas City Chiefs",
+    "venue": "Arrowhead Stadium"
+  },
+  {
+    "date": "2025-11-02T20:25:00Z",
+    "home": "Kansas City Chiefs",
+    "away": "Buffalo Bills",
+    "venue": "Highmark Stadium"
+  },
+  {
+    "date": null,
+    "note": "Bye Week"
+  },
+  {
+    "date": "2025-11-16T20:25:00Z",
+    "home": "Denver Broncos",
+    "away": "Kansas City Chiefs",
+    "venue": "Empower Field at Mile High"
+  },
+  {
+    "date": "2025-11-23T17:00:00Z",
+    "home": "Kansas City Chiefs",
+    "away": "Indianapolis Colts",
+    "venue": "Arrowhead Stadium"
+  },
+  {
+    "date": "2025-11-27T20:30:00Z",
+    "home": "Dallas Cowboys",
+    "away": "Kansas City Chiefs",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": "2025-12-07T00:20:00Z",
+    "home": "Houston Texans",
+    "away": "Kansas City Chiefs",
+    "venue": "Arrowhead Stadium"
+  },
+  {
+    "date": "2025-12-14T17:00:00Z",
+    "home": "Kansas City Chiefs",
+    "away": "Los Angeles Chargers",
+    "venue": "Arrowhead Stadium"
+  },
+  {
+    "date": "2025-12-21T17:00:00Z",
+    "home": "Tennessee Titans",
+    "away": "Kansas City Chiefs",
+    "venue": "Nissan Stadium"
+  },
+  {
+    "date": "2025-12-25T00:15:00Z",
+    "home": "Denver Broncos",
+    "away": "Kansas City Chiefs",
+    "venue": "Arrowhead Stadium"
+  },
+  {
+    "date": null,
+    "home": "Kansas City Chiefs",
+    "away": "Las Vegas Raiders",
+    "venue": "Allegiant Stadium"
   }
 ]

@@ -736,5 +736,111 @@
     "home": "Washington Redskins",
     "away": "Philadelphia Eagles",
     "venue": "Lincoln Financial Field"
+  },
+ {
+    "date": "2025-09-07T21:05:00Z",
+    "home": "Seattle Seahawks",
+    "away": "San Francisco 49ers",
+    "venue": "Lumen Field"
+  },
+  {
+    "date": "2025-09-14T18:00:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Pittsburgh Steelers",
+    "venue": "Acrisure Stadium"
+  },
+  {
+    "date": "2025-09-21T21:05:00Z",
+    "home": "Seattle Seahawks",
+    "away": "New Orleans Saints",
+    "venue": "Lumen Field"
+  },
+  {
+    "date": "2025-09-25T17:15:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Arizona Cardinals",
+    "venue": "State Farm Stadium"
+  },
+  {
+    "date": "2025-10-05T21:05:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Tampa Bay Buccaneers",
+    "venue": "Lumen Field"
+  },
+  {
+    "date": "2025-10-12T18:00:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Jacksonville Jaguars",
+    "venue": "EverBank Stadium"
+  },
+  {
+    "date": "2025-10-20T07:00:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Houston Texans",
+    "venue": "Lumen Field"
+  },
+  {
+    "date": null,
+    "note": "Bye Week"
+  },
+  {
+    "date": "2025-11-02T01:20:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Washington Redskins",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": "2025-11-09T21:05:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Arizona Cardinals",
+    "venue": "Lumen Field"
+  },
+  {
+    "date": "2025-11-16T21:05:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Los Angeles Rams",
+    "venue": "SoFi Stadium"
+  },
+  {
+    "date": "2025-11-23T18:00:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Tennessee Titans",
+    "venue": "Nissan Stadium"
+  },
+  {
+    "date": "2025-11-30T21:05:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Minnesota Vikings",
+    "venue": "Lumen Field"
+  },
+  {
+    "date": "2025-12-07T18:00:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Atlanta Falcons",
+    "venue": "Mercedes-Benz Stadium"
+  },
+  {
+    "date": "2025-12-14T21:25:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Indianapolis Colts",
+    "venue": "Lumen Field"
+  },
+  {
+    "date": "2025-12-18T01:15:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Los Angeles Rams",
+    "venue": "Lumen Field"
+  },
+  {
+    "date": null,
+    "home": "Seattle Seahawks",
+    "away": "Carolina Panthers",
+    "venue": "Bank of America Stadium"
+  },
+  {
+    "date": null,
+    "home": "Seattle Seahawks",
+    "away": "San Francisco 49ers",
+    "venue": "Levi's Stadium"
   }
 ]

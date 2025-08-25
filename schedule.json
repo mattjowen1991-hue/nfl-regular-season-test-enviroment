@@ -524,5 +524,111 @@
     "home": "New York Giants",
     "away": "Dallas Cowboys",
     "venue": "MetLife Stadium"
+  },
+ {
+    "date": "2025-09-07T17:00:00Z",
+    "home": "New England Patriots",
+    "away": "Las Vegas Raiders",
+    "venue": "Gillette Stadium"
+  },
+  {
+    "date": "2025-09-14T17:00:00Z",
+    "home": "Miami Dolphins",
+    "away": "New England Patriots",
+    "venue": "Hard Rock Stadium"
+  },
+  {
+    "date": "2025-09-21T17:00:00Z",
+    "home": "New England Patriots",
+    "away": "Pittsburgh Steelers",
+    "venue": "Gillette Stadium"
+  },
+  {
+    "date": "2025-09-28T17:00:00Z",
+    "home": "New England Patriots",
+    "away": "Carolina Panthers",
+    "venue": "Gillette Stadium"
+  },
+  {
+    "date": "2025-10-06T00:20:00Z",
+    "home": "New England Patriots",
+    "away": "Buffalo Bills",
+    "venue": "Highmark Stadium"
+  },
+  {
+    "date": "2025-10-12T20:25:00Z",
+    "home": "New England Patriots",
+    "away": "New Orleans Saints",
+    "venue": "Caesars Superdome"
+  },
+  {
+    "date": "2025-10-19T17:00:00Z",
+    "home": "Tennessee Titans",
+    "away": "New England Patriots",
+    "venue": "Nissan Stadium"
+  },
+  {
+    "date": "2025-10-26T17:00:00Z",
+    "home": "New England Patriots",
+    "away": "Cleveland Browns",
+    "venue": "Gillette Stadium"
+  },
+  {
+    "date": "2025-11-02T17:00:00Z",
+    "home": "New England Patriots",
+    "away": "Atlanta Falcons",
+    "venue": "Gillette Stadium"
+  },
+  {
+    "date": "2025-11-09T17:00:00Z",
+    "home": "Tampa Bay Buccaneers",
+    "away": "New England Patriots",
+    "venue": "Raymond James Stadium"
+  },
+  {
+    "date": "2025-11-13T00:15:00Z",
+    "home": "New England Patriots",
+    "away": "New York Jets",
+    "venue": "Gillette Stadium"
+  },
+  {
+    "date": "2025-11-23T17:00:00Z",
+    "home": "Cincinnati Bengals",
+    "away": "New England Patriots",
+    "venue": "Paycor Stadium"
+  },
+  {
+    "date": "2025-12-01T00:15:00Z",
+    "home": "New England Patriots",
+    "away": "New York Giants",
+    "venue": "Gillette Stadium"
+  },
+  {
+    "date": null,
+    "note": "Bye Week"
+  },
+  {
+    "date": "2025-12-14T17:00:00Z",
+    "home": "New England Patriots",
+    "away": "Buffalo Bills",
+    "venue": "Gillette Stadium"
+  },
+  {
+    "date": "2025-12-21T17:00:00Z",
+    "home": "Baltimore Ravens",
+    "away": "New England Patriots",
+    "venue": "M&T Bank Stadium"
+  },
+  {
+    "date": "2025-12-28T17:00:00Z",
+    "home": "New York Jets",
+    "away": "New England Patriots",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": null,
+    "home": "New England Patriots",
+    "away": "Miami Dolphins",
+    "venue": "Gillette Stadium"
   }
 ]

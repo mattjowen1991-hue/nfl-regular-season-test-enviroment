@@ -14,14 +14,13 @@
   <style>
     :root { --line: rgba(255,255,255,0.15); --theme:#2563eb; --nfl-red:#c8102e; }
 
-    /* ------------ Font: Freshman ------------ */
+    /* Font: Freshman */
     @font-face {
       font-family: 'Freshman';
       src: url('Assets/Freshman.ttf') format('truetype');
       font-weight: normal; font-style: normal; font-display: swap;
     }
 
-    /* ------------ Background (robust mobile) ------------ */
     html, body { min-height: 100%; }
     body{
       font-family: 'Freshman', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -45,15 +44,12 @@
       }
     }
 
-    /* Lock scroll when a modal is open */
-    body.no-scroll { overflow: hidden; }
-
-    /* ------------ Typography ------------ */
+    /* Typography */
     h1,h2,h3,h4,.riddle-title{ text-transform:uppercase; letter-spacing:.05em; font-weight:900; }
     .riddle-title{ letter-spacing:.08em; }
     .text-2xl,.text-xl,.font-extrabold{ letter-spacing:.06em; }
 
-    /* ------------ UI bits ------------ */
+    /* UI bits */
     .rule-key{ color:var(--nfl-red); font-weight:700; }
     .card{ background:rgba(0,0,0,.60); border:1px solid var(--line); border-radius:1rem; box-shadow:0 4px 12px rgba(0,0,0,.5); }
     .tab-btn,.pill{ background:rgba(255,255,255,.10); border:1px solid var(--line); color:#fff; transition:background .2s; text-transform:uppercase; letter-spacing:.05em; }
@@ -62,10 +58,10 @@
     .avatar{ width:56px; height:56px; border-radius:50%; object-fit:cover; }
     .grid-auto{ display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:1rem; }
 
-    /* Player CARD: solid background + selectable glow */
+    /* Player card */
     .player-card{
       position:relative;
-      background:#0d111a;                 /* SOLID */
+      background:#0d111a;
       border:1px solid var(--line);
       border-radius:1rem;
       box-shadow:0 4px 12px rgba(0,0,0,.5);
@@ -75,7 +71,6 @@
     .player-card.selected{
       box-shadow:0 0 0 4px rgba(245,158,11,.8), 0 10px 24px rgba(0,0,0,.6);
     }
-
     .medal-badge{
       position:absolute; top:.5rem; right:.5rem;
       width:2.25rem; height:2.25rem; border-radius:9999px;
@@ -83,24 +78,30 @@
       z-index:2; pointer-events:none;
     }
 
-    /* Modals - solid cards */
+    /* Modals + scroll lock */
     .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; z-index:60; }
     .modal-backdrop.open{ display:flex; align-items:center; justify-content:center; }
     .modal-card { background:#111 !important; border:1px solid var(--line); border-radius:1rem; box-shadow:0 8px 20px rgba(0,0,0,.75); }
+    .body-locked { overflow:hidden; touch-action:none; position:relative; }
 
     /* Profile panel */
     .profile-panel{ width:min(900px,92vw); max-height:90vh; overflow:auto; }
     .stat-card{ background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:1rem; padding:1rem; text-align:center; }
     .close-btn{ position:absolute; top:.5rem; right:.5rem; width:40px; height:40px; border-radius:9999px; background:rgba(255,255,255,.1); border:1px solid var(--line); display:grid; place-items:center; }
     .close-btn:hover{ background:rgba(255,255,255,.2); }
-    .team-pill{ display:inline-flex; align-items:center; gap:.5rem; border:1px solid var(--line); border-radius:9999px; padding:.4rem .75rem; background:rgba(255,255,255,.06); }
 
-    /* Mobile tweaks */
-    @media (max-width:640px){
-      header .riddle-title{ font-size:1.5rem }
-      .card{ padding:1rem !important }
-      .tab-btn,.pill{ font-size:1rem; padding:.5rem 1rem }
+    .team-pill{
+      display:inline-flex; align-items:center; gap:.5rem;
+      border:1px solid var(--line); border-radius:9999px; padding:.4rem .75rem;
+      background:rgba(255,255,255,.06);
     }
+    .team-pill img { width:3rem; height:3rem; object-fit:contain; } /* bigger logos: w-12 h-12 */
+
+    .next-game{
+      margin-top:1rem; border:1px solid var(--line); border-radius:1rem;
+      background:rgba(255,255,255,.04); padding:0.75rem 1rem;
+    }
+    .next-game img { width:2rem; height:2rem; object-fit:contain; }
   </style>
 </head>
 <body>
@@ -113,9 +114,7 @@
       2025 NFL League
       <span class="block">Regular Season</span>
     </h1>
-    <p class="text-center opacity-80 text-base mt-2">
-      Updated weekly
-    </p>
+    <p class="text-center opacity-80 text-base mt-2">Updated weekly</p>
     <div class="mt-4 flex items-center justify-center gap-3">
       <button id="rulesBtn" class="tab-btn px-3 py-1.5 rounded-lg text-sm">Rules</button>
       <a id="repoLink" class="text-sm underline opacity-90 hover:opacity-100" target="_blank" rel="noreferrer">View on GitHub</a>
@@ -154,8 +153,8 @@
 
   <!-- Rules Modal -->
   <div id="rulesModal" class="modal-backdrop" aria-hidden="true">
-    <div class="modal-card card max-w-[600px] w-[92vw] p-6" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
-      <h3 id="rulesTitle" class="riddle-title text-xl font-extrabold mb-3 text-center">League Rules</h3>
+    <div class="modal-card card max-w-[600px] w-[92vw] p-6">
+      <h3 class="riddle-title text-xl font-extrabold mb-3 text-center">League Rules</h3>
       <ol class="list-decimal pl-5 space-y-2 text-sm leading-6">
         <li><span class="rule-key">Submit</span> Sunday game picks before <span class="rule-key">6 PM UK</span>.</li>
         <li>Each correct prediction earns <span class="rule-key">1 point</span>.</li>
@@ -171,8 +170,8 @@
 
   <!-- Player Profile Modal -->
   <div id="profileModal" class="modal-backdrop" aria-hidden="true">
-    <div class="modal-card profile-panel relative p-5 sm:p-7" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
-      <button class="close-btn" id="profileClose" title="Close" aria-label="Close profile"><span aria-hidden="true">✕</span></button>
+    <div class="modal-card profile-panel relative p-5 sm:p-7">
+      <button class="close-btn" id="profileClose" title="Close"><span aria-hidden="true">✕</span></button>
 
       <div class="flex items-center gap-4">
         <img id="profAvatar" src="" alt="" class="w-20 h-20 rounded-full object-cover border border-[var(--line)]">
@@ -191,14 +190,24 @@
         <div class="stat-card"><div class="text-xs opacity-80">Perfect Weeks</div><div id="statPerfect" class="text-2xl font-extrabold">0</div></div>
       </div>
 
-      <!-- Next game card goes here -->
-      <div id="profNextGame" class="mt-6"></div>
+      <!-- Next Game -->
+      <div id="nextGame" class="next-game hidden">
+        <div class="flex items-center gap-3">
+          <img id="nextHomeLogo" src="" alt="" />
+          <div class="text-sm">
+            <div class="font-extrabold" id="nextMatchup">Team vs Opponent</div>
+            <div class="opacity-80" id="nextWhen">Sun 1:00 PM UK</div>
+            <div class="opacity-80" id="nextVenue">Venue</div>
+          </div>
+          <div class="ml-auto">
+            <img id="nextAwayLogo" src="" alt="" />
+          </div>
+        </div>
+      </div>
 
       <div class="mt-5 flex items-center justify-end">
         <button id="metricHelpBtn" class="tab-btn px-3 py-1.5 rounded-lg text-sm">Metrics Explained</button>
       </div>
-
-      <!-- Inline help (toggles) -->
       <div id="metricHelp" class="hidden mt-3 text-sm leading-6 bg-black/40 border border-[var(--line)] rounded-xl p-4">
         <ul class="list-disc ml-5 space-y-1">
           <li><span class="rule-key">Total Points</span> Sum of all your weekly points.</li>
@@ -213,22 +222,23 @@
   </div>
 
   <script>
-    /* ---------- Config: team logos map (expand as needed) ---------- */
+    /* ------------ Config & helpers ------------ */
+    const paths = { players:"players.json", weeks:"weeks.json", config:"config.json", schedule:"schedule.json" };
+
+    // team name -> logo path (extend as needed)
     const teamLogos = {
       "San Francisco 49ers": "Assets/san-francisco-49ers.png",
-      "Dallas Cowboys": "Assets/dallas-cowboys.png",
       "Philadelphia Eagles": "Assets/philadelphia-eagles.png",
       "New York Giants": "Assets/new-york-giants.png",
       "Kansas City Chiefs": "Assets/kansas-city-chiefs.png",
       "New England Patriots": "Assets/new-england-patriots.png",
       "Washington Commanders": "Assets/washington-commanders.png",
-      "Las Vegas Raiders": "Assets/raiders.png",
+      "Washington Redskins": "Assets/washington-redskins.png",   // if you kept this in players.json
       "Seattle Seahawks": "Assets/seattle-seahawks.png",
-      // add more as you need...
+      "Las Vegas Raiders": "Assets/raiders.png",
+      "Dallas Cowboys": "Assets/dallas-cowboys.png"
+      // add more as you like
     };
-
-    /* ---------- Utilities ---------- */
-    const paths = { players:"players.json", weeks:"weeks.json", config:"config.json", schedule:"schedule.json" };
 
     async function loadJSON(path){
       const res = await fetch(path, { cache: 'no-store' });
@@ -236,7 +246,19 @@
       return await res.json();
     }
 
-    /* ---------- Compute base tables ---------- */
+    function formatUK(isoLike){
+      // Accepts ISO string in UTC or with offset, returns e.g. "Sun 6 Oct, 9:25 PM UK"
+      try{
+        const dt = new Date(isoLike);
+        return dt.toLocaleString('en-GB', {
+          timeZone: 'Europe/London',
+          weekday: 'short', day: 'numeric', month: 'short',
+          hour: 'numeric', minute: '2-digit', hour12: true
+        }).replace(',', ',') + ' UK';
+      }catch(e){ return ''; }
+    }
+
+    /* ------------ Compute base tables ------------ */
     function compute({ players, weeks }){
       const playersById = Object.fromEntries(players.map(p=>[p.id,p]));
       const weekNums = [...new Set(weeks.map(w=>w.week))].sort((a,b)=>a-b);
@@ -251,15 +273,14 @@
           const val = Number(pts);
           if(Number.isFinite(val)){
             t.total += val;
-            t.perWeek[w.week] = val;  // undefined = DNP; number 0+ = played
+            t.perWeek[w.week] = val;
           }
         }
       });
-
       return { playersById, totals, weekNums };
     }
 
-    /* ---------- Leaderboard UI ---------- */
+    /* ------------ Leaderboard UI ------------ */
     function medal(rank){
       if(rank===0) return {emoji:"🥇", color:"from-yellow-400 to-yellow-600", name:"Gold"};
       if(rank===1) return {emoji:"🥈", color:"from-gray-300 to-gray-500", name:"Silver"};
@@ -302,14 +323,12 @@
       const root = document.getElementById('leaderboard');
       root.innerHTML = html;
 
-      // selection highlight on card tap/click (doesn't open profile)
       root.querySelectorAll('.player-card').forEach(card=>{
         card.addEventListener('click', (e)=>{
-          if(e.target.closest('.open-profile')) return; // ignore when pressing the button
+          if(e.target.closest('.open-profile')) return;
           card.classList.toggle('selected');
         });
       });
-      // handle Profile buttons
       root.querySelectorAll('.open-profile').forEach(btn=>{
         btn.addEventListener('click', (e)=>{
           e.stopPropagation();
@@ -318,7 +337,7 @@
       });
     }
 
-    /* ---------- Season Highlight & Honorary ---------- */
+    /* ------------ Season Highlight & Honorary ------------ */
     function renderHighlight(cfg, playersById){
       const el = document.getElementById('highlight');
       if(!el) return;
@@ -375,38 +394,31 @@
         : '<div class="opacity-60 text-center">No honorary winners yet.</div>';
     }
 
-    /* ---------- Profile Stats (with "played weeks" fix) ---------- */
-    // Only count weeks that actually happened (at least one player scored > 0)
+    /* ------------ Profile stats ------------ */
     function computeProfileStats(weeks, playerId, config){
       const playedWeeks = weeks.filter(w=>{
         const vals = Object.values(w.scores || {}).map(Number).filter(Number.isFinite);
         return vals.some(v => v > 0);
       });
 
-      const perfectMap = config?.perfectWeekPoints || {}; // { "1": 14, ... }
+      const perfectMap = config?.perfectWeekPoints || {};
 
-      let total = 0;
-      let games = 0;
-      let bestPoints = -Infinity;
-      let bestWeek = null;
+      let total = 0, games = 0;
+      let bestPoints = -Infinity, bestWeek = null;
       let longest = 0, current = 0;
       let perfectCount = 0;
 
       for(const w of playedWeeks){
         const raw = w?.scores?.[playerId];
-        if(raw === undefined) continue; // DNP in a week that happened
+        if(raw === undefined) continue;
         const v = Number(raw);
         if(!Number.isFinite(v)) continue;
 
-        total += v;
-        games += 1;
+        total += v; games += 1;
 
         if(v > bestPoints){ bestPoints = v; bestWeek = w.week; }
+        if(v > 0){ current += 1; longest = Math.max(longest, current); } else { current = 0; }
 
-        if(v > 0){ current += 1; longest = Math.max(longest, current); }
-        else { current = 0; }
-
-        // perfect week target
         let target;
         if(perfectMap[w.week] != null){
           target = Number(perfectMap[w.week]);
@@ -416,11 +428,8 @@
           const vals = Object.values(w.scores||{}).map(n=>Number(n)).filter(Number.isFinite);
           target = vals.length ? Math.max(...vals) : undefined;
         }
-        if(Number.isFinite(target) && v === target && v > 0){
-          perfectCount += 1;
-        }
+        if(Number.isFinite(target) && v === target && v > 0){ perfectCount += 1; }
       }
-
       if(bestPoints === -Infinity){ bestPoints = 0; bestWeek = null; }
 
       return {
@@ -434,29 +443,17 @@
       };
     }
 
-    /* ---------- Next Game Helper ---------- */
-    function getNextGame(team, schedule){
-      if(!team || !Array.isArray(schedule)) return null;
+    /* ------------ Next game (uses schedule.json) ------------ */
+    function findNextGameForTeam(schedule, teamName){
       const now = new Date();
-
-      const upcoming = schedule
-        .map(g => ({ ...g, _d: new Date(g.date) }))
-        .filter(g => g._d > now && (g.home === team || g.away === team))
-        .sort((a,b)=> a._d - b._d);
-
-      const next = upcoming[0];
-      if(!next) return null;
-
-      const opponent = next.home === team ? next.away : next.home;
-      return {
-        date: next.date,
-        venue: next.venue || '',
-        opponent,
-        opponentLogo: teamLogos[opponent] || null
-      };
+      const future = schedule
+        .filter(g => g.home === teamName || g.away === teamName)
+        .map(g => ({ ...g, dt: new Date(g.kickoffUTC || g.kickoffET || g.kickoff) }))
+        .filter(g => g.dt > now)
+        .sort((a,b)=> a.dt - b.dt);
+      return future[0] || null;
     }
 
-    /* ---------- Profile Modal ---------- */
     function openProfile(playerId){
       const { playersById } = window.state;
       const player = playersById[playerId];
@@ -464,65 +461,61 @@
 
       const stats = computeProfileStats(window.weeks, playerId, window.config || {});
 
-      // Header bits
-      document.getElementById('profAvatar').src = player.avatar;
-      document.getElementById('profAvatar').alt = player.name;
-      document.getElementById('profName').textContent = player.name;
+      // Header
+      profAvatar.src = player.avatar;
+      profAvatar.alt = player.name;
+      profName.textContent = player.name;
 
-      // Team pill (optional in players.json) — logo at w-12 h-12 as requested
-      const teamWrap = document.getElementById('profTeam');
+      // Team pill (big logo)
       if(player.team || player.teamLogo){
-        const logo = player.teamLogo || teamLogos[player.team];
-        teamWrap.innerHTML = `
+        profTeam.innerHTML = `
           <span class="team-pill">
-            ${logo ? `<img src="${logo}" alt="" class="w-12 h-12 object-contain rounded-sm">` : ''}
+            <img src="${player.teamLogo || teamLogos[player.team] || 'Assets/placeholder.png'}" alt="">
             <span>${player.team || 'Team'}</span>
           </span>`;
-      } else {
-        teamWrap.innerHTML = '';
+      }else{
+        profTeam.innerHTML = '';
       }
 
       // Stats
-      document.getElementById('statTotal').textContent   = stats.totalPoints;
-      document.getElementById('statGames').textContent   = stats.gamesPlayed;
-      document.getElementById('statAvg').textContent     = stats.avgPerGame.toFixed(2);
-      document.getElementById('statBest').textContent    = stats.bestWeek ? `W${stats.bestWeek} (${stats.bestPoints})` : '—';
-      document.getElementById('statStreak').textContent  = stats.longest;
-      document.getElementById('statPerfect').textContent = stats.perfectWeeks;
+      statTotal.textContent   = stats.totalPoints;
+      statGames.textContent   = stats.gamesPlayed;
+      statAvg.textContent     = stats.avgPerGame.toFixed(2);
+      statBest.textContent    = stats.bestWeek ? \`W\${stats.bestWeek} (\${stats.bestPoints})\` : '—';
+      statStreak.textContent  = stats.longest;
+      statPerfect.textContent = stats.perfectWeeks;
 
-      // Next Game (with opponent logo at w-12 h-12)
-      const nextGameEl = document.getElementById('profNextGame');
-      const ng = getNextGame(player.team, window.schedule || []);
-      if(ng){
-        nextGameEl.innerHTML = `
-          <div class="stat-card flex items-center justify-between gap-3">
-            <div>
-              <div class="text-xs opacity-80">Next Game</div>
-              <div class="text-sm font-extrabold">${new Date(ng.date).toLocaleString()}</div>
-              <div class="text-base">${player.team} vs ${ng.opponent}</div>
-              ${ng.venue ? `<div class="text-xs opacity-80 mt-1">${ng.venue}</div>` : ''}
-            </div>
-            ${ng.opponentLogo ? `<img src="${ng.opponentLogo}" class="w-12 h-12 object-contain rounded-sm" alt="${ng.opponent}">` : ''}
-          </div>
-        `;
+      // Next game (UK time + both logos)
+      const next = findNextGameForTeam(window.schedule || [], player.team);
+      const nextBox = document.getElementById('nextGame');
+      if(next){
+        const homeLogo = teamLogos[next.home] || 'Assets/placeholder.png';
+        const awayLogo = teamLogos[next.away] || 'Assets/placeholder.png';
+        document.getElementById('nextHomeLogo').src = homeLogo;
+        document.getElementById('nextAwayLogo').src = awayLogo;
+        document.getElementById('nextMatchup').textContent = \`\${next.home} vs \${next.away}\`;
+        document.getElementById('nextWhen').textContent   = formatUK(next.kickoffUTC || next.kickoffET || next.kickoff);
+        document.getElementById('nextVenue').textContent  = next.venue || '';
+        nextBox.classList.remove('hidden');
       } else {
-        nextGameEl.innerHTML = `<div class="stat-card opacity-60">No upcoming games</div>`;
+        nextBox.classList.add('hidden');
       }
 
       // Show modal + lock scroll
       document.getElementById('profileModal').classList.add('open');
-      document.body.classList.add('no-scroll');
+      document.body.classList.add('body-locked');
     }
 
-    /* ---------- Boot ---------- */
+    /* ------------ Boot ------------ */
     (async function boot(){
       try{
         const [players, weeks, config, schedule] = await Promise.all([
           loadJSON(paths.players),
           loadJSON(paths.weeks),
           loadJSON(paths.config).catch(()=>({})),
-          loadJSON(paths.schedule).catch(()=>[]) // schedule.json optional
+          loadJSON(paths.schedule).catch(()=>[])
         ]);
+
         window.weeks = weeks;
         window.config = config;
         window.schedule = schedule;
@@ -530,22 +523,21 @@
         const state = compute({ players, weeks });
         window.state = state;
 
-        // Build week dropdown (ascending) and default it to Week 1
+        // Week dropdown
         const weekSel = document.getElementById('weekSelect');
         const totalBtn = document.getElementById('totalBtn');
-
         weekSel.innerHTML = state.weekNums.map(w=>`<option value="${w}">Week ${w}</option>`).join('');
-        if(state.weekNums.length){ weekSel.value = String(state.weekNums[0]); } // Week 1
+        if(state.weekNums.length){ weekSel.value = String(state.weekNums[0]); }
 
         // Initial renders
-        renderLeaderboard(state.totals, 'total'); // Always start on All
+        renderLeaderboard(state.totals, 'total');
         renderHighlight(config, state.playersById);
         renderHonorary(config, state.playersById);
 
-        // Keep defaulting to All even on bfcache returns
+        // Always default back to "All"
         function resetToAll(){
           totalBtn.setAttribute('aria-selected','true');
-          if(state.weekNums.length) weekSel.selectedIndex = 0; // show "Week 1"
+          if(state.weekNums.length) weekSel.selectedIndex = 0;
           renderLeaderboard(state.totals, 'total');
         }
         resetToAll();
@@ -561,31 +553,42 @@
           renderLeaderboard(state.totals, 'week', Number(weekSel.value));
         });
 
-        // Rules modal + lock scroll
+        // Rules modal + scroll lock
         const rulesModal = document.getElementById('rulesModal');
-        const openRules = ()=>{ rulesModal.classList.add('open'); document.body.classList.add('no-scroll'); };
-        const closeRules = ()=>{ rulesModal.classList.remove('open'); document.body.classList.remove('no-scroll'); };
+        document.getElementById('rulesBtn').addEventListener('click', ()=>{
+          rulesModal.classList.add('open');
+          document.body.classList.add('body-locked');
+        });
+        document.getElementById('closeRules').addEventListener('click', ()=>{
+          rulesModal.classList.remove('open');
+          document.body.classList.remove('body-locked');
+        });
+        rulesModal.addEventListener('click', e=>{
+          if(e.target===rulesModal){
+            rulesModal.classList.remove('open');
+            document.body.classList.remove('body-locked');
+          }
+        });
 
-        document.getElementById('rulesBtn').addEventListener('click', openRules);
-        document.getElementById('closeRules').addEventListener('click', closeRules);
-        rulesModal.addEventListener('click', e=>{ if(e.target===rulesModal) closeRules(); });
-
-        // Profile modal + lock scroll
+        // Profile modal close
         const profileModal = document.getElementById('profileModal');
-        const closeProfile = ()=>{ profileModal.classList.remove('open'); document.body.classList.remove('no-scroll'); };
-        document.getElementById('profileClose').addEventListener('click', closeProfile);
-        profileModal.addEventListener('click', e=>{ if(e.target===profileModal) closeProfile(); });
+        document.getElementById('profileClose').addEventListener('click', ()=>{
+          profileModal.classList.remove('open');
+          document.body.classList.remove('body-locked');
+        });
+        profileModal.addEventListener('click', e=>{
+          if(e.target===profileModal){
+            profileModal.classList.remove('open');
+            document.body.classList.remove('body-locked');
+          }
+        });
 
         // Metric help toggle
         const metricHelpBtn = document.getElementById('metricHelpBtn');
         const metricHelp = document.getElementById('metricHelp');
-        metricHelpBtn.addEventListener('click', ()=>{
-          metricHelp.classList.toggle('hidden');
-        });
+        metricHelpBtn.addEventListener('click', ()=> metricHelp.classList.toggle('hidden'));
 
-        // Repo link + footer year
-        const repoLink = document.getElementById('repoLink');
-        if(repoLink) repoLink.href = config.repoUrl || '#';
+        // Footer year
         document.getElementById('copyrightYear').textContent = new Date().getFullYear();
 
       }catch(err){

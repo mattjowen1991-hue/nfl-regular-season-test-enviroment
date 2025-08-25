@@ -1,0 +1,32 @@
+[
+  {
+    "date": "2025-09-07T17:00:00Z",
+    "home": "San Francisco 49ers",
+    "away": "Dallas Cowboys",
+    "venue": "Levi's Stadium"
+  },
+  {
+    "date": "2025-09-07T20:25:00Z",
+    "home": "Philadelphia Eagles",
+    "away": "Washington Redskins",
+    "venue": "Lincoln Financial Field"
+  },
+  {
+    "date": "2025-09-08T00:20:00Z",
+    "home": "Seattle Seahawks",
+    "away": "New York Giants",
+    "venue": "Lumen Field"
+  },
+  {
+    "date": "2025-09-14T17:00:00Z",
+    "home": "Kansas City Chiefs",
+    "away": "New England Patriots",
+    "venue": "GEHA Field at Arrowhead Stadium"
+  },
+  {
+    "date": "2025-09-14T20:25:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "San Francisco 49ers",
+    "venue": "Allegiant Stadium"
+  }
+]

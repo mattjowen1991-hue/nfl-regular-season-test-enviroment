@@ -418,5 +418,111 @@
     "home": "Kansas City Chiefs",
     "away": "Las Vegas Raiders",
     "venue": "Allegiant Stadium"
+  },
+  {
+    "date": "2025-09-07T17:00:00Z",
+    "home": "Washington Commanders",
+    "away": "New York Giants",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": "2025-09-14T17:00:00Z",
+    "home": "Dallas Cowboys",
+    "away": "New York Giants",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": "2025-09-21T00:20:00Z",
+    "home": "New York Giants",
+    "away": "Kansas City Chiefs",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": "2025-09-28T17:00:00Z",
+    "home": "New York Giants",
+    "away": "Los Angeles Chargers",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": "2025-10-05T17:00:00Z",
+    "home": "New Orleans Saints",
+    "away": "New York Giants",
+    "venue": "Caesars Superdome"
+  },
+  {
+    "date": "2025-10-09T00:15:00Z",
+    "home": "New York Giants",
+    "away": "Philadelphia Eagles",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": "2025-10-19T20:05:00Z",
+    "home": "Denver Broncos",
+    "away": "New York Giants",
+    "venue": "Empower Field at Mile High"
+  },
+  {
+    "date": "2025-10-26T17:00:00Z",
+    "home": "Philadelphia Eagles",
+    "away": "New York Giants",
+    "venue": "Lincoln Financial Field"
+  },
+  {
+    "date": "2025-11-02T17:00:00Z",
+    "home": "New York Giants",
+    "away": "San Francisco 49ers",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": "2025-11-09T17:00:00Z",
+    "home": "Chicago Bears",
+    "away": "New York Giants",
+    "venue": "Soldier Field"
+  },
+  {
+    "date": "2025-11-16T17:00:00Z",
+    "home": "New York Giants",
+    "away": "Green Bay Packers",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": "2025-11-23T17:00:00Z",
+    "home": "Detroit Lions",
+    "away": "New York Giants",
+    "venue": "Ford Field"
+  },
+  {
+    "date": "2025-12-01T00:15:00Z",
+    "home": "New England Patriots",
+    "away": "New York Giants",
+    "venue": "Gillette Stadium"
+  },
+  {
+    "date": null,
+    "note": "Bye Week"
+  },
+  {
+    "date": "2025-12-14T17:00:00Z",
+    "home": "New York Giants",
+    "away": "Washington Commanders",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": "2025-12-21T17:00:00Z",
+    "home": "New York Giants",
+    "away": "Minnesota Vikings",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": null,
+    "home": "Las Vegas Raiders",
+    "away": "New York Giants",
+    "venue": "Allegiant Stadium"
+  },
+  {
+    "date": null,
+    "home": "New York Giants",
+    "away": "Dallas Cowboys",
+    "venue": "MetLife Stadium"
   }
 ]

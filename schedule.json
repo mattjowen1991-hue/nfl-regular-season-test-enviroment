@@ -948,5 +948,111 @@
     "home": "Las Vegas Raiders",
     "away": "Kansas City Chiefs",
     "venue": "Allegiant Stadium"
+  },
+  {
+    "date": "2025-09-04T00:20:00Z",
+    "home": "Philadelphia Eagles",
+    "away": "Dallas Cowboys",
+    "venue": "Lincoln Financial Field"
+  },
+  {
+    "date": "2025-09-14T17:00:00Z",
+    "home": "Dallas Cowboys",
+    "away": "New York Giants",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": "2025-09-21T20:25:00Z",
+    "home": "Dallas Cowboys",
+    "away": "Chicago Bears",
+    "venue": "Soldier Field"
+  },
+  {
+    "date": "2025-09-29T00:20:00Z",
+    "home": "Green Bay Packers",
+    "away": "Dallas Cowboys",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": "2025-10-05T17:00:00Z",
+    "home": "Dallas Cowboys",
+    "away": "New York Jets",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": "2025-10-12T17:00:00Z",
+    "home": "Dallas Cowboys",
+    "away": "Carolina Panthers",
+    "venue": "Bank of America Stadium"
+  },
+  {
+    "date": "2025-10-19T20:25:00Z",
+    "home": "Dallas Cowboys",
+    "away": "Washington Redskins",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": "2025-10-26T20:25:00Z",
+    "home": "Dallas Cowboys",
+    "away": "Denver Broncos",
+    "venue": "Empower Field at Mile High"
+  },
+  {
+    "date": "2025-11-03T00:15:00Z",
+    "home": "Arizona Cardinals",
+    "away": "Dallas Cowboys",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": null,
+    "note": "Bye Week"
+  },
+  {
+    "date": "2025-11-17T00:15:00Z",
+    "home": "Las Vegas Raiders",
+    "away": "Dallas Cowboys",
+    "venue": "Allegiant Stadium"
+  },
+  {
+    "date": "2025-11-23T16:25:00Z",
+    "home": "Dallas Cowboys",
+    "away": "Philadelphia Eagles",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": "2025-11-27T21:30:00Z",
+    "home": "Dallas Cowboys",
+    "away": "Kansas City Chiefs",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": "2025-12-05T01:15:00Z",
+    "home": "Detroit Lions",
+    "away": "Dallas Cowboys",
+    "venue": "Ford Field"
+  },
+  {
+    "date": "2025-12-15T00:20:00Z",
+    "home": "Dallas Cowboys",
+    "away": "Minnesota Vikings",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": "2025-12-21T17:00:00Z",
+    "home": "Dallas Cowboys",
+    "away": "Los Angeles Chargers",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": "2025-12-25T18:00:00Z",
+    "home": "Washington Redskins",
+    "away": "Dallas Cowboys",
+    "venue": "Northwest Stadium"
+  },
+  {
+    "date": null,
+    "home": "New York Giants",
+    "away": "Dallas Cowboys",
+    "venue": "MetLife Stadium"
   }
 ]

@@ -573,7 +573,8 @@ if(next){
 }
 
       // Stats
-      document.getElementById('statTotal').textContent   = stats.totalPoints;
+      document.getElementById('statNFLWins').textContent =
+  Number.isFinite(Number(player.nflWins)) ? Number(player.nflWins) : 0;
       document.getElementById('statGames').textContent   = stats.gamesPlayed;
       document.getElementById('statAvg').textContent     = stats.avgPerGame.toFixed(2);
       document.getElementById('statWinRate').textContent = stats.winRate + '%';

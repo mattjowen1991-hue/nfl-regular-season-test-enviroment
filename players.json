@@ -1,9 +1,9 @@
 [
-  { "id": "matt",  "name": "Matt",  "avatar": "Assets/matt.png",  "team": "San Francisco 49ers", "teamLogo": "Assets/san-francisco-49ers.png", "superbowlWins": 0, "nflWins": 1 🏆 },
+  { "id": "matt",  "name": "Matt",  "avatar": "Assets/matt.png",  "team": "San Francisco 49ers", "teamLogo": "Assets/san-francisco-49ers.png", "superbowlWins": 0, "nflWins": 1 },
   { "id": "jarv",  "name": "Jarv",  "avatar": "Assets/jarv.png",  "team": "Philadelphia Eagles", "teamLogo": "Assets/philadelphia-eagles.png", "superbowlWins": 0, "nflWins": 0 },
   { "id": "gaz",   "name": "Gaz",   "avatar": "Assets/gaz.png",   "team": "New York Giants", "teamLogo": "Assets/new-york-giants.png", "superbowlWins": 0, "nflWins": 0 },
   { "id": "joe",   "name": "Joe",   "avatar": "Assets/joe.png",   "team": "Kansas City Chiefs", "teamLogo": "Assets/kansas-city-chiefs.png", "superbowlWins": 0, "nflWins": 0 },
-  { "id": "ben",   "name": "Ben",   "avatar": "Assets/ben.png",   "team": "New England Patriots", "teamLogo": "Assets/new-england-patriots.png", "superbowlWins": 1 🌟, "nflWins": 0 },
+  { "id": "ben",   "name": "Ben",   "avatar": "Assets/ben.png",   "team": "New England Patriots", "teamLogo": "Assets/new-england-patriots.png", "superbowlWins": 1, "nflWins": 0 },
   { "id": "coley", "name": "Coley", "avatar": "Assets/coley.png", "team": "Washington Redskins", "teamLogo": "Assets/washington-redskins.png", "superbowlWins": 0, "nflWins": 0 },
   { "id": "mark",  "name": "Mark",  "avatar": "Assets/mark.png",  "team": "San Francisco 49ers", "teamLogo": "Assets/san-francisco-49ers.png", "superbowlWins": 0, "nflWins": 0 },
   { "id": "ste",   "name": "Ste",   "avatar": "Assets/ste.png",   "team": "Seattle Seahawks", "teamLogo": "Assets/seattle-seahawks.png", "superbowlWins": 0, "nflWins": 0 },

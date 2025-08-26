@@ -10,5 +10,5 @@
   { "id": "tony",  "name": "Tony",  "avatar": "Assets/donuts.png","team": "Las Vegas Raiders", "teamLogo": "Assets/raiders.png", "superbowlWins": 0 },
   { "id": "jay",   "name": "Jay",   "avatar": "Assets/jay.png",   "team": "Seattle Seahawks", "teamLogo": "Assets/seattle-seahawks.png", "superbowlWins": 0 },
   { "id": "lee",   "name": "Lee",   "avatar": "Assets/lee.png",   "team": "Dallas Cowboys", "teamLogo": "Assets/dallas-cowboys.png", "superbowlWins": 0 },
-  { "id": "liam",  "name": "Liam",  "avatar": "Assets/liam.png",  "team": "Placeholder Team", "teamLogo": "Assets/placeholder.png", "superbowlWins": 0 }
+  { "id": "liam",  "name": "Liam",  "avatar": "Assets/liam.png",  "team": "Assets/Minnesota Vikings", "teamLogo": "Assets/Assets/minnesota-vikings.png", "superbowlWins": 0 }
 ]

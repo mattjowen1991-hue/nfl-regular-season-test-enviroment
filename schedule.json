@@ -1054,5 +1054,111 @@
     "home": "New York Giants",
     "away": "Dallas Cowboys",
     "venue": "MetLife Stadium"
+  },
+  {
+    "date": "2025-09-09T00:15:00Z",
+    "home": "Chicago Bears",
+    "away": "Minnesota Vikings",
+    "venue": "Soldier Field"
+  },
+  {
+    "date": "2025-09-14T00:20:00Z",
+    "home": "Minnesota Vikings",
+    "away": "Atlanta Falcons",
+    "venue": "U.S. Bank Stadium"
+  },
+  {
+    "date": "2025-09-21T17:00:00Z",
+    "home": "Minnesota Vikings",
+    "away": "Cincinnati Bengals",
+    "venue": "U.S. Bank Stadium"
+  },
+  {
+    "date": "2025-09-28T13:30:00Z",
+    "home": "Pittsburgh Steelers",
+    "away": "Minnesota Vikings",
+    "venue": "Croke Park (Dublin)"
+  },
+  {
+    "date": "2025-10-05T13:30:00Z",
+    "home": "Cleveland Browns",
+    "away": "Minnesota Vikings",
+    "venue": "Tottenham Hotspur Stadium (London)"
+  },
+  {
+    "date": null,
+    "note": "Bye Week"
+  },
+  {
+    "date": "2025-10-19T17:00:00Z",
+    "home": "Minnesota Vikings",
+    "away": "Philadelphia Eagles",
+    "venue": "U.S. Bank Stadium"
+  },
+  {
+    "date": "2025-10-23T00:15:00Z",
+    "home": "Los Angeles Chargers",
+    "away": "Minnesota Vikings",
+    "venue": "SoFi Stadium"
+  },
+  {
+    "date": "2025-11-02T17:00:00Z",
+    "home": "Detroit Lions",
+    "away": "Minnesota Vikings",
+    "venue": "Ford Field"
+  },
+  {
+    "date": "2025-11-09T17:00:00Z",
+    "home": "Minnesota Vikings",
+    "away": "Baltimore Ravens",
+    "venue": "U.S. Bank Stadium"
+  },
+  {
+    "date": "2025-11-16T17:00:00Z",
+    "home": "Minnesota Vikings",
+    "away": "Chicago Bears",
+    "venue": "U.S. Bank Stadium"
+  },
+  {
+    "date": "2025-11-23T17:00:00Z",
+    "home": "Green Bay Packers",
+    "away": "Minnesota Vikings",
+    "venue": "Lambeau Field"
+  },
+  {
+    "date": "2025-11-30T20:05:00Z",
+    "home": "Seattle Seahawks",
+    "away": "Minnesota Vikings",
+    "venue": "Lumen Field"
+  },
+  {
+    "date": "2025-12-07T17:00:00Z",
+    "home": "Minnesota Vikings",
+    "away": "Washington Commanders",
+    "venue": "U.S. Bank Stadium"
+  },
+  {
+    "date": "2025-12-15T00:20:00Z",
+    "home": "Dallas Cowboys",
+    "away": "Minnesota Vikings",
+    "venue": "AT&T Stadium"
+  },
+  {
+    "date": "2025-12-21T17:00:00Z",
+    "home": "New York Giants",
+    "away": "Minnesota Vikings",
+    "venue": "MetLife Stadium"
+  },
+  {
+    "date": "2025-12-25T21:30:00Z",
+    "home": "Minnesota Vikings",
+    "away": "Detroit Lions",
+    "venue": "U.S. Bank Stadium"
+  },
+  {
+    "date": null,
+    "home": "Minnesota Vikings",
+    "away": "Green Bay Packers",
+    "venue": "U.S. Bank Stadium"
   }
 ]

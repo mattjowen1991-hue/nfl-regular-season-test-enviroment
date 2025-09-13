@@ -98,54 +98,47 @@
     .next-game{ background:rgba(255,255,255,.05); border:1px dashed var(--line); border-radius:1rem; padding:1rem; }
 
     /* --- Next game row + fiery VS badge (mobile-safe) --- */
-.next-row{
-  display: grid;
-  grid-template-columns: 1fr auto 1fr; /* teams take equal space, VS auto */
-  align-items: center;
-  gap: .5rem;
-}
-
-.next-row .team{
-  min-width: 0;                 /* allow child to shrink inside grid cell */
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-}
-
-.next-row .team--home{ justify-content: flex-start; }
-.next-row .team--away{ justify-content: flex-end; }
-
-.next-row .team-name{
-  /* key: clamp size + ellipsis instead of wrapping into the VS */
-  font-weight: 800;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-.vs-badge{
-  font-weight:900;
-  letter-spacing:.12em;
-  padding:.15rem .6rem;
-  border:1px solid #ff4d4d;
-  border-radius:.5rem;
-  color:#ff4d4d;
-  text-shadow:
-    0 0 6px  #ff1a1a,
-    0 0 12px #ff1a1a,
-    0 0 18px #ff6a00;
-  box-shadow:
-    0 0 10px 2px rgba(255, 0, 0, .45),
-    inset 0 0 10px rgba(255, 68, 0, .55);
-  animation: pulseGlow 1.8s ease-in-out infinite;
-}
-
-/* scale names & logos on very small screens */
-@media (max-width: 480px){
-  .next-row .team-name{ font-size: clamp(.8rem, 3.4vw, 1rem); }
-  .next-row img{ width: 1.25rem; height: 1.25rem; }
-}
+    .next-row{
+      display: grid;
+      grid-template-columns: 1fr auto 1fr; /* teams take equal space, VS auto */
+      align-items: center;
+      gap: .5rem;
+    }
+    .next-row .team{
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .next-row .team--home{ justify-content: flex-start; }
+    .next-row .team--away{ justify-content: flex-end; }
+    .next-row .team-name{
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+    .vs-badge{
+      font-weight:900;
+      letter-spacing:.12em;
+      padding:.15rem .6rem;
+      border:1px solid #ff4d4d;
+      border-radius:.5rem;
+      color:#ff4d4d;
+      text-shadow:
+        0 0 6px  #ff1a1a,
+        0 0 12px #ff1a1a,
+        0 0 18px #ff6a00;
+      box-shadow:
+        0 0 10px 2px rgba(255, 0, 0, .45),
+        inset 0 0 10px rgba(255, 68, 0, .55);
+      animation: pulseGlow 1.8s ease-in-out infinite;
+    }
+    @media (max-width: 480px){
+      .next-row .team-name{ font-size: clamp(.8rem, 3.4vw, 1rem); }
+      .next-row img{ width: 1.25rem; height: 1.25rem; }
+    }
 
     /* Mobile tweaks */
     @media (max-width:640px){
@@ -262,7 +255,7 @@
         <ul class="list-disc ml-5 space-y-1">
           <li><span class="rule-key">Total Weeks Predicted</span> The number of weeks you predicted the NFL scores.</li>
           <li><span class="rule-key">Best Week</span> Your highest scoring week.</li>
-          <li><span class="rule-key">Win Rate</span> The % of your played weeks with a score &gt; 0.</li>
+          <li><span class="rule-key">Win Rate</span> % of your <strong>game picks</strong> that were correct.</li>
           <li><span class="rule-key">Best Team Accuracy</span> The team you pick most accurately.</li>
           <li><span class="rule-key">Avg / Game</span> Total Points divided by Games Played.</li>
           <li><span class="rule-key">Longest Streak</span> Most consecutive weeks with a score &gt; 0.</li>
@@ -280,7 +273,7 @@
     players: "players.json",
     weeks:   "weeks.json",
     config:  "config.json",
-    picks:   "picks.json",   // OPTIONAL – for team accuracy
+    picks:   "picks.json",   // OPTIONAL – for team accuracy & win rate
     schedule:"schedule.json" // OPTIONAL – for next game
   };
 
@@ -533,12 +526,30 @@
       totalPoints: total,
       gamesPlayed: games,
       avgPerGame: games ? total/games : 0,
-      winRate: games ? Math.round((positiveWeeks / games) * 100) : 0,
+      winRate: games ? Math.round((positiveWeeks / games) * 100) : 0, // fallback if no picks.json
       bestPoints,
       bestWeek,
       longest,
       perfectWeeks: perfectCount
     };
+  }
+
+  // Pick accuracy (per game) from picks.json
+  function computePickAccuracy(picks, playerId){
+    if(!Array.isArray(picks)) return null;
+    let correct = 0, total = 0;
+    for(const wk of picks){
+      for(const g of (wk.games || [])){
+        const pick = g?.picks?.[playerId];
+        if(!pick) continue;
+        if(g.winner){
+          total += 1;
+          if(pick === g.winner) correct += 1;
+        }
+      }
+    }
+    if(!total) return null;
+    return { correct, total, pct: Math.round((correct/total)*100) };
   }
 
   // Best team accuracy from picks.json
@@ -586,6 +597,7 @@
     if(!player) return;
 
     const stats = computeProfileStats(window.weeks, playerId, window.config || {});
+    const pickAcc = computePickAccuracy(window.picks, playerId); // NEW
     const bestTeam = computeBestTeamAccuracy(window.picks, playerId, window.config || {});
     const next = nextGameForTeam(window.schedule, player.team);
 
@@ -640,12 +652,12 @@
       nextEl.innerHTML = '';
     }
 
-    // Stats
+    // Stats (Win Rate prefers pick accuracy; falls back to week-based)
     document.getElementById('statNFLWins').textContent =
       Number.isFinite(Number(player.nflWins)) ? Number(player.nflWins) : 0;
     document.getElementById('statGames').textContent   = stats.gamesPlayed;
     document.getElementById('statAvg').textContent     = stats.avgPerGame.toFixed(2);
-    document.getElementById('statWinRate').textContent = stats.winRate + '%';
+    document.getElementById('statWinRate').textContent = pickAcc ? `${pickAcc.pct}%` : (stats.winRate + '%');
     document.getElementById('statBest').textContent    = stats.bestWeek ? `W${stats.bestWeek} (${stats.bestPoints})` : '—';
     document.getElementById('statStreak').textContent  = stats.longest;
     document.getElementById('statPerfect').textContent = stats.perfectWeeks;
@@ -760,6 +772,6 @@
       document.body.appendChild(msg);
     }
   })();
-</script>
+  </script>
 </body>
 </html>

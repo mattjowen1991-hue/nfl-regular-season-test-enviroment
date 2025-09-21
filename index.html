@@ -100,7 +100,7 @@
     /* --- Next game row + fiery VS badge (mobile-safe) --- */
     .next-row{
       display: grid;
-      grid-template-columns: 1fr auto 1fr; /* teams take equal space, VS auto */
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
       gap: .5rem;
     }
@@ -231,19 +231,17 @@
 
       <!-- Stats -->
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
-        
         <div class="stat-card"><div class="text-xs opacity-80">Total Weeks Predicted</div><div id="statGames" class="text-2xl font-extrabold">0</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Best Week</div><div id="statBest" class="text-2xl font-extrabold">—</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Win Rate</div><div id="statWinRate" class="text-2xl font-extrabold">0%</div></div>
-        
+
         <div class="stat-card"><div class="text-xs opacity-80">Best Team Accuracy</div><div id="statBestTeam" class="text-2xl font-extrabold">—</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Avg / Game</div><div id="statAvg" class="text-2xl font-extrabold">0.00</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Longest Streak</div><div id="statStreak" class="text-2xl font-extrabold">0</div></div>
 
-        <div class="stat-card"><div class="text-xs opacity-80">Perfect Weeks 👌🏼</div><div id="statPerfect" class="text-2xl font-extrabold">0</div></div>
+        <div class="stat-card"><div class="text-xs opacity-80">Perfect Weeks</div><div id="statPerfect" class="text-2xl font-extrabold">0</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">NFL Regular Season Wins 🏆</div><div id="statNFLWins" class="text-2xl font-extrabold">0</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Super Bowl Wins 🌟</div><div id="statSBWins" class="text-2xl font-extrabold">0</div></div>
-
       </div>
 
       <div class="mt-5 flex items-center justify-end">
@@ -255,7 +253,7 @@
         <ul class="list-disc ml-5 space-y-1">
           <li><span class="rule-key">Total Weeks Predicted</span> The number of weeks you predicted the NFL scores.</li>
           <li><span class="rule-key">Best Week</span> Your highest scoring week.</li>
-          <li><span class="rule-key">Win Rate</span> % of your <strong>game picks</strong> that were correct.</li>
+          <li><span class="rule-key">Win Rate</span> The % of your picks that were correct (decided games only).</li>
           <li><span class="rule-key">Best Team Accuracy</span> The team you pick most accurately.</li>
           <li><span class="rule-key">Avg / Game</span> Total Points divided by Games Played.</li>
           <li><span class="rule-key">Longest Streak</span> Most consecutive weeks with a score &gt; 0.</li>
@@ -266,18 +264,17 @@
       </div>
     </div>
   </div>
+
   <script>
   /* ---------- Utilities ---------- */
-  // Optional files: picks.json & schedule.json
   const paths = {
     players: "players.json",
     weeks:   "weeks.json",
     config:  "config.json",
-    picks:   "picks.json",   // OPTIONAL – for team accuracy & win rate
-    schedule:"schedule.json" // OPTIONAL – for next game
+    picks:   "picks.json",
+    schedule:"schedule.json"
   };
 
-  // Map NFL team names to logo image paths (add any others you need)
   const teamLogos = {
     "San Francisco 49ers": "Assets/san-francisco-49ers.png",
     "Seattle Seahawks": "Assets/seattle-seahawks.png",
@@ -319,7 +316,7 @@
       if(!res.ok) throw 0;
       return await res.json();
     }catch{
-      return null; // optional files may be missing
+      return null;
     }
   }
 
@@ -333,7 +330,7 @@
       hour: '2-digit',
       minute: '2-digit',
       hour12: false,
-      timeZoneName: 'short' // shows BST/GMT
+      timeZoneName: 'short'
     });
   }
 
@@ -403,14 +400,12 @@
     const root = document.getElementById('leaderboard');
     root.innerHTML = html;
 
-    // selection highlight on card tap/click (doesn't open profile)
     root.querySelectorAll('.player-card').forEach(card=>{
       card.addEventListener('click', (e)=>{
-        if(e.target.closest('.open-profile')) return; // ignore when pressing the button
+        if(e.target.closest('.open-profile')) return;
         card.classList.toggle('selected');
       });
     });
-    // handle Profile buttons
     root.querySelectorAll('.open-profile').forEach(btn=>{
       btn.addEventListener('click', (e)=>{
         e.stopPropagation();
@@ -425,7 +420,7 @@
     if(!el) return;
 
     const wId = cfg?.highlight?.winner;
-    const sId = cfg?.highlight?.spoon;
+       const sId = cfg?.highlight?.spoon;
     const w = wId && playersById[wId];
     const s = sId && playersById[sId];
 
@@ -477,23 +472,26 @@
   }
 
   /* ---------- Profile Stats & helpers ---------- */
-  // Only count weeks that actually happened (at least one player scored > 0)
+  // Now: Win Rate = correct picks / decided picks (from picks.json)
   function computeProfileStats(weeks, playerId, config){
     const playedWeeks = (weeks||[]).filter(w=>{
       const vals = Object.values(w.scores || {}).map(Number).filter(Number.isFinite);
       return vals.some(v => v > 0);
     });
 
-    const perfectMap = config?.perfectWeekPoints || {}; // { "1": 14, ... }
+    const perfectMap = config?.perfectWeekPoints || {};
     let total = 0, games = 0;
-    let positiveWeeks = 0;
     let bestPoints = -Infinity, bestWeek = null;
     let longest = 0, current = 0;
     let perfectCount = 0;
 
+    // NEW: for win rate
+    let totalPicks = 0;
+    let correctPicks = 0;
+
     for(const w of playedWeeks){
       const raw = w?.scores?.[playerId];
-      if(raw === undefined) continue; // DNP in a week that happened
+      if(raw === undefined) continue; // DNP
       const v = Number(raw);
       if(!Number.isFinite(v)) continue;
 
@@ -502,10 +500,25 @@
 
       if(v > bestPoints){ bestPoints = v; bestWeek = w.week; }
 
-      if(v > 0){ current += 1; longest = Math.max(longest, current); positiveWeeks += 1; }
+      // Count picks & correct picks for this week (decided games only)
+      if (Array.isArray(window.picks)) {
+        const weekData = window.picks.find(p => p.week === w.week);
+        if (weekData && Array.isArray(weekData.games)) {
+          for (const g of weekData.games) {
+            const pick = g?.picks?.[playerId];
+            if (!pick) continue;
+            if (!g.winner) continue; // ignore undecided games
+            totalPicks += 1;
+            if (g.winner === pick) correctPicks += 1;
+          }
+        }
+      }
+
+      // Streak (weeks with >0 points)
+      if (v > 0) { current += 1; longest = Math.max(longest, current); }
       else { current = 0; }
 
-      // perfect week target
+      // Perfect week detection
       let target;
       if(perfectMap[w.week] != null){
         target = Number(perfectMap[w.week]);
@@ -522,34 +535,18 @@
 
     if(bestPoints === -Infinity){ bestPoints = 0; bestWeek = null; }
 
+    const winRate = totalPicks ? Math.round((correctPicks / totalPicks) * 100) : 0;
+
     return {
       totalPoints: total,
       gamesPlayed: games,
       avgPerGame: games ? total/games : 0,
-      winRate: games ? Math.round((positiveWeeks / games) * 100) : 0, // fallback if no picks.json
+      winRate,
       bestPoints,
       bestWeek,
       longest,
       perfectWeeks: perfectCount
     };
-  }
-
-  // Pick accuracy (per game) from picks.json
-  function computePickAccuracy(picks, playerId){
-    if(!Array.isArray(picks)) return null;
-    let correct = 0, total = 0;
-    for(const wk of picks){
-      for(const g of (wk.games || [])){
-        const pick = g?.picks?.[playerId];
-        if(!pick) continue;
-        if(g.winner){
-          total += 1;
-          if(pick === g.winner) correct += 1;
-        }
-      }
-    }
-    if(!total) return null;
-    return { correct, total, pct: Math.round((correct/total)*100) };
   }
 
   // Best team accuracy from picks.json
@@ -561,9 +558,12 @@
       for(const g of (wk.games || [])){
         const playerPick = g?.picks?.[playerId];
         if(!playerPick) continue;
+        const decided = Boolean(g.winner);
         const t = (counts[playerPick] ||= { correct:0, total:0 });
-        t.total += 1;
-        if(g.winner && g.winner === playerPick) t.correct += 1;
+        if (decided) {
+          t.total += 1;
+          if(g.winner === playerPick) t.correct += 1;
+        }
       }
     }
     const minPicks = Number(config?.bestTeamMinPicks ?? 3);
@@ -597,7 +597,6 @@
     if(!player) return;
 
     const stats = computeProfileStats(window.weeks, playerId, window.config || {});
-    const pickAcc = computePickAccuracy(window.picks, playerId); // NEW
     const bestTeam = computeBestTeamAccuracy(window.picks, playerId, window.config || {});
     const next = nextGameForTeam(window.schedule, player.team);
 
@@ -652,12 +651,12 @@
       nextEl.innerHTML = '';
     }
 
-    // Stats (Win Rate prefers pick accuracy; falls back to week-based)
+    // Stats
     document.getElementById('statNFLWins').textContent =
       Number.isFinite(Number(player.nflWins)) ? Number(player.nflWins) : 0;
     document.getElementById('statGames').textContent   = stats.gamesPlayed;
     document.getElementById('statAvg').textContent     = stats.avgPerGame.toFixed(2);
-    document.getElementById('statWinRate').textContent = pickAcc ? `${pickAcc.pct}%` : (stats.winRate + '%');
+    document.getElementById('statWinRate').textContent = stats.winRate + '%';
     document.getElementById('statBest').textContent    = stats.bestWeek ? `W${stats.bestWeek} (${stats.bestPoints})` : '—';
     document.getElementById('statStreak').textContent  = stats.longest;
     document.getElementById('statPerfect').textContent = stats.perfectWeeks;
@@ -700,17 +699,16 @@
       const totalBtn = document.getElementById('totalBtn');
 
       weekSel.innerHTML = state.weekNums.map(w=>`<option value="${w}">Week ${w}</option>`).join('');
-      if(state.weekNums.length){ weekSel.value = String(state.weekNums[0]); } // Week 1
+      if(state.weekNums.length){ weekSel.value = String(state.weekNums[0]); }
 
       // Initial renders
-      renderLeaderboard(state.totals, 'total'); // Always start on All
+      renderLeaderboard(state.totals, 'total');
       renderHighlight(config, state.playersById);
       renderHonorary(config, state.playersById);
 
-      // Keep defaulting to All even on bfcache returns
       function resetToAll(){
         totalBtn.setAttribute('aria-selected','true');
-        if(state.weekNums.length) weekSel.selectedIndex = 0; // show "Week 1"
+        if(state.weekNums.length) weekSel.selectedIndex = 0;
         renderLeaderboard(state.totals, 'total');
       }
       resetToAll();

@@ -238,7 +238,6 @@
         
         <div class="stat-card"><div class="text-xs opacity-80">Best Team Accuracy</div><div id="statBestTeam" class="text-2xl font-extrabold">—</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Avg / Game</div><div id="statAvg" class="text-2xl font-extrabold">0.00</div></div>
-        <div class="stat-card"><div class="text-xs opacity-80">Longest Streak</div><div id="statStreak" class="text-2xl font-extrabold">0</div></div>
 
         <div class="stat-card"><div class="text-xs opacity-80">Perfect Weeks 👌🏼</div><div id="statPerfect" class="text-2xl font-extrabold">0</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">NFL Regular Season Wins 🏆</div><div id="statNFLWins" class="text-2xl font-extrabold">0</div></div>
@@ -258,7 +257,6 @@
           <li><span class="rule-key">Win Rate</span> % of your <strong>game picks</strong> that were correct.</li>
           <li><span class="rule-key">Best Team Accuracy</span> The team you pick most accurately.</li>
           <li><span class="rule-key">Avg / Game</span> Total Points divided by Games Played.</li>
-          <li><span class="rule-key">Longest Streak</span> Most consecutive weeks with a score &gt; 0.</li>
           <li><span class="rule-key">Perfect Weeks</span> Weeks where you guessed every game correctly.</li>
            <li><span class="rule-key">NFL Regular Season Wins</span> Number of NFL Regular Seasons you have won.</li>
           <li><span class="rule-key">Super Bowl Wins</span> Number of Super Bowls you have won.</li>
@@ -488,7 +486,6 @@
     let total = 0, games = 0;
     let positiveWeeks = 0;
     let bestPoints = -Infinity, bestWeek = null;
-    let longest = 0, current = 0;
     let perfectCount = 0;
 
     for(const w of playedWeeks){
@@ -502,8 +499,7 @@
 
       if(v > bestPoints){ bestPoints = v; bestWeek = w.week; }
 
-      if(v > 0){ current += 1; longest = Math.max(longest, current); positiveWeeks += 1; }
-      else { current = 0; }
+      if(v > 0){ positiveWeeks += 1; }
 
       // perfect week target
       let target;
@@ -529,7 +525,6 @@
       winRate: games ? Math.round((positiveWeeks / games) * 100) : 0, // fallback if no picks.json
       bestPoints,
       bestWeek,
-      longest,
       perfectWeeks: perfectCount
     };
   }
@@ -590,7 +585,7 @@
     return upcoming[0] || null;
   }
 
-  /* ---------- NEW: Fallback win-rate (no picks.json required) ---------- */
+  /* ---------- Fallback win-rate (no picks.json required) ---------- */
   function computeWinPctFromWeeks(weeks, playerId, config){
     if(!Array.isArray(weeks)) return 0;
     let correct = 0, total = 0;
@@ -690,13 +685,11 @@
     document.getElementById('statGames').textContent   = stats.gamesPlayed;
     document.getElementById('statAvg').textContent     = stats.avgPerGame.toFixed(2);
 
-    /* CHANGED LINE BELOW */
     const fallbackPct = computeWinPctFromWeeks(window.weeks, playerId, window.config || {});
     document.getElementById('statWinRate').textContent =
       pickAcc ? `${pickAcc.pct}%` : `${fallbackPct}%`;
 
     document.getElementById('statBest').textContent    = stats.bestWeek ? `W${stats.bestWeek} (${stats.bestPoints})` : '—';
-    document.getElementById('statStreak').textContent  = stats.longest;
     document.getElementById('statPerfect').textContent = stats.perfectWeeks;
 
     // Super Bowl wins (from players.json, optional)

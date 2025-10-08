@@ -519,6 +519,7 @@
         "lee": "Pittsburgh Steelers",
         "mark": "Minnesota Vikings",
         "jay": "Minnesota Vikings",
+        "joe": "Minnesota Vikings",
         "tony": "Pittsburgh Steelers",
         "ben": "Minnesota Vikings",
         "coley": "Minnesota Vikings",
@@ -660,6 +661,144 @@
         "matt": "Detroit Lions",
         "jarv": "Detroit Lions",
         "ste": "Detroit Lions"
+      }
+    }
+  ]
+},
+ {
+  "week": 5,
+  "games": [
+    {
+      "home": "Minnesota Vikings",
+      "away": "Cleveland Browns",
+      "winner": "Minnesota Vikings",
+      "picks": {
+        "lee": "Minnesota Vikings",
+        "ben": "Minnesota Vikings",
+        "tony": "Minnesota Vikings",
+        "joe": "Cleveland Browns",
+        "mark": "Minnesota Vikings",
+        "liam": "Minnesota Vikings",
+        "ste": "Minnesota Vikings",
+        "jarv": "Minnesota Vikings",
+        "gaz": "missed",
+        "coley": "Cleveland Browns",
+        "matt": "Minnesota Vikings",
+        "jay": "Minnesota Vikings"
+      }
+    },
+    {
+      "home": "Houston Texans",
+      "away": "Baltimore Ravens",
+      "winner": "Houston Texan",
+      "picks": {
+        "lee": "Baltimore Ravens",
+        "ben": "Houston Texans",
+        "tony": "Baltimore Ravens",
+        "joe": "Houston Texans",
+        "mark": "Baltimore Ravens",
+        "liam": "Houston Texans",
+        "ste": "Houston Texans",
+        "jarv": "Houston Texans",
+        "gaz": "Baltimore Ravens",
+        "coley": "Baltimore Ravens",
+        "matt": "Baltimore Ravens",
+        "jay": "Baltimore Ravens"
+      }
+    },
+    {
+      "home": "Miami Dolphins",
+      "away": "Carolina Panthers",
+      "winner": "Carolina Panthers",
+      "picks": {
+        "lee": "Miami Dolphins",
+        "ben": "Carolina Panthers",
+        "tony": "Miami Dolphins",
+        "joe": "Carolina Panthers",
+        "mark": "Carolina Panthers",
+        "liam": "Miami Dolphins",
+        "ste": "Carolina Panthers",
+        "jarv": "Carolina Panthers",
+        "gaz": "Carolina Panthers",
+        "coley": "Miami Dolphins",
+        "matt": "Miami Dolphins",
+        "jay": "Carolina Panthers"
+      }
+    },
+    {
+      "home": "Las Vegas Raiders",
+      "away": "Indianapolis Colts",
+      "winner": "Indianapolis Colts",
+      "picks": {
+        "lee": "Indianapolis Colts",
+        "ben": "Indianapolis Colts",
+        "tony": "Las Vegas Raiders",
+        "joe": "Indianapolis Colts",
+        "mark": "Indianapolis Colts",
+        "liam": "Indianapolis Colts",
+        "ste": "Indianapolis Colts",
+        "jarv": "Indianapolis Colts",
+        "gaz": "Indianapolis Colts",
+        "coley": "Indianapolis Colts",
+        "matt": "Indianapolis Colts",
+        "jay": "Indianapolis Colts"
+      }
+    },
+    {
+      "home": "New York Giants",
+      "away": "New Orleans Saints",
+      "winner": "New Orleans Saints",
+      "picks": {
+        "lee": "New York Giants",
+        "ben": "New York Giants",
+        "tony": "New Orleans Saints",
+        "joe": "New York Giants",
+        "mark": "New Orleans Saints",
+        "liam": "New Orleans Saints",
+        "ste": "New Orleans Saints",
+        "jarv": "New York Giants",
+        "gaz": "New Orleans Saints",
+        "coley": "New Orleans Saints",
+        "matt": "New Orleans Saints",
+        "jay": "New York Giants"
+      }
+    },
+    {
+      "home": "Dallas Cowboys",
+      "away": "New York Jets",
+      "winner": "Dallas Cowboys",
+      "picks": {
+        "lee": "Dallas Cowboys",
+        "ben": "Dallas Cowboys",
+        "tony": "Dallas Cowboys",
+        "joe": "Dallas Cowboys",
+        "mark": "Dallas Cowboys",
+        "liam": "Dallas Cowboys",
+        "ste": "Dallas Cowboys",
+        "jarv": "Dallas Cowboys",
+        "gaz": "Dallas Cowboys",
+        "coley": "New York Jets",
+        "matt": "Dallas Cowboys",
+        "jay": "Dallas Cowboys"
+      }
+    },
+    {
+      "home": "Denver Broncos",
+      "away": "Philadelphia Eagles",
+      "winner": "Denver Broncos",
+      "picks": {
+        "lee": "Philadelphia Eagles",
+        "ben": "Philadelphia Eagles",
+        "tony": "Philadelphia Eagles",
+        "joe": "Philadelphia Eagles",
+        "mark": "Philadelphia Eagles",
+        "liam": "Philadelphia Eagles",
+        "ste": "Philadelphia Eagles",
+        "jarv": "Philadelphia Eagles",
+        "gaz": "Philadelphia Eagles",
+        "coley": "Philadelphia Eagles",
+        "matt": "Philadelphia Eagles",
+        "jay": "Philadelphia Eagles"
       }
     }
   ]

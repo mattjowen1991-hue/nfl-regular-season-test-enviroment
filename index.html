@@ -212,10 +212,10 @@
     </div>
   </div>
 
-  <!-- Player Profile Modal -->
+  <!-- Player Stats Modal -->
   <div id="profileModal" class="modal-backdrop" aria-hidden="true">
     <div class="modal-card profile-panel relative p-5 sm:p-7">
-      <button class="close-btn" id="profileClose" title="Close"><span aria-hidden="true">✕</span></button>
+      <button class="close-btn" id="profileClose" title="Close player stats"><span aria-hidden="true">✕</span></button>
 
       <!-- Header -->
       <div class="flex items-center gap-4">
@@ -260,6 +260,7 @@
       </div>
     </div>
   </div>
+
   <script>
   /* ---------- Utilities ---------- */
   // Optional files: picks.json & schedule.json
@@ -375,7 +376,7 @@
             <img src="${p.avatar}" alt="${p.name}" class="avatar border border-[var(--line)]"/>
             <div class="min-w-0">
               <div class="font-extrabold text-lg truncate">${p.name}</div>
-              <button class="open-profile tab-btn mt-1 px-2 py-1 rounded-lg text-xs" data-player="${p.id}">Profile</button>
+              <button class="open-profile tab-btn mt-1 px-2 py-1 rounded-lg text-xs" data-player="${p.id}">Player Stats</button>
             </div>
           </div>
           <div class="mt-3 grid text-center">
@@ -397,14 +398,14 @@
     const root = document.getElementById('leaderboard');
     root.innerHTML = html;
 
-    // selection highlight on card tap/click (doesn't open profile)
+    // selection highlight on card tap/click (doesn't open player stats)
     root.querySelectorAll('.player-card').forEach(card=>{
       card.addEventListener('click', (e)=>{
         if(e.target.closest('.open-profile')) return; // ignore when pressing the button
         card.classList.toggle('selected');
       });
     });
-    // handle Profile buttons
+    // open Player Stats
     root.querySelectorAll('.open-profile').forEach(btn=>{
       btn.addEventListener('click', (e)=>{
         e.stopPropagation();
@@ -470,7 +471,7 @@
       : '<div class="opacity-60 text-center">No honorary winners yet.</div>';
   }
 
-  /* ---------- Profile Stats & helpers ---------- */
+  /* ---------- Player Stats & helpers ---------- */
   // Only count weeks that actually happened (at least one player scored > 0)
   function computeProfileStats(weeks, playerId, config){
     const playedWeeks = (weeks||[]).filter(w=>{
@@ -613,7 +614,7 @@
     return total ? Math.round((correct / total) * 100) : 0;
   }
 
-  /* ---------- Profile Modal ---------- */
+  /* ---------- Player Stats Modal ---------- */
   function openProfile(playerId){
     const { playersById } = window.state;
     const player = playersById[playerId];
@@ -768,7 +769,7 @@
       document.getElementById('closeRules').addEventListener('click', closeRules);
       rulesModal.addEventListener('click', e=>{ if(e.target===rulesModal) closeRules(); });
 
-      // Profile modal
+      // Player stats modal
       const profileModal = document.getElementById('profileModal');
       function closeProfile(){
         profileModal.classList.remove('open');

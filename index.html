@@ -168,7 +168,7 @@
   <main class="max-w-6xl mx-auto px-4 sm:px-6 pb-24 space-y-6">
     <!-- Weekly Scores -->
     <section class="card p-5 sm:p-7">
-      <div class="flex items-center justify-between">
+    <div class="flex flex-col items-center sm:flex-row justify-between gap-4 sm:gap-0">
         <h2 class="riddle-title text-2xl sm:text-3xl font-extrabold">Weekly Scores</h2>
         <div class="flex gap-2 items-center">
           <button id="totalBtn" class="tab-btn px-3 py-1.5 rounded-lg text-sm" aria-selected="true">Total</button>
@@ -366,9 +366,18 @@
   function playerCardHTML(p, rank, view, selectedWeek){
     const m = medal(rank);
     let value = p.total, label = 'Total';
-    if(view==='week'){ value = p.perWeek[selectedWeek] ?? 0; label = `Week ${selectedWeek}`; }
+    if(view === 'week'){ 
+    value = p.perWeek[selectedWeek] ?? 0; 
+    
+    // Check if it is our special Thanksgiving week
+    if(selectedWeek === 12.5) {
+      label = "Thanksgiving 🦃";
+    } else {
+      label = `Week ${selectedWeek}`;
+    }
+  }
 
-    return `
+  return `
       <article class="player-card" data-player="${p.id}">
         ${m ? `<div class="medal-badge bg-gradient-to-b ${m.color}" title="${m.name}">${m.emoji}</div>` : ''}
         <div class="p-4">
@@ -723,11 +732,16 @@
       window.state = state;
 
       // Build week dropdown (ascending) and default it to Week 1
-      const weekSel = document.getElementById('weekSelect');
-      const totalBtn = document.getElementById('totalBtn');
+const weekSel = document.getElementById('weekSelect');
+const totalBtn = document.getElementById('totalBtn');
 
-      weekSel.innerHTML = state.weekNums.map(w=>`<option value="${w}">Week ${w}</option>`).join('');
-      if(state.weekNums.length){ weekSel.value = String(state.weekNums[0]); } // Week 1
+// UPDATED LOGIC: Checks for 12.5 to show text, otherwise shows number
+weekSel.innerHTML = state.weekNums.map(w => {
+  const label = (w === 12.5) ? "Thanksgiving 🦃" : `Week ${w}`;
+  return `<option value="${w}">${label}</option>`;
+}).join('');
+
+if(state.weekNums.length){ weekSel.value = String(state.weekNums[0]); } // Week 1
 
       // Initial renders
       renderLeaderboard(state.totals, 'total'); // Always start on All

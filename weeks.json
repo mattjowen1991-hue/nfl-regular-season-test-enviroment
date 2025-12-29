@@ -14,8 +14,9 @@
   { "week": 12.5, "scores": { "matt": 0, "jarv": 0, "gaz": 0, "joe": 0, "ben": 2, "coley": 2, "mark": 0, "ste": 2, "tony": 2, "jay": 2, "lee": 2, "liam": 0 } },
   { "week": 13, "scores": { "matt": 5, "jarv": 5, "gaz": 4, "joe": 5, "ben": 4, "coley": 4, "mark": 4, "ste": 5, "tony": 3, "jay": 4, "lee": 4, "liam": 3 } },
   { "week": 14, "scores": { "matt": 4, "jarv": 4, "gaz": 3, "joe": 4, "ben": 6, "coley": 4, "mark": 3, "ste": 4, "tony": 4, "jay": 4, "lee": 4, "liam": 4 } },
-  { "week": 15, "scores": { "matt": 0, "jarv": 0, "gaz": 0, "joe": 0, "ben": 0, "coley": 0, "mark": 0, "ste": 0, "tony": 0, "jay": 0, "lee": 0, "liam": 0 } },
-  { "week": 16, "scores": { "matt": 0, "jarv": 0, "gaz": 0, "joe": 0, "ben": 0, "coley": 0, "mark": 0, "ste": 0, "tony": 0, "jay": 0, "lee": 0, "liam": 0 } },
-  { "week": 17, "scores": { "matt": 0, "jarv": 0, "gaz": 0, "joe": 0, "ben": 0, "coley": 0, "mark": 0, "ste": 0, "tony": 0, "jay": 0, "lee": 0, "liam": 0 } },
+  { "week": 15, "scores": { "matt": 6, "jarv": 6, "gaz": 7, "joe": 5, "ben": 7, "coley": 10, "mark": 5, "ste": 5, "tony": 4, "jay": 6, "lee": 7, "liam": 6 } },
+  { "week": 16, "scores": { "matt": 6, "jarv": 5, "gaz": 5, "joe": 9, "ben": 5, "coley": 4, "mark": 5, "ste": 5, "tony": 0, "jay": 0, "lee": 5, "liam": 4 } },
+  { "week": 16.5, "scores": { "matt": 4, "jarv": 4, "gaz": 4, "joe": 6, "ben": 4, "coley": 2, "mark": 4, "ste": 4, "tony": 4, "jay": 4, "lee": 6, "liam": 4 } },
+  { "week": 17, "scores": { "matt": 5, "jarv": 5, "gaz": 5, "joe": 4, "ben": 5, "coley": 5, "mark": 5, "ste": 5, "tony": 5, "jay": 6, "lee": 4, "liam": 5 } },
   { "week": 18, "scores": { "matt": 0, "jarv": 0, "gaz": 0, "joe": 0, "ben": 0, "coley": 0, "mark": 0, "ste": 0, "tony": 0, "jay": 0, "lee": 0, "liam": 0 } }
 ]

@@ -262,6 +262,34 @@
   </div>
 
   <script>
+  /* ============================================
+     JSONBIN CONFIGURATION
+     ============================================ */
+  const JSONBIN_CONFIG = {
+    // League Scores Bin ID - same as admin dashboard
+    // Replace YOUR_SCORES_BIN_ID_HERE with your actual bin ID
+    SCORES_BIN_ID: '6951c2b0ae596e708fb6c625',
+    API_KEY: '$2a$10$C7BY0Kl0u74gNn/kXO7xNuayWv493/f1jAxlHUmx3ENADQKDii61C'
+  };
+
+  // Load from JSONBin (with fallback to local file)
+  async function loadFromJSONBin() {
+    if (!JSONBIN_CONFIG.SCORES_BIN_ID || JSONBIN_CONFIG.SCORES_BIN_ID === 'YOUR_SCORES_BIN_ID_HERE') {
+      return null;
+    }
+    try {
+      const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.SCORES_BIN_ID}/latest`, {
+        headers: { 'X-Access-Key': JSONBIN_CONFIG.API_KEY }
+      });
+      if (!response.ok) throw new Error('JSONBin fetch failed');
+      const data = await response.json();
+      return data.record || null;
+    } catch (err) {
+      console.warn('JSONBin fetch failed, falling back to local files:', err);
+      return null;
+    }
+  }
+
   /* ---------- Utilities ---------- */
   // Optional files: picks.json & schedule.json
   const paths = {
@@ -716,16 +744,40 @@
     document.getElementById('profileModal').setAttribute('aria-hidden','false');
   }
 
-  /* ---------- Boot ---------- */
+/* ---------- Boot ---------- */
   (async function boot(){
     try{
-      const [players, weeks, config, picks, schedule] = await Promise.all([
-        loadJSON(paths.players),
-        loadJSON(paths.weeks),
-        loadJSON(paths.config),
-        loadJSON(paths.picks),
-        loadJSON(paths.schedule)
-      ]);
+      // Always load players from local file
+      const players = await loadJSON(paths.players);
+      
+      // Try to load weeks and config from JSONBin first
+      let weeks, config;
+      const jsonBinData = await loadFromJSONBin();
+      
+      if (jsonBinData && jsonBinData.weeks && jsonBinData.weeks.length > 0) {
+        // Use JSONBin data for weeks
+        weeks = jsonBinData.weeks;
+        // Merge JSONBin config with local config
+        const localConfig = await loadJSON(paths.config) || {};
+        config = {
+          ...localConfig,
+          perfectWeekPoints: {
+            ...(localConfig.perfectWeekPoints || {}),
+            ...(jsonBinData.config?.perfectWeekPoints || {})
+          }
+        };
+        console.log('✅ Loaded scores from JSONBin');
+      } else {
+        // Fall back to local files
+        weeks = await loadJSON(paths.weeks);
+        config = await loadJSON(paths.config);
+        console.log('📁 Using local data files');
+      }
+
+      // Load optional files (always local)
+      const picks = await loadJSON(paths.picks);
+      const schedule = await loadJSON(paths.schedule);
+
       window.weeks = weeks || [];
       window.config = config || {};
       window.picks = picks || null;

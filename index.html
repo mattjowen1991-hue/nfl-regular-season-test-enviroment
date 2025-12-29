@@ -336,6 +336,173 @@
     "Atlanta Falcons": "Assets/atlanta-falcons.png"
   };
 
+    // ESPN API team IDs for schedule fetching
+  const ESPN_TEAM_IDS = {
+    "San Francisco 49ers": "25",
+    "Seattle Seahawks": "26",
+    "Dallas Cowboys": "6",
+    "Philadelphia Eagles": "21",
+    "Washington Redskins": "28",  // Now Commanders in ESPN
+    "Washington Commanders": "28",
+    "New York Giants": "19",
+    "Kansas City Chiefs": "12",
+    "New England Patriots": "17",
+    "Las Vegas Raiders": "13",
+    "Los Angeles Rams": "14",
+    "Tampa Bay Buccaneers": "27",
+    "Arizona Cardinals": "22",
+    "Jacksonville Jaguars": "30",
+    "Carolina Panthers": "29",
+    "Cleveland Browns": "5",
+    "Tennessee Titans": "10",
+    "Indianapolis Colts": "11",
+    "Chicago Bears": "3",
+    "Houston Texans": "34",
+    "Los Angeles Chargers": "24",
+    "Baltimore Ravens": "33",
+    "Buffalo Bills": "2",
+    "Cincinnati Bengals": "4",
+    "Denver Broncos": "7",
+    "Detroit Lions": "8",
+    "Green Bay Packers": "9",
+    "Minnesota Vikings": "16",
+    "New Orleans Saints": "18",
+    "New York Jets": "20",
+    "Pittsburgh Steelers": "23",
+    "Miami Dolphins": "15",
+    "Atlanta Falcons": "1"
+  };
+
+  // Cache key for localStorage
+  const SCHEDULE_CACHE_KEY = 'nfl_schedule_cache';
+  const SCHEDULE_CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+
+    // Load cached schedule from localStorage
+  function loadScheduleCache() {
+    try {
+      const cached = localStorage.getItem(SCHEDULE_CACHE_KEY);
+      if (!cached) return null;
+      
+      const { timestamp, data } = JSON.parse(cached);
+      const age = Date.now() - timestamp;
+      
+      // Return cached data (we'll refresh in background if stale)
+      return { data, isStale: age > SCHEDULE_CACHE_DURATION };
+    } catch {
+      return null;
+    }
+  }
+
+  // Save schedule to localStorage cache
+  function saveScheduleCache(data) {
+    try {
+      localStorage.setItem(SCHEDULE_CACHE_KEY, JSON.stringify({
+        timestamp: Date.now(),
+        data
+      }));
+    } catch (e) {
+      console.warn('Could not cache schedule:', e);
+    }
+  }
+
+  // Fetch schedule for a single team from ESPN API
+  async function fetchTeamSchedule(teamId, teamName) {
+    try {
+      const response = await fetch(
+        `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${teamId}/schedule`
+      );
+      if (!response.ok) throw new Error('ESPN API failed');
+      
+      const data = await response.json();
+      const events = data.events || [];
+      
+      // Convert ESPN format to our format
+      return events.map(event => {
+        const competition = event.competitions?.[0];
+        const homeTeam = competition?.competitors?.find(c => c.homeAway === 'home');
+        const awayTeam = competition?.competitors?.find(c => c.homeAway === 'away');
+        
+        return {
+          home: homeTeam?.team?.displayName || 'TBD',
+          away: awayTeam?.team?.displayName || 'TBD',
+          date: event.date,
+          venue: competition?.venue?.fullName || '',
+          completed: competition?.status?.type?.completed || false
+        };
+      });
+    } catch (err) {
+      console.warn(`Failed to fetch schedule for ${teamName}:`, err);
+      return null;
+    }
+  }
+
+  // Fetch schedules for all unique teams (with deduplication)
+  async function fetchAllSchedules(players) {
+    const uniqueTeams = [...new Set(players.map(p => p.team).filter(Boolean))];
+    const scheduleMap = {};
+    
+    // Fetch all teams in parallel
+    const results = await Promise.allSettled(
+      uniqueTeams.map(async teamName => {
+        const teamId = ESPN_TEAM_IDS[teamName];
+        if (!teamId) {
+          console.warn(`No ESPN ID for team: ${teamName}`);
+          return { teamName, games: null };
+        }
+        const games = await fetchTeamSchedule(teamId, teamName);
+        return { teamName, games };
+      })
+    );
+    
+    // Build schedule map
+    results.forEach(result => {
+      if (result.status === 'fulfilled' && result.value.games) {
+        scheduleMap[result.value.teamName] = result.value.games;
+      }
+    });
+    
+    return scheduleMap;
+  }
+
+  // Helper to find team logo even with partial name matches
+  function findTeamLogo(teamName) {
+    if (!teamName) return null;
+    
+    // Direct match
+    if (teamLogos[teamName]) return teamLogos[teamName];
+    
+    // Try to find partial match (ESPN might return "49ers" instead of "San Francisco 49ers")
+    const searchLower = teamName.toLowerCase();
+    for (const [fullName, logoPath] of Object.entries(teamLogos)) {
+      if (fullName.toLowerCase().includes(searchLower) || 
+          searchLower.includes(fullName.split(' ').pop().toLowerCase())) {
+        return logoPath;
+      }
+    }
+    return null;
+  }
+
+  // Get next game for a team from the schedule map
+  function getNextGameFromMap(scheduleMap, teamName) {
+    const games = scheduleMap[teamName];
+    if (!games || !games.length) return null;
+    
+    const now = new Date();
+    const upcoming = games
+      .filter(g => !g.completed && new Date(g.date) >= now)
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    if (!upcoming.length) return null;
+    
+    const next = upcoming[0];
+    return {
+      home: next.home,
+      away: next.away,
+      dt: new Date(next.date),
+      venue: next.venue
+    };
+  }
+
   async function loadJSON(path){
     try{
       const res = await fetch(path, { cache: "no-store" });
@@ -611,8 +778,16 @@
     return best; // { team, pct, total } or null
   }
 
-  // Next upcoming game for a team (from schedule.json)
+// Next upcoming game for a team
+  // Now uses scheduleMap (from ESPN API) with fallback to schedule.json
   function nextGameForTeam(schedule, teamName){
+    // First try the ESPN schedule map (populated by API)
+    if (window.scheduleMap && window.scheduleMap[teamName]) {
+      const next = getNextGameFromMap(window.scheduleMap, teamName);
+      if (next) return next;
+    }
+    
+    // Fallback to schedule.json (legacy support)
     if(!Array.isArray(schedule) || !teamName) return null;
     const now = new Date();
     const upcoming = schedule
@@ -705,7 +880,7 @@
           <span class="vs-badge" aria-hidden="true">VS</span>
 
           <div class="team team--away">
-            ${teamLogos[opp] ? `<img src="${teamLogos[opp]}" class="w-8 h-8 object-contain" alt="">` : ''}
+            ${findTeamLogo(opp) ? `<img src="${findTeamLogo(opp)}" class="w-8 h-8 object-contain" alt="">` : ''}
             <span class="team-name">${opp}</span>
           </div>
         </div>
@@ -776,7 +951,41 @@
 
       // Load optional files (always local)
       const picks = await loadJSON(paths.picks);
-      const schedule = await loadJSON(paths.schedule);
+      
+      // Schedule: Load from cache first, then refresh from ESPN API in background
+      let schedule = null;
+      window.scheduleMap = {}; // Will hold ESPN data by team
+      
+      const cached = loadScheduleCache();
+      if (cached?.data) {
+        window.scheduleMap = cached.data;
+        console.log('📅 Loaded schedule from cache' + (cached.isStale ? ' (refreshing...)' : ''));
+      }
+      
+      // Always try to refresh from ESPN (in background if we have cache)
+      const fetchSchedules = async () => {
+        try {
+          const freshData = await fetchAllSchedules(players);
+          if (Object.keys(freshData).length > 0) {
+            window.scheduleMap = freshData;
+            saveScheduleCache(freshData);
+            console.log('✅ Schedule updated from ESPN API');
+          }
+        } catch (err) {
+          console.warn('ESPN schedule fetch failed:', err);
+        }
+      };
+      
+      if (cached?.data && !cached.isStale) {
+        // Cache is fresh, refresh in background (don't block)
+        fetchSchedules();
+      } else {
+        // No cache or stale, fetch now (might block briefly)
+        await fetchSchedules();
+      }
+      
+      // Legacy fallback (schedule.json)
+      schedule = await loadJSON(paths.schedule);
 
       window.weeks = weeks || [];
       window.config = config || {};

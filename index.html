@@ -364,39 +364,42 @@
   }
 
   function playerCardHTML(p, rank, view, selectedWeek){
-    const m = medal(rank);
-    let value = p.total, label = 'Total';
-    if(view === 'week'){ 
+  const m = medal(rank);
+  let value = p.total, label = 'Total';
+  
+  if(view === 'week'){ 
     value = p.perWeek[selectedWeek] ?? 0; 
     
-    // Check if it is our special Thanksgiving week
-    if(selectedWeek === 12.5) {
+    // Check if it is a special week
+    if (selectedWeek === 12.5) {
       label = "Thanksgiving 🦃";
+    } else if (selectedWeek === 16.5) {
+      label = "Christmas 🎄";
     } else {
       label = `Week ${selectedWeek}`;
     }
   }
 
   return `
-      <article class="player-card" data-player="${p.id}">
-        ${m ? `<div class="medal-badge bg-gradient-to-b ${m.color}" title="${m.name}">${m.emoji}</div>` : ''}
-        <div class="p-4">
-          <div class="flex items-center gap-3">
-            <img src="${p.avatar}" alt="${p.name}" class="avatar border border-[var(--line)]"/>
-            <div class="min-w-0">
-              <div class="font-extrabold text-lg truncate">${p.name}</div>
-              <button class="open-profile tab-btn mt-1 px-2 py-1 rounded-lg text-xs" data-player="${p.id}">Player Stats</button>
-            </div>
-          </div>
-          <div class="mt-3 grid text-center">
-            <div class="rounded-xl border border-[var(--line)] py-3">
-              <div class="text-xs opacity-80">${label}</div>
-              <div class="text-2xl font-extrabold">${value}</div>
-            </div>
+    <article class="player-card" data-player="${p.id}">
+      ${m ? `<div class="medal-badge bg-gradient-to-b ${m.color}" title="${m.name}">${m.emoji}</div>` : ''}
+      <div class="p-4">
+        <div class="flex items-center gap-3">
+          <img src="${p.avatar}" alt="${p.name}" class="avatar border border-[var(--line)]"/>
+          <div class="min-w-0">
+            <div class="font-extrabold text-lg truncate">${p.name}</div>
+            <button class="open-profile tab-btn mt-1 px-2 py-1 rounded-lg text-xs" data-player="${p.id}">Player Stats</button>
           </div>
         </div>
-      </article>`;
-  }
+        <div class="mt-3 grid text-center">
+          <div class="rounded-xl border border-[var(--line)] py-3">
+            <div class="text-xs opacity-80">${label}</div>
+            <div class="text-2xl font-extrabold">${value}</div>
+          </div>
+        </div>
+      </div>
+    </article>`;
+}
 
   function renderLeaderboard(totals, view, selectedWeek){
     const sorted = [...totals].sort((a,b)=>{
@@ -735,9 +738,16 @@
 const weekSel = document.getElementById('weekSelect');
 const totalBtn = document.getElementById('totalBtn');
 
-// UPDATED LOGIC: Checks for 12.5 to show text, otherwise shows number
+// UPDATED LOGIC: Checks for special weeks
 weekSel.innerHTML = state.weekNums.map(w => {
-  const label = (w === 12.5) ? "Thanksgiving 🦃" : `Week ${w}`;
+  let label;
+  if (w === 12.5) {
+    label = "Thanksgiving 🦃";
+  } else if (w === 16.5) {
+    label = "Christmas 🎄";
+  } else {
+    label = `Week ${w}`;
+  }
   return `<option value="${w}">${label}</option>`;
 }).join('');
 

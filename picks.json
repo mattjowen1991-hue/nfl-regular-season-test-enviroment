@@ -2208,7 +2208,7 @@
     {
       "home": "Cincinnati Bengals\"",
       "away": "Baltimore Ravens",
-      "winner": "",
+      "winner": "Baltimore Ravens",
       "picks": {
         "matt": "Baltimore Ravens",
         "jarv": "Baltimore Ravens",
@@ -2227,7 +2227,7 @@
     {
       "home": "Philadelphia Eagles",
       "away": "Las Vegas Raiders",
-      "winner": "",
+      "winner": "Philadelphia Eagles",
       "picks": {
         "matt": "Philadelphia Eagles",
         "jarv": "Philadelphia Eagles",
@@ -2246,7 +2246,7 @@
     {
       "home": "Houston Texans",
       "away": "Arizona Cardinals",
-      "winner": "",
+      "winner": "Houston Texans",
       "picks": {
         "matt": "Houston Texans",
         "jarv": "Houston Texans",
@@ -2265,7 +2265,7 @@
     {
       "home": "Kansas City Chiefs",
       "away": "Los Angeles Chargers",
-      "winner": "",
+      "winner": "Los Angeles Chargers",
       "picks": {
         "matt": "Los Angeles Chargers",
         "jarv": "Kansas City Chiefs",
@@ -2284,7 +2284,7 @@
     {
       "home": "New England Patriots",
       "away": "Buffalo Bills",
-      "winner": "",
+      "winner": "Buffalo Bills",
       "picks": {
         "matt": "New England Patriots",
         "jarv": "Buffalo Bills",
@@ -2303,7 +2303,7 @@
     {
       "home": "Jacksonville Jaguars",
       "away": "New York Jets",
-      "winner": "",
+      "winner": "Jacksonville Jaguars",
       "picks": {
         "matt": "Jacksonville Jaguars",
         "jarv": "Jacksonville Jaguars",
@@ -2322,7 +2322,7 @@
     {
       "home": "New York Giants",
       "away": "Washington Commanders",
-      "winner": "",
+      "winner": "Washington Commanders",
       "picks": {
         "matt": "New York Giants",
         "jarv": "New York Giants",
@@ -2341,7 +2341,7 @@
     {
       "home": "Chicago Bears",
       "away": "Cleveland Browns",
-      "winner": "",
+      "winner": "Chicago Bears",
       "picks": {
         "matt": "Chicago Bears",
         "jarv": "Chicago Bears",

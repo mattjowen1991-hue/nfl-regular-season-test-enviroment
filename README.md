@@ -1,6 +1,6 @@
 # 🏈 NFL Picks League - Repository Documentation
 
-A fully automated NFL picks prediction league with live scoring, ESPN integration, and cloud storage.
+A fully automated NFL picks prediction league with live scoring, ESPN integration, cloud storage, and comprehensive player statistics.
 
 ---
 
@@ -14,7 +14,6 @@ NFL-League/
 ├── players.json            # Player profiles (LOCAL ONLY)
 ├── config.json             # Season settings (LOCAL + JSONBin merge)
 ├── weeks.json              # Score history (LOCAL BACKUP)
-├── picks.json              # Historical picks data (LOCAL ONLY)
 ├── Assets/
 │   ├── [player avatars]
 │   ├── [team logos]
@@ -27,9 +26,9 @@ NFL-League/
 ## 🔄 How Data Flows
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        DATA FLOW DIAGRAM                         │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           COMPLETE DATA FLOW                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
 
     PLAYER SUBMITS PICKS              ADMIN PROCESSES SCORES
     ─────────────────────             ─────────────────────────
@@ -43,28 +42,102 @@ NFL-League/
            │ Saves picks                        │ 1. Loads picks
            ▼                                    │ 2. Fetches ESPN scores
     ┌─────────────┐                             │ 3. Calculates points
-    │  PICKS BIN  │◄────────────────────────────┘
-    │  (JSONBin)  │         Reads picks
-    │             │
-    │ Resets each │                    ┌─────────────────┐
-    │    week     │                    │  ESPN API       │
-    └─────────────┘                    │  (Live Scores)  │
-                                       └────────┬────────┘
+    │  PICKS BIN  │◄────────────────────────────┤
+    │  (JSONBin)  │         Reads picks         │
+    │             │                             │
+    │ Resets each │                             │
+    │    week     │                             │
+    └─────────────┘                             │
                                                 │
-                                                ▼
-                                       ┌─────────────────┐
-                                       │  SCORES BIN     │
-                                       │  (JSONBin)      │
-                                       │                 │
-                                       │  NEVER resets   │
-                                       │  All-time data  │
-                                       └────────┬────────┘
-                                                │
-                                                ▼
-                                       ┌─────────────────┐
-                                       │   index.html    │
-                                       │  (League Table) │
-                                       └─────────────────┘
+                           ┌────────────────────┼────────────────────┐
+                           │                    │                    │
+                           ▼                    ▼                    ▼
+                  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+                  │  ESPN API       │  │  SCORES BIN     │  │ PICKS HISTORY   │
+                  │  (Live Scores)  │  │  (JSONBin)      │  │     BIN         │
+                  │                 │  │                 │  │  (JSONBin)      │
+                  │ Auto-detects    │  │  NEVER resets   │  │                 │
+                  │ game winners    │  │  All-time data  │  │  NEVER resets   │
+                  └────────┬────────┘  └────────┬────────┘  │  Detailed picks │
+                           │                    │           └────────┬────────┘
+                           │                    │                    │
+                           └──────────┬─────────┴────────────────────┘
+                                      │
+                                      ▼
+                             ┌─────────────────┐
+                             │   index.html    │
+                             │  (League Table) │◄──── ESPN Schedule API
+                             │                 │      (Next Game info)
+                             │  - Leaderboard  │
+                             │  - Player Stats │
+                             │  - Prize Pot    │
+                             └─────────────────┘
+```
+
+---
+
+## 🗄️ JSONBin Storage Architecture
+
+The system uses **three separate JSONBin bins** for different purposes:
+
+| Bin | Purpose | Bin ID | Reset? |
+|-----|---------|--------|--------|
+| **Picks Bin** | Current week's player picks | `69487a81ae596e708fa937cb` | ✅ Weekly |
+| **Scores Bin** | All-time weekly scores + config | `6951c2b0ae596e708fb6c625` | ❌ NEVER |
+| **Picks History Bin** | Detailed pick-by-pick history | `695317c4ae596e708fb8f9ec` | ❌ NEVER |
+
+### Picks Bin Structure
+```json
+{
+  "week": 18,
+  "picks": {
+    "matt": { "0": "Team A", "1": "Team B", ... },
+    "jarv": { "0": "Team B", "1": "Team A", ... }
+  },
+  "submissions": [
+    { "player": "matt", "timestamp": "2024-01-04T17:30:00Z", "inGracePeriod": false }
+  ]
+}
+```
+
+### Scores Bin Structure
+```json
+{
+  "weeks": [
+    { "week": 1, "scores": { "matt": 6, "jarv": 7, ... } },
+    { "week": 2, "scores": { "matt": 7, "jarv": 8, ... } }
+  ],
+  "config": {
+    "perfectWeekPoints": {
+      "1": 10,
+      "2": 11,
+      "12.5": 6
+    }
+  }
+}
+```
+
+### Picks History Bin Structure
+```json
+{
+  "weeks": [
+    {
+      "week": 1,
+      "games": [
+        {
+          "home": "Indianapolis Colts",
+          "away": "Miami Dolphins",
+          "winner": "Indianapolis Colts",
+          "doublePoints": false,
+          "picks": {
+            "matt": "Indianapolis Colts",
+            "jarv": "Miami Dolphins"
+          }
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ---
@@ -73,7 +146,7 @@ NFL-League/
 
 ### 🏠 index.html (League Table)
 
-**Purpose:** Public-facing league standings and player stats
+**Purpose:** Public-facing league standings and comprehensive player stats
 
 **Data Sources:**
 | Data | Primary Source | Fallback |
@@ -81,18 +154,33 @@ NFL-League/
 | Scores | JSONBin (Scores Bin) | weeks.json |
 | Players | players.json | — |
 | Config | JSONBin + config.json merged | config.json |
+| Picks History | JSONBin (Picks History Bin) | — |
 | Schedule | ESPN API (cached in localStorage) | — |
 
 **Key Features:**
 - Prize pot display with animated money rain 💰
-- Weekly/Total score views
-- Player stats modal with next game info
+- Weekly/Total score views with special week labels (🦃 Thanksgiving, 🎄 Christmas)
+- Comprehensive player stats modal
 - Hall of Fame section
 - Automatic ESPN schedule fetching (no manual updates needed!)
 
+**Player Stats Modal Features:**
+| Stat | Description | Data Source |
+|------|-------------|-------------|
+| Win Rate 🎯 | % of correct picks | Picks History Bin (or estimated from scores) |
+| Best Team Accuracy | Team picked most accurately (min 5 picks) | Picks History Bin |
+| Correct Picks | Total correct / total picks | Picks History Bin |
+| Most Picked Team | Team selected most often | Picks History Bin |
+| Current Form | Last 5 weeks: 🟢 above avg, 🔴 below avg | Scores Bin |
+| Perfect Weeks 👌🏼 | Weeks with max possible score | Scores Bin + config |
+| NFL Regular Season Wins 🏆 | League championships won | players.json |
+| Super Bowl Wins 🌟 | Playoff championships won | players.json |
+
 **What Gets Updated Automatically:**
 - ✅ Scores (from JSONBin after you save from admin dashboard)
-- ✅ Next game schedules (from ESPN API)
+- ✅ Picks history & detailed stats (from JSONBin Picks History Bin)
+- ✅ Next game schedules (from ESPN API, cached 1 hour)
+- ✅ Perfect week points (from JSONBin config)
 - ❌ Player profiles (manual edit of players.json)
 - ❌ Hall of Fame (manual edit of config.json)
 
@@ -135,14 +223,19 @@ const CONFIG = {
 
 ### ⚙️ admin-dashboard-v2.html (Admin Panel)
 
-**Purpose:** Process scores, set winners, save to league table
+**Purpose:** Process scores, set winners, save to league table and picks history
 
 **Configuration (edit weekly):**
 ```javascript
 const CONFIG = {
-  PICKS_BIN_ID: '69487a81ae596e708fa937cb',    // Same as player-picks
-  SCORES_BIN_ID: '6951c2b0ae596e708fb6c625',   // Permanent scores storage
-  API_KEY: '$2a$10$...',
+  // Picks storage (resets weekly)
+  JSONBIN_BIN_ID: '69487a81ae596e708fa937cb',
+  
+  // Permanent storage (NEVER reset)
+  SCORES_BIN_ID: '6951c2b0ae596e708fb6c625',
+  PICKS_HISTORY_BIN_ID: '695317c4ae596e708fb8f9ec',
+  
+  JSONBIN_API_KEY: '$2a$10$...',
   ADMIN_PIN: '292292',
   
   WEEK: 18,                                     // ← Update each week
@@ -154,6 +247,11 @@ const CONFIG = {
   ]
 };
 ```
+
+**Status Indicators:**
+The admin dashboard header shows two connection status indicators:
+- **JSONBin** - Shows connection to picks data (green = connected)
+- **ESPN Scores API** - Shows ESPN connection when fetching scores (green = connected)
 
 **Week Types:**
 | Type | When to Use | Points/Game | Full House Bonus |
@@ -167,9 +265,19 @@ const CONFIG = {
 *Use `doublePoints: true` on specific international games
 
 **Buttons:**
-- 🔄 **Fetch Live Scores** - Gets results from ESPN API, auto-selects winners
-- 💾 **Save to League Table** - Calculates points, saves to Scores Bin
-- 🔄 **Reset for New Week** - Clears Picks Bin (do AFTER saving!)
+| Button | What It Does |
+|--------|--------------|
+| 🔄 **Fetch Live Scores** | Gets results from ESPN API, auto-selects winners for completed games |
+| 💾 **Save to League Table** | Calculates points, saves to BOTH Scores Bin AND Picks History Bin |
+| ⬇ **Download JSON** | Downloads current week data as backup |
+| 🔄 **Reset for New Week** | Clears Picks Bin only (do AFTER saving!) |
+
+**What "Save to League Table" Does:**
+1. Calculates each player's score based on picks vs winners
+2. Saves scores to the **Scores Bin** (`weeks` array)
+3. Saves `perfectWeekPoints` for the week to config
+4. Saves detailed pick-by-pick data to the **Picks History Bin**
+5. All three bins update simultaneously
 
 ---
 
@@ -203,7 +311,7 @@ const CONFIG = {
 **⚠️ Important:** The `id` must match the keys used in:
 - `CONFIG.PLAYERS` in player-picks.html
 - Score objects in weeks.json
-- Picks objects in picks.json
+- Picks objects in Picks History Bin
 
 ---
 
@@ -231,10 +339,10 @@ const CONFIG = {
   ],
   
   "perfectWeekPoints": {                     // Max possible points per week
-    "1": 10,                                 // Week 1: 8 games × 1pt + 2 bonus = 10
-    "12.5": 6,                               // Thanksgiving: 3 games × 2pts = 6
-    "16.5": 6,                               // Christmas: 3 games × 2pts = 6
-    "17": 9                                  // Normal: 7 games × 1pt + 2 bonus = 9
+    "1": 10,                                 // Week 1: 8 games × 1pt + 2 bonus
+    "12.5": 6,                               // Thanksgiving: 3 games × 2pts
+    "16.5": 6,                               // Christmas: 3 games × 2pts
+    "17": 7                                  // Normal: 5 games × 1pt + 2 bonus
   }
 }
 ```
@@ -242,12 +350,13 @@ const CONFIG = {
 **When to Edit:**
 - End of season (update winner, spoon, honorary)
 - New season (update season year)
-- Perfect week points are auto-calculated by admin dashboard, but you can manually adjust
+- Perfect week points are auto-calculated by admin dashboard
 
 **How perfectWeekPoints Works:**
 - Used to calculate "Win Rate" and "Perfect Weeks" stats
 - Auto-populated when you save from admin dashboard
 - Formula: `(games × pointsPerGame) + fullHouseBonus`
+- JSONBin values merge with and override local config values
 
 ---
 
@@ -279,50 +388,7 @@ const CONFIG = {
 - This file is a **BACKUP** - the live data is in JSONBin
 - The league table reads from JSONBin first, falls back to this file
 - You can manually edit this to fix mistakes, but changes won't appear until JSONBin is updated
-
----
-
-### picks.json
-
-**Purpose:** Historical picks data for detailed stats
-
-**Location:** Local file only (not automatically updated)
-
-**Structure:**
-```json
-[
-  {
-    "week": 1,
-    "games": [
-      {
-        "home": "Indianapolis Colts",
-        "away": "Miami Dolphins",
-        "winner": "Indianapolis Colts",        // Actual winner
-        "picks": {
-          "matt": "Indianapolis Colts",        // Each player's pick
-          "jarv": "Miami Dolphins",
-          // ...
-        }
-      }
-    ]
-  }
-]
-```
-
-**What It's Used For:**
-- "Win Rate" stat (accurate per-game %)
-- "Best Team Accuracy" stat
-- Historical record of who picked what
-
-**⚠️ Current Limitation:**
-This file is NOT automatically updated by the system. You would need to:
-1. Export picks from JSONBin before resetting each week
-2. Manually add them to this file
-3. Or build an export feature (future enhancement)
-
-**Without picks.json:**
-- Win Rate uses an estimate based on weekly scores
-- Best Team Accuracy shows "—"
+- Keep this file in sync with JSONBin as a disaster recovery option
 
 ---
 
@@ -330,28 +396,13 @@ This file is NOT automatically updated by the system. You would need to:
 
 ### JSONBin.io (Cloud Storage)
 
-**What It Stores:**
+**Three bins for different purposes:**
 
-| Bin | ID | Contents | Reset? |
-|-----|----|---------| -------|
-| Picks Bin | `69487a81ae596e708fa937cb` | Current week's picks | ✅ Weekly |
-| Scores Bin | `6951c2b0ae596e708fb6c625` | All-time scores + config | ❌ NEVER |
-
-**Scores Bin Structure:**
-```json
-{
-  "weeks": [
-    { "week": 1, "scores": {...} },
-    { "week": 2, "scores": {...} }
-  ],
-  "config": {
-    "perfectWeekPoints": {
-      "1": 10,
-      "2": 11
-    }
-  }
-}
-```
+| Bin | ID | Contents | Reset? | Used By |
+|-----|----|---------| -------|---------|
+| Picks Bin | `69487a81ae596e708fa937cb` | Current week's picks | ✅ Weekly | player-picks, admin |
+| Scores Bin | `6951c2b0ae596e708fb6c625` | All-time scores + config | ❌ NEVER | admin, index.html |
+| Picks History Bin | `695317c4ae596e708fb8f9ec` | Detailed pick history | ❌ NEVER | admin, index.html |
 
 **How Config Merging Works:**
 1. League table loads `config.json` (local file)
@@ -363,19 +414,20 @@ This file is NOT automatically updated by the system. You would need to:
 
 ### ESPN API (Live Scores & Schedules)
 
-**Scores Endpoint:**
+**Scores Endpoint (Admin Dashboard):**
 ```
-https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard
+https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week={WEEK}
 ```
-- Used by admin dashboard "Fetch Live Scores" button
+- Used by "Fetch Live Scores" button
 - Returns current/recent game results
 - Auto-detects winners for completed games
+- Shows "Live" badge for in-progress games
 
-**Schedule Endpoint:**
+**Schedule Endpoint (League Table):**
 ```
 https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/{teamId}/schedule
 ```
-- Used by league table for "Next Game" display
+- Used for "Next Game" display in player stats
 - Fetched for each unique team in players.json
 - Cached in localStorage for 1 hour
 - **No manual schedule.json needed!**
@@ -389,6 +441,43 @@ const ESPN_TEAM_IDS = {
   // ... all 32 teams
 };
 ```
+
+---
+
+## 📈 Player Stats Explained
+
+The league table's player stats modal shows comprehensive statistics:
+
+### Win Rate 🎯
+- **With Picks History:** Exact % of correct picks (e.g., "89/134 = 66%")
+- **Without Picks History:** Estimated from weekly scores vs perfect week points
+
+### Best Team Accuracy
+- The team you predict most accurately
+- Requires minimum 5 picks of that team (`bestTeamMinPicks` in config)
+- Shows team name + accuracy % (e.g., "49ers (78%)")
+
+### Correct Picks
+- Total correct picks / total picks made
+- Only available when Picks History Bin has data
+
+### Most Picked Team
+- The team you select to win most often
+- Shows team name + count (e.g., "Chiefs (23)")
+
+### Current Form
+- Your performance over the last 5 weeks
+- 🟢 = scored at or above league average that week
+- 🔴 = scored below league average that week
+- Displayed oldest to newest (left to right)
+
+### Perfect Weeks 👌🏼
+- Weeks where you scored the maximum possible points
+- Compared against `perfectWeekPoints` in config/JSONBin
+
+### NFL Regular Season Wins / Super Bowl Wins
+- From `nflWins` and `superbowlWins` in players.json
+- Updated manually at end of season
 
 ---
 
@@ -407,7 +496,7 @@ const ESPN_TEAM_IDS = {
 
 □ Update GAMES array in both files:
   - Must be identical in both files!
-  - Set doublePoints: true for international games
+  - Set doublePoints: true for special games
 
 □ Set WEEK_TYPE in admin-dashboard-v2.html:
   - 'normal' | 'thanksgiving' | 'christmas' | 'week18'
@@ -423,6 +512,7 @@ const ESPN_TEAM_IDS = {
 □ Open admin dashboard and log in (PIN: 292292)
 
 □ Click "🔄 Fetch Live Scores"
+  - Check both status indicators turn green
   - Winners auto-populate for completed games
   - Verify all winners are correct
 
@@ -430,10 +520,12 @@ const ESPN_TEAM_IDS = {
   - Review the confirmation modal
   - Check player scores look correct
   - Click "SAVE TO LEAGUE"
+  - Console shows: "✅ Picks history saved"
 
 □ Verify on league table (index.html)
   - Scores updated?
   - Console shows: "✅ Loaded scores from JSONBin"
+  - Console shows: "✅ Loaded picks history from JSONBin"
 
 □ Click "🔄 Reset for New Week"
   - Only do this AFTER saving!
@@ -464,7 +556,7 @@ const ESPN_TEAM_IDS = {
 | Normal (7 games) | 7 | 7×1 + 2 | **9** |
 | Thanksgiving (3) | 3 | 3×2 + 0 | **6** |
 | Christmas (3) | 3 | 3×2 + 0 | **6** |
-| Week 18 (16) | 16 | 16×2 + 2 | **34** |
+| Week 18 (6 games) | 6 | 6×2 + 2 | **14** |
 | With 1 London game | 7+1 | 6×1 + 1×2 + 2 | **10** |
 
 ---
@@ -477,6 +569,14 @@ const ESPN_TEAM_IDS = {
 2. Verify JSONBin has the data: https://jsonbin.io
 3. Hard refresh the page (Cmd+Shift+R)
 4. Check the Scores Bin ID matches in both files
+5. Look for: "✅ Loaded scores from JSONBin" in console
+
+### Player stats showing "—" for some fields
+
+1. Check if Picks History Bin has data
+2. Look for: "✅ Loaded picks history from JSONBin" in console
+3. Stats require picks history to be saved from admin dashboard
+4. Some stats (Win Rate) fall back to estimates if no picks history
 
 ### "Next Game" not showing
 
@@ -497,6 +597,13 @@ const ESPN_TEAM_IDS = {
 1. Verify WEEK_TYPE is correct
 2. Check doublePoints flags on games
 3. Re-save from admin dashboard with correct settings
+
+### ESPN API status shows error
+
+1. Check your internet connection
+2. ESPN API may be temporarily unavailable
+3. You can still set winners manually using the dropdown menus
+4. Try clicking "Fetch Live Scores" again after a few minutes
 
 ---
 
@@ -535,7 +642,7 @@ const ESPN_TEAM_IDS = {
 ### Before Next Season
 
 - Update `season` in config.json
-- **DO NOT** reset the Scores Bin
+- **DO NOT** reset the Scores Bin or Picks History Bin
 - System starts fresh automatically at Week 1
 - ESPN schedule will show new season games automatically
 
@@ -548,6 +655,7 @@ const ESPN_TEAM_IDS = {
 | Admin PIN | `292292` |
 | Picks Bin ID | `69487a81ae596e708fa937cb` |
 | Scores Bin ID | `6951c2b0ae596e708fb6c625` |
+| Picks History Bin ID | `695317c4ae596e708fb8f9ec` |
 | JSONBin API Key | `$2a$10$C7BY0Kl0u74gNn/kXO7xNuayWv493/f1jAxlHUmx3ENADQKDii61C` |
 
 ### Player PINs
@@ -571,14 +679,14 @@ const ESPN_TEAM_IDS = {
 
 ## 🚀 Future Enhancements (Ideas)
 
-- [ ] Automatic picks.json export before weekly reset
 - [ ] Email/push notifications for deadline reminders
 - [ ] Head-to-head comparison feature
 - [ ] Playoff bracket system
 - [ ] Historical season archives
 - [ ] Mobile app version
+- [ ] Automatic weekly config updates
 
 ---
 
 *Last updated: December 2024*
-*System Version: 2.0 (ESPN Live Schedule Integration)*
+*System Version: 3.0 (Picks History + Enhanced Stats)*

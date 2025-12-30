@@ -398,12 +398,14 @@
 
       <!-- Stats -->
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
-        <div class="stat-card"><div class="text-xs opacity-80">Total Weeks Predicted</div><div id="statGames" class="text-2xl font-extrabold">0</div></div>
-        <div class="stat-card"><div class="text-xs opacity-80">Best Week</div><div id="statBest" class="text-2xl font-extrabold">—</div></div>
-        <div class="stat-card"><div class="text-xs opacity-80">Win Rate</div><div id="statWinRate" class="text-2xl font-extrabold">0%</div></div>
+        <div class="stat-card"><div class="text-xs opacity-80">Win Rate 🎯</div><div id="statWinRate" class="text-2xl font-extrabold">0%</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Best Team Accuracy</div><div id="statBestTeam" class="text-2xl font-extrabold">—</div></div>
-        <div class="stat-card"><div class="text-xs opacity-80">Avg / Game</div><div id="statAvg" class="text-2xl font-extrabold">0.00</div></div>
+        <div class="stat-card"><div class="text-xs opacity-80">Correct Picks</div><div id="statCorrectPicks" class="text-2xl font-extrabold">—</div></div>
+        <div class="stat-card"><div class="text-xs opacity-80">Most Picked Team</div><div id="statMostPicked" class="text-2xl font-extrabold">—</div></div>
+        <div class="stat-card"><div class="text-xs opacity-80">Current Form</div><div id="statCurrentForm" class="text-2xl font-extrabold">—</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Perfect Weeks 👌🏼</div><div id="statPerfect" class="text-2xl font-extrabold">0</div></div>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4 mt-4">
         <div class="stat-card"><div class="text-xs opacity-80">NFL Regular Season Wins 🏆</div><div id="statNFLWins" class="text-2xl font-extrabold">0</div></div>
         <div class="stat-card"><div class="text-xs opacity-80">Super Bowl Wins 🌟</div><div id="statSBWins" class="text-2xl font-extrabold">0</div></div>
       </div>
@@ -415,14 +417,14 @@
       <!-- Inline help (toggles) -->
       <div id="metricHelp" class="hidden mt-3 text-sm leading-6 bg-black/40 border border-[var(--line)] rounded-xl p-4">
         <ul class="list-disc ml-5 space-y-1">
-          <li><span class="rule-key">Total Weeks Predicted</span> The number of weeks you predicted the NFL scores.</li>
-          <li><span class="rule-key">Best Week</span> Your highest scoring week.</li>
-          <li><span class="rule-key">Win Rate</span> % of your <strong>game picks</strong> that were correct.</li>
-          <li><span class="rule-key">Best Team Accuracy</span> The team you pick most accurately.</li>
-          <li><span class="rule-key">Avg / Game</span> Total Points divided by Games Played.</li>
+          <li><span class="rule-key">Win Rate</span> % of your game picks that were correct.</li>
+          <li><span class="rule-key">Best Team Accuracy</span> The team you predict most accurately (min 5 picks).</li>
+          <li><span class="rule-key">Correct Picks</span> Total correct picks out of total picks made.</li>
+          <li><span class="rule-key">Most Picked Team</span> The team you pick most often to win.</li>
+          <li><span class="rule-key">Current Form</span> Your last 5 weeks: 🟢 = above average, 🔴 = below average.</li>
           <li><span class="rule-key">Perfect Weeks</span> Weeks where you guessed every game correctly.</li>
-          <li><span class="rule-key">NFL Regular Season Wins</span> Number of NFL Regular Seasons you have won.</li>
-          <li><span class="rule-key">Super Bowl Wins</span> Number of Super Bowls you have won.</li>
+          <li><span class="rule-key">NFL Regular Season Wins</span> Number of league seasons you have won.</li>
+          <li><span class="rule-key">Super Bowl Wins</span> Number of playoff championships you have won.</li>
         </ul>
       </div>
     </div>
@@ -434,10 +436,29 @@
      ============================================ */
   const JSONBIN_CONFIG = {
     // League Scores Bin ID - same as admin dashboard
-    // Replace YOUR_SCORES_BIN_ID_HERE with your actual bin ID
     SCORES_BIN_ID: '6951c2b0ae596e708fb6c625',
+    // Picks History Bin ID - for detailed stats
+    PICKS_HISTORY_BIN_ID: '695317c4ae596e708fb8f9ec',
     API_KEY: '$2a$10$C7BY0Kl0u74gNn/kXO7xNuayWv493/f1jAxlHUmx3ENADQKDii61C'
   };
+
+    // Load picks history from JSONBin (for detailed stats)
+  async function loadPicksHistory() {
+    if (!JSONBIN_CONFIG.PICKS_HISTORY_BIN_ID) {
+      return null;
+    }
+    try {
+      const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.PICKS_HISTORY_BIN_ID}/latest`, {
+        headers: { 'X-Access-Key': JSONBIN_CONFIG.API_KEY }
+      });
+      if (!response.ok) throw new Error('Picks history fetch failed');
+      const data = await response.json();
+      return data.record?.weeks || [];
+    } catch (err) {
+      console.warn('Could not load picks history:', err);
+      return null;
+    }
+  }
 
   // Load from JSONBin (with fallback to local file)
   async function loadFromJSONBin() {
@@ -900,14 +921,14 @@
     };
   }
 
-  // Pick accuracy (per game) from picks.json
+  // Pick accuracy (per game) from picks history
   function computePickAccuracy(picks, playerId){
     if(!Array.isArray(picks)) return null;
     let correct = 0, total = 0;
     for(const wk of picks){
       for(const g of (wk.games || [])){
         const pick = g?.picks?.[playerId];
-        if(!pick) continue;
+        if(!pick || pick === 'missed') continue;
         if(g.winner){
           total += 1;
           if(pick === g.winner) correct += 1;
@@ -918,7 +939,7 @@
     return { correct, total, pct: Math.round((correct/total)*100) };
   }
 
-  // Best team accuracy from picks.json
+  // Best team accuracy from picks history
   function computeBestTeamAccuracy(picks, playerId, config){
     if(!Array.isArray(picks)) return null;
 
@@ -926,7 +947,7 @@
     for(const wk of picks){
       for(const g of (wk.games || [])){
         const playerPick = g?.picks?.[playerId];
-        if(!playerPick) continue;
+        if(!playerPick || playerPick === 'missed') continue;
         const t = (counts[playerPick] ||= { correct:0, total:0 });
         t.total += 1;
         if(g.winner && g.winner === playerPick) t.correct += 1;
@@ -945,6 +966,59 @@
     return best; // { team, pct, total } or null
   }
 
+    // Most picked team (which team does player pick most often)
+  function computeMostPickedTeam(picks, playerId){
+    if(!Array.isArray(picks)) return null;
+
+    const counts = {}; // team -> count
+    for(const wk of picks){
+      for(const g of (wk.games || [])){
+        const playerPick = g?.picks?.[playerId];
+        if(!playerPick || playerPick === 'missed') continue;
+        counts[playerPick] = (counts[playerPick] || 0) + 1;
+      }
+    }
+
+    let mostPicked = null;
+    let maxCount = 0;
+    for(const [team, count] of Object.entries(counts)){
+      if(count > maxCount){
+        maxCount = count;
+        mostPicked = team;
+      }
+    }
+    
+    return mostPicked ? { team: mostPicked, count: maxCount } : null;
+  }
+
+  // Current form - last 5 weeks performance (🟢 = good, 🔴 = bad)
+  function computeCurrentForm(weeks, playerId, config){
+    if(!Array.isArray(weeks)) return null;
+
+    // Get weeks where player participated, sorted by week number descending
+    const playedWeeks = weeks
+      .filter(w => {
+        const score = w?.scores?.[playerId];
+        return score !== undefined && Number.isFinite(Number(score));
+      })
+      .sort((a, b) => b.week - a.week)
+      .slice(0, 5); // Last 5 weeks
+
+    if(playedWeeks.length === 0) return null;
+
+    const form = playedWeeks.map(w => {
+      const score = Number(w.scores[playerId]);
+      const allScores = Object.values(w.scores || {}).map(Number).filter(Number.isFinite);
+      const avgScore = allScores.reduce((a, b) => a + b, 0) / allScores.length;
+      
+      // Green if at or above average, red if below
+      return score >= avgScore ? '🟢' : '🔴';
+    });
+
+    // Reverse so oldest is first (left to right = oldest to newest)
+    return form.reverse().join('');
+  }
+    
 // Next upcoming game for a team
   // Now uses scheduleMap (from ESPN API) with fallback to schedule.json
   function nextGameForTeam(schedule, teamName){
@@ -1058,27 +1132,43 @@
       nextEl.innerHTML = '';
     }
 
-    // Stats (Win Rate prefers pick accuracy; falls back to week-level estimate)
-    document.getElementById('statNFLWins').textContent =
-      Number.isFinite(Number(player.nflWins)) ? Number(player.nflWins) : 0;
-    document.getElementById('statGames').textContent   = stats.gamesPlayed;
-    document.getElementById('statAvg').textContent     = stats.avgPerGame.toFixed(2);
-
+    // Calculate new stats
+    const mostPicked = computeMostPickedTeam(window.picks, playerId);
+    const currentForm = computeCurrentForm(window.weeks, playerId, window.config || {});
     const fallbackPct = computeWinPctFromWeeks(window.weeks, playerId, window.config || {});
+
+    // Win Rate
     document.getElementById('statWinRate').textContent =
       pickAcc ? `${pickAcc.pct}%` : `${fallbackPct}%`;
 
-    document.getElementById('statBest').textContent    = stats.bestWeek ? `W${stats.bestWeek} (${stats.bestPoints})` : '—';
+    // Best Team Accuracy (show team name + percentage)
+    document.getElementById('statBestTeam').textContent = bestTeam
+      ? `${bestTeam.team.split(' ').pop()} (${bestTeam.pct}%)`
+      : '—';
+
+    // Correct Picks (e.g., "89/134")
+    document.getElementById('statCorrectPicks').textContent = pickAcc
+      ? `${pickAcc.correct}/${pickAcc.total}`
+      : '—';
+
+    // Most Picked Team
+    document.getElementById('statMostPicked').textContent = mostPicked
+      ? `${mostPicked.team.split(' ').pop()} (${mostPicked.count})`
+      : '—';
+
+    // Current Form (last 5 weeks)
+    document.getElementById('statCurrentForm').textContent = currentForm || '—';
+
+    // Perfect Weeks
     document.getElementById('statPerfect').textContent = stats.perfectWeeks;
 
-    // Super Bowl wins (from players.json, optional)
+    // NFL Regular Season Wins
+    document.getElementById('statNFLWins').textContent =
+      Number.isFinite(Number(player.nflWins)) ? Number(player.nflWins) : 0;
+
+    // Super Bowl Wins
     document.getElementById('statSBWins').textContent =
       Number.isFinite(Number(player.superbowlWins)) ? Number(player.superbowlWins) : 0;
-
-    // Best Team Accuracy (from picks.json, optional)
-    document.getElementById('statBestTeam').textContent = bestTeam
-      ? `${bestTeam.team}`
-      : '—';
 
     // Show modal & lock scroll
     document.getElementById('profileModal').classList.add('open');
@@ -1116,8 +1206,12 @@
         console.log('📁 Using local data files');
       }
 
-      // Load optional files (always local)
-      const picks = await loadJSON(paths.picks);
+      // Load picks history from JSONBin (replaces local picks.json)
+      const picksHistory = await loadPicksHistory();
+      const picks = picksHistory || await loadJSON(paths.picks);
+      if (picksHistory) {
+        console.log('✅ Loaded picks history from JSONBin');
+      }
       
       // Schedule: Load from cache first, then refresh from ESPN API in background
       let schedule = null;
